@@ -97,6 +97,12 @@
     }
     .attack-lunge { animation: player-attack-lunge 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
 
+    @keyframes player-heal-pulse {
+      0%, 100% { transform: scale(1); filter: none; }
+      40% { transform: scale(1.22); filter: brightness(1.8) drop-shadow(0 0 30px #10b981); }
+    }
+    .heal-pulse { animation: player-heal-pulse 0.65s ease-out; }
+
     /* 1. Standaard Recoil */
     @keyframes enemy-hit-recoil {
       0% { transform: translateX(0) scale(1); filter: brightness(1); }
@@ -264,6 +270,12 @@
       100% { background-color: transparent; }
     }
     .damage-flash { animation: damage-flash-anim 0.45s ease-out; }
+
+    @keyframes heal-flash-anim {
+      0% { background-color: rgba(16, 185, 129, 0.35); }
+      100% { background-color: transparent; }
+    }
+    .heal-flash { animation: heal-flash-anim 0.55s ease-out; }
   </style>
 </head>
 <body id="body-root" class="min-h-screen flex flex-col justify-between p-3 md:p-6 select-none relative">
@@ -279,7 +291,7 @@
       <div class="w-20 h-20 rounded-2xl bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center text-4xl shadow-[0_0_25px_rgba(6,182,212,0.4)] animate-float shrink-0">🚀</div>
       <div>
         <h1 class="font-cyber text-2xl md:text-4xl font-black text-cyan-400 tracking-wider">CODEBOT GAMING HUB</h1>
-        <p class="text-xs md:text-sm text-slate-300 mt-2">Elke ronde start je op 0 Bits. Verdien upgrades, overleef met je HP en versla de eindbaas!</p>
+        <p class="text-xs md:text-sm text-slate-300 mt-2">Elke ronde start je op 0 Bits. Verdien upgrades, koop Repair Kits en versla de eindbaas!</p>
       </div>
 
       <!-- Game Mode Cards -->
@@ -402,7 +414,7 @@
       <button onclick="returnToHub()" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-lg hover:bg-slate-700 transition" title="Terug naar Hub">🏠</button>
       <div>
         <h1 id="app-title-header" class="font-cyber text-lg md:text-xl font-black tracking-wider text-cyan-400">CODEBOT ARENA</h1>
-        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v3.8</p>
+        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v3.9</p>
       </div>
     </div>
 
@@ -459,7 +471,7 @@
       </div>
 
       <!-- Battle / Lab Stage -->
-      <div id="battle-stage-panel" class="cyber-panel rounded-2xl p-6 relative overflow-hidden min-h-[245px] flex flex-col justify-between border border-slate-800">
+      <div id="battle-stage-panel" class="cyber-panel rounded-2xl p-6 relative overflow-hidden min-h-[250px] flex flex-col justify-between border border-slate-800">
         <!-- Subtiele interne stage gloed -->
         <div id="stage-glow-backdrop" class="absolute inset-0 opacity-20 pointer-events-none" style="background: radial-gradient(circle at 50% 50%, #06b6d4 0%, transparent 70%);"></div>
 
@@ -474,9 +486,23 @@
               <span id="player-hp-text" class="text-xs font-bold text-emerald-400">(100/100 HP)</span>
               <span id="shield-badge" class="hidden px-2 py-0.5 text-[10px] bg-blue-500/30 border border-blue-400 text-blue-300 rounded-full">🛡️ Schild Actief</span>
             </div>
-            <div class="w-full max-w-[210px] bg-slate-800 h-3.5 rounded-full overflow-hidden mb-2 border border-slate-700 p-0.5">
-              <div id="player-hp-bar" class="bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full transition-all duration-300" style="width: 100%"></div>
+            
+            <!-- HP Bar + Snelle Nood-Repair Knop -->
+            <div class="flex items-center gap-2 w-full max-w-[260px] mb-2">
+              <div class="flex-grow bg-slate-800 h-3.5 rounded-full overflow-hidden border border-slate-700 p-0.5">
+                <div id="player-hp-bar" class="bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full transition-all duration-300" style="width: 100%"></div>
+              </div>
+              <button 
+                type="button" 
+                id="quick-repair-btn" 
+                onclick="buyRepairKit()" 
+                class="hidden px-2 py-0.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-cyber font-black text-[10px] shadow-lg shadow-emerald-500/30 active:scale-95 transition whitespace-nowrap"
+                title="Koop en gebruik direct een Repair Kit (+50 HP)"
+              >
+                🛠️ +50 HP (💎 30)
+              </button>
             </div>
+
             <div id="player-weapon-badge" class="text-[10px] text-slate-400 mb-2 font-bold">🔫 Wapen: Puls-Laser (1x)</div>
             <div id="player-bot-wrap" class="relative flex items-center justify-center">
               <div id="player-bot-avatar" class="text-6xl md:text-7xl animate-float filter drop-shadow-[0_0_16px_rgba(6,182,212,0.7)] select-none">🤖</div>
@@ -622,7 +648,7 @@
           </div>
         </div>
 
-        <!-- Garage / Lab Shop (2 kolommen breed voor alle 8 upgrades) -->
+        <!-- Garage / Lab Shop (2 kolommen breed voor Consumable + 8 Upgrades) -->
         <div class="cyber-panel rounded-2xl p-5 flex flex-col gap-4 lg:col-span-2">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div>
@@ -632,7 +658,29 @@
             <span class="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 font-cyber font-bold text-xs" id="shop-balance-badge">💎 0</span>
           </div>
 
-          <div id="garage-list" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 max-h-[430px] overflow-y-auto pr-1">
+          <!-- EENMALIGE REPAIR KIT / SERUM CONSUMABLE BANNER -->
+          <div id="repair-kit-card" class="p-3.5 rounded-xl bg-emerald-950/40 border-2 border-emerald-500/50 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span id="repair-kit-icon" class="text-3xl">🛠️</span>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span id="repair-kit-title" class="font-cyber text-xs md:text-sm font-bold text-emerald-300">Nano-Repair Kit</span>
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">1x Gebruik • +50 HP</span>
+                </div>
+                <p id="repair-kit-desc" class="text-[11px] text-slate-300 mt-0.5">Herstelt direct 50 HP. Na gebruik moet je een nieuwe kopen!</p>
+              </div>
+            </div>
+            <button 
+              type="button" 
+              id="shop-repair-btn" 
+              onclick="buyRepairKit()" 
+              class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-cyber font-black text-xs transition whitespace-nowrap"
+            >
+              Koop & Gebruik (💎 30)
+            </button>
+          </div>
+
+          <div id="garage-list" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 max-h-[380px] overflow-y-auto pr-1">
             <!-- Dynamically populated -->
           </div>
         </div>
@@ -788,7 +836,7 @@
       };
     }
 
-    // Specifieke explosie-effecten per wapen-upgrade!
+    // Specifieke explosie-effecten per wapen-upgrade & heal!
     function triggerHitExplosion(targetEl, weaponStyle = 'pulse', isMega = false, isError = false) {
       if (!targetEl) return;
       const rect = targetEl.getBoundingClientRect();
@@ -797,13 +845,14 @@
 
       const styleConfig = {
         pulse:  { hues: [190, 210], count: 28, speed: 7, size: 4, shape: 'circle', rings: 1 },
-        twin:   { hues: [195, 240, 160], count: 40, speed: 9, size: 4.5, shape: 'square', rings: 2 },
+        twin:   { hues: [195, 240, 160], count: 40, size: 4.5, speed: 9, shape: 'square', rings: 2 },
         plasma: { hues: [15, 32, 48], count: 48, speed: 10, size: 6.5, shape: 'circle', rings: 1 },
         shock:  { hues: [52, 190, 60], count: 45, speed: 13, size: 3.5, shape: 'spark', rings: 2 },
         cryo:   { hues: [185, 195, 210], count: 42, speed: 6.5, size: 5.5, shape: 'diamond', rings: 1 },
         vortex: { hues: [275, 315, 255], count: 55, speed: 9.5, size: 5.5, shape: 'circle', rings: 2 },
         crush:  { hues: [42, 52, 15], count: 65, speed: 14, size: 6.5, shape: 'square', rings: 2 },
-        nova:   { hues: [0, 45, 130, 195, 280, 325], count: 85, speed: 16, size: 7.5, shape: 'diamond', rings: 3 }
+        nova:   { hues: [0, 45, 130, 195, 280, 325], count: 85, speed: 16, size: 7.5, shape: 'diamond', rings: 3 },
+        heal:   { hues: [145, 165, 120], count: 42, speed: 7.5, size: 5, shape: 'diamond', rings: 2 }
       };
 
       const cfg = styleConfig[weaponStyle] || styleConfig.pulse;
@@ -824,11 +873,11 @@
           x: centerX,
           y: centerY,
           vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - (weaponStyle === 'plasma' ? 2 : 0),
+          vy: Math.sin(angle) * speed - (weaponStyle === 'plasma' || weaponStyle === 'heal' ? 2.2 : 0),
           size: Math.random() * cfg.size + 2.5,
           alpha: 1,
           decay: Math.random() * 0.02 + 0.014,
-          gravity: weaponStyle === 'cryo' ? -0.04 : (weaponStyle === 'vortex' ? 0 : 0.16),
+          gravity: weaponStyle === 'cryo' || weaponStyle === 'heal' ? -0.05 : (weaponStyle === 'vortex' ? 0 : 0.16),
           hue: hues[Math.floor(Math.random() * hues.length)],
           shape: isError ? 'circle' : cfg.shape
         });
@@ -1010,6 +1059,9 @@
     // ==========================================
     // 1. STATE, DATA & 8 UPGRADE TIERS PER THEMA
     // ==========================================
+    const REPAIR_COST = 30;
+    const REPAIR_AMOUNT = 50;
+
     const DEFAULT_LISTS = {
       "Blok 3 - Week 4": [
         "De engelen", "Wij parkeren", "Het gebouw", "De planeten", "De iglo",
@@ -1067,9 +1119,12 @@
     const THEMES = {
       arena: {
         title: "CODEBOT ARENA",
-        subtitle: "Spelling Compiler v3.8 • Roguelike Arena",
+        subtitle: "Spelling Compiler v3.9 • Roguelike Arena",
         currency: "Data-Bits",
         currencySymbol: "💎",
+        repairName: "Nano-Repair Kit",
+        repairIcon: "🛠️",
+        repairDesc: "Eenmalige reparatie-kit: herstelt direct +50 HP. Daarna moet je hem opnieuw kopen!",
         scriptLabel: "ACTIEF SCRIPT:",
         compileBtn: "⚡ COMPILEER",
         megaBtn: "☄️ VUUR OMEGA-KANON",
@@ -1098,9 +1153,12 @@
       },
       lab: {
         title: "BIO-CHEM LAB",
-        subtitle: "Wetenschappelijk Synthese Lab v3.8",
+        subtitle: "Wetenschappelijk Synthese Lab v3.9",
         currency: "Lab Credits",
         currencySymbol: "⚗️",
+        repairName: "Bio-Medisch Serum",
+        repairIcon: "💉",
+        repairDesc: "Eenmalig nood-serum: herstelt direct +50 HP. Daarna moet je een nieuw flesje kopen!",
         scriptLabel: "ACTIEF REAGENS:",
         compileBtn: "🧪 SYNTHETISEER",
         megaBtn: "💥 ACTIVEER BIO-CORE",
@@ -1213,6 +1271,11 @@
       document.getElementById('shop-desc').textContent = t.shopDesc;
       document.getElementById('builder-title').textContent = t.builderTitle;
       document.getElementById('builder-desc').textContent = t.builderDesc;
+
+      // Update Repair Kit teksten per thema
+      document.getElementById('repair-kit-icon').textContent = t.repairIcon;
+      document.getElementById('repair-kit-title').textContent = t.repairName;
+      document.getElementById('repair-kit-desc').textContent = t.repairDesc;
 
       if (state.gameTheme === 'lab') { 
         root.classList.add('lab-theme'); 
@@ -1512,7 +1575,7 @@
     function testAudioSystem() { speakText("De ingebouwde spraakmodule werkt uitstekend.", 0.95); }
 
     // ==========================================
-    // 3. AUDIO EFFECTS PER WAPEN & GAME OVER
+    // 3. AUDIO EFFECTS PER WAPEN, HEAL & GAME OVER
     // ==========================================
     let audioCtx = null;
     function getAudioCtx() {
@@ -1562,6 +1625,23 @@
       gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
       osc.connect(gain); gain.connect(ctx.destination);
       osc.start(now); osc.stop(now + 0.35);
+    }
+
+    function playHealSound() {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      [440, 554.37, 659.25, 880].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+        gain.gain.setValueAtTime(0.16, now + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.005, now + idx * 0.08 + 0.28);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(now + idx * 0.08);
+        osc.stop(now + idx * 0.08 + 0.28);
+      });
     }
 
     function playMegaLaserSound() {
@@ -1644,8 +1724,49 @@
     }
 
     // ==========================================
-    // 4. GAMEPLAY, UPGRADE FX & GAME OVER CONDITION
+    // 4. GAMEPLAY, REPAIR KIT & GAME OVER CONDITION
     // ==========================================
+    function buyRepairKit() {
+      const t = THEMES[state.gameTheme];
+      if (state.playerHp >= 100) {
+        setAudioStatus("❤️ Je HP is al helemaal vol (100%)!");
+        return;
+      }
+      if (state.bits < REPAIR_COST) {
+        alert(`Nog niet genoeg ${t.currency} voor een ${t.repairName}! Je hebt ${state.bits}/${REPAIR_COST}.`);
+        return;
+      }
+
+      // Verbruik direct de kosten en herstel 50 HP (eenmalig gebruik, moet daarna opnieuw gekocht worden)
+      state.bits -= REPAIR_COST;
+      const oldHp = state.playerHp;
+      state.playerHp = Math.min(100, state.playerHp + REPAIR_AMOUNT);
+      const healed = state.playerHp - oldHp;
+
+      playHealSound();
+
+      const playerWrap = document.getElementById('player-bot-wrap');
+      const stagePanel = document.getElementById('battle-stage-panel');
+
+      if (playerWrap) {
+        playerWrap.classList.remove('heal-pulse');
+        void playerWrap.offsetWidth;
+        playerWrap.classList.add('heal-pulse');
+      }
+      if (stagePanel) {
+        stagePanel.classList.remove('heal-flash');
+        void stagePanel.offsetWidth;
+        stagePanel.classList.add('heal-flash');
+      }
+
+      triggerHitExplosion(playerWrap, 'heal', false, false);
+      spawnFloatingText(`+${healed} HP HERSTELD! ${t.repairIcon}`, playerWrap, "text-emerald-300", -10);
+      setAudioStatus(`${t.repairIcon} ${t.repairName} gebruikt (+${healed} HP)!`);
+
+      updateHUD();
+      renderGarage();
+    }
+
     function getCurrentItem() {
       if (state.currentPhase === 'words') {
         if (state.currentIndex >= state.wordsQueue.length) {
@@ -1904,7 +2025,6 @@
         }
       }
 
-      // Unieke visuele impact op de vijand afhankelijk van het gekozen wapen!
       const allHitClasses = ['hit-recoil', 'hit-twin', 'hit-burn', 'hit-shock', 'hit-freeze', 'hit-vortex', 'hit-crush', 'hit-nova'];
       setTimeout(() => {
         if (enemyWrap) {
@@ -1973,7 +2093,6 @@
       }
       renderMistakeLog();
 
-      // Echt HP-verlies: 25 HP schade per fout (4 fouten zonder schild = 0 HP = Game Over!)
       if (state.shieldActive) {
         state.shieldActive = false;
         spawnFloatingText(`🛡️ SCHILD BLOKKEERT SCHADE!`, playerWrap, "text-cyan-300", 0);
@@ -1984,8 +2103,8 @@
       }
 
       updateHUD();
+      renderGarage();
 
-      // Controleer of speler nu AF is (0 HP)
       if (state.playerHp <= 0) {
         setTimeout(() => {
           triggerHitExplosion(playerWrap, 'nova', true, true);
@@ -2107,7 +2226,6 @@
       const shopBalance = document.getElementById('shop-balance-badge');
       if (shopBalance) shopBalance.textContent = `${t.currencySymbol} ${state.bits} beschikbaar`;
 
-      // Speler HP balk & kleur-waarschuwing bij lage HP
       const hpBar = document.getElementById('player-hp-bar');
       const hpText = document.getElementById('player-hp-text');
       hpBar.style.width = `${state.playerHp}%`;
@@ -2119,6 +2237,34 @@
         ? "bg-gradient-to-r from-rose-600 to-orange-500 h-full rounded-full transition-all duration-300"
         : "bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full transition-all duration-300";
 
+      // Update de Snelle Nood-Repair Knop in de Arena én de knop in de Shop
+      const quickRepairBtn = document.getElementById('quick-repair-btn');
+      const shopRepairBtn = document.getElementById('shop-repair-btn');
+      const canAffordRepair = state.bits >= REPAIR_COST;
+      const needsRepair = state.playerHp < 100 && state.playerHp > 0;
+
+      if (quickRepairBtn) {
+        quickRepairBtn.innerHTML = `${t.repairIcon} +50 HP (${t.currencySymbol}${REPAIR_COST})`;
+        if (needsRepair && canAffordRepair) {
+          quickRepairBtn.classList.remove('hidden');
+        } else {
+          quickRepairBtn.classList.add('hidden');
+        }
+      }
+
+      if (shopRepairBtn) {
+        if (!needsRepair) {
+          shopRepairBtn.textContent = `HP is al vol (100%)`;
+          shopRepairBtn.className = "px-4 py-2 rounded-xl bg-slate-800 text-slate-500 font-cyber font-bold text-xs cursor-not-allowed whitespace-nowrap";
+        } else if (canAffordRepair) {
+          shopRepairBtn.textContent = `Koop & Gebruik (${t.currencySymbol} ${REPAIR_COST})`;
+          shopRepairBtn.className = "px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-cyber font-black text-xs animate-pulse transition whitespace-nowrap";
+        } else {
+          shopRepairBtn.textContent = `Koop (${t.currencySymbol} ${REPAIR_COST})`;
+          shopRepairBtn.className = "px-4 py-2 rounded-xl bg-slate-800 text-slate-400 font-cyber font-bold text-xs whitespace-nowrap";
+        }
+      }
+
       const enemyPct = Math.round((state.enemyHp / state.enemyMaxHp) * 100);
       document.getElementById('enemy-hp-bar').style.width = `${enemyPct}%`;
       document.getElementById('enemy-hp-text').textContent = `(${state.enemyHp}/${state.enemyMaxHp})`;
@@ -2127,8 +2273,7 @@
       if (state.shieldActive) shieldBadge.classList.remove('hidden');
       else shieldBadge.classList.add('hidden');
 
-      // Laat een meldings-stipje zien op de Upgrades tab als er een nieuwe upgrade betaalbaar is!
-      const canAffordNew = t.bots.some(b => !state.unlockedBots.includes(b.id) && state.bits >= b.cost);
+      const canAffordNew = t.bots.some(b => !state.unlockedBots.includes(b.id) && state.bits >= b.cost) || (needsRepair && canAffordRepair);
       const dot = document.getElementById('upgrade-affordable-dot');
       if (dot) {
         if (canAffordNew) dot.classList.remove('hidden');

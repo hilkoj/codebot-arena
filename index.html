@@ -266,8 +266,8 @@
             <button type="button" onclick="speakCurrentWord(0.95)" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs md:text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20 active:scale-95 transition">
               🔊 Spreek Uit
             </button>
-            <button type="button" onclick="speakCurrentWord(0.40)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs md:text-sm flex items-center gap-1 active:scale-95 transition" title="Langzaam">
-              🐢 Langzaam
+            <button type="button" onclick="spellCurrentWord()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs md:text-sm flex items-center gap-1 active:scale-95 transition" title="Spel het woord letter voor letter">
+              🐢 Spel
             </button>
             <button type="button" onclick="triggerFlashHint()" id="btn-flash" class="px-3 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/40 font-bold text-xs md:text-sm active:scale-95 transition" title="Scan">
               👁️ Scan
@@ -947,7 +947,20 @@
       speakText(getCurrentItem(), rate);
       document.getElementById('word-input').focus();
     }
+    function spellCurrentWord() {
+  const item = getCurrentItem();
+  
+  // We splitsen het item op in losse karakters.
+  // Spaties worden hardop uitgesproken als 'spatie' en na elke letter komt een komma voor de pauze.
+  const spelledText = item.split('').map(char => {
+    return char === ' ' ? 'spatie' : char;
+  }).join(', ');
 
+  // Stuur de opgesplitste tekst naar de spraakmotor
+  speakText(spelledText, 0.95);
+  
+  document.getElementById('word-input').focus();
+}
     function changeTTSEngine() {}
     function testAudioSystem() { speakText("De ingebouwde spraakmodule werkt.", 0.95); }
 

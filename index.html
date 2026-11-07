@@ -160,7 +160,7 @@
       <button onclick="returnToHub()" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-lg hover:bg-slate-700 transition" title="Terug naar Hub">🏠</button>
       <div>
         <h1 id="app-title-header" class="font-cyber text-lg md:text-xl font-black tracking-wider text-cyan-400">CODEBOT ARENA</h1>
-        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v3.3</p>
+        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v3.4</p>
       </div>
     </div>
 
@@ -266,16 +266,16 @@
             <button type="button" onclick="speakCurrentWord(0.95)" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs md:text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20 active:scale-95 transition">
               🔊 Spreek Uit
             </button>
-            <button type="button" onclick="speakCurrentWord(0.65)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs md:text-sm flex items-center gap-1 active:scale-95 transition" title="Langzaam uitspreken">
+            <button type="button" onclick="speakCurrentWord(0.65)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs md:text-sm flex items-center gap-1 active:scale-95 transition" title="Langzaam">
               🐢 Langzaam
             </button>
-            <button type="button" onclick="triggerFlashHint()" id="btn-flash" class="px-3 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/40 font-bold text-xs md:text-sm active:scale-95 transition" title="Scan kort op het scherm">
+            <button type="button" onclick="triggerFlashHint()" id="btn-flash" class="px-3 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/40 font-bold text-xs md:text-sm active:scale-95 transition" title="Scan">
               👁️ Scan
             </button>
           </div>
         </div>
 
-        <!-- Flash Preview Area / Masked Prompt -->
+        <!-- Flash Preview Area -->
         <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-center min-h-[76px] flex flex-col items-center justify-center relative">
           <div id="word-display-box" class="font-cyber text-lg md:text-2xl tracking-[0.2em] text-cyan-300 font-bold break-words max-w-full">
             KLIK OP 'SPREEK UIT'
@@ -349,8 +349,8 @@
             <div>
               <label class="text-xs font-bold text-emerald-400 block mb-1">DAN (THEN) Actie:</label>
               <select id="select-then" onchange="updateLogicRule()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-purple-400">
-                <option value="double_dmg">Dubbele Schade (+50%)</option>
-                <option value="mine_bits">Activeer Extra Credits (+15)</option>
+                <option value="double_dmg">Schade Bonus (+50%)</option>
+                <option value="mine_bits">Extra Credits Bonus (+15)</option>
                 <option value="shield">Activeer Schild + Herstel 20 HP</option>
               </select>
             </div>
@@ -365,8 +365,8 @@
         <!-- Garage / Lab Shop -->
         <div class="cyber-panel rounded-2xl p-5 flex flex-col gap-4">
           <div>
-            <h2 id="shop-title" class="font-cyber text-base md:text-lg font-bold text-cyan-400">🔧 Robot Garage & Upgrades</h2>
-            <p id="shop-desc" class="text-xs text-slate-400">Gebruik je verdiende Data-Bits om nieuwe chassissen te kopen.</p>
+            <h2 id="shop-title" class="font-cyber text-base md:text-lg font-bold text-cyan-400">🔧 Uitrusting Upgrades</h2>
+            <p id="shop-desc" class="text-xs text-slate-400">Geavanceerde gear geeft je passieve bonussen zoals meer schade of extra verdiensten!</p>
           </div>
 
           <div id="garage-list" class="flex flex-col gap-2.5">
@@ -483,7 +483,7 @@
 
   <script>
     // ==========================================
-    // 1. STATE, DATA & MODES
+    // 1. STATE, DATA & MODES (MET FUNCTIONELE STATS)
     // ==========================================
     const DEFAULT_LISTS = {
       "Blok 3 - Week 4": [
@@ -542,7 +542,7 @@
     const THEMES = {
       arena: {
         title: "CODEBOT ARENA",
-        subtitle: "Spelling Compiler v3.3 • Cyber Arena",
+        subtitle: "Spelling Compiler v3.4 • Cyber Arena",
         currency: "Data-Bits",
         currencySymbol: "💎",
         playerName: "Nova-Bit v1",
@@ -555,19 +555,19 @@
         compileBtn: "⚡ COMPILEER",
         megaBtn: "☄️ VUUR OMEGA-KANON",
         shopTitle: "🔧 Robot Garage & Upgrades",
-        shopDesc: "Gebruik je Data-Bits om nieuwe chassissen vrij te spelen.",
+        shopDesc: "Koop geavanceerde modellen voor extra schade en meer verdiensten!",
         builderTitle: "🧠 Robot Logica Programmeren",
         builderDesc: "Stel jouw eigen ALS -> DAN code-regel in!",
         bots: [
-          { id: 'nova', name: 'Standard Unit', icon: '🤖', cost: 0, desc: 'Standaard model' },
-          { id: 'valkyrie', name: 'Quantum Mech', icon: '🦾', cost: 100, desc: 'Snelle upgrade' },
-          { id: 'dragon', name: 'Omega Core', icon: '🐉', cost: 250, desc: 'Geavanceerd model' },
-          { id: 'alien', name: 'Astro X9', icon: '🛸', cost: 400, desc: 'Ultieme machine' }
+          { id: 'nova', name: 'Standard Unit', icon: '🤖', cost: 0, desc: 'Basis model (1x Schade, 1x Bits)', multDmg: 1, multBits: 1 },
+          { id: 'valkyrie', name: 'Quantum Mech', icon: '🦾', cost: 100, desc: 'Snellere winst (1.5x Schade)', multDmg: 1.5, multBits: 1 },
+          { id: 'dragon', name: 'Omega Core', icon: '🐉', cost: 250, desc: 'Goede boeren (1.5x Schade & 1.5x Bits)', multDmg: 1.5, multBits: 1.5 },
+          { id: 'alien', name: 'Astro X9', icon: '🛸', cost: 400, desc: 'Ultieme machine (2x Schade & 2x Bits)', multDmg: 2, multBits: 2 }
         ]
       },
       lab: {
         title: "BIO-CHEM LAB",
-        subtitle: "Wetenschappelijk Synthese Lab v3.3",
+        subtitle: "Wetenschappelijk Synthese Lab v3.4",
         currency: "Lab Credits",
         currencySymbol: "⚗️",
         playerName: "Dr. Lab-Bot",
@@ -580,14 +580,14 @@
         compileBtn: "🧪 SYNTHETISEER",
         megaBtn: "💥 ACTIVEER BIO-CORE",
         shopTitle: "🧬 Lab Apparatuur & Upgrades",
-        shopDesc: "Gebruik je Lab Credits om geavanceerde microscopen en injectoren te kopen.",
+        shopDesc: "Koop betere instrumenten voor snellere synthese en bonus credits!",
         builderTitle: "🔬 Experiment Protocol Configureren",
         builderDesc: "Stel jouw ALS -> DAN reagens-voorwaarden in!",
         bots: [
-          { id: 'nova', name: 'Digitale Microscoop', icon: '🔬', cost: 0, desc: 'Standaard lab-instrument' },
-          { id: 'valkyrie', name: 'Laser Spectrometer', icon: '📡', cost: 100, desc: 'Snellere analyse' },
-          { id: 'dragon', name: 'Plasma Centrifuge', icon: '⚙️', cost: 250, desc: 'Hoogwaardige centrifuge' },
-          { id: 'alien', name: 'Quantum DNA-Sequencer', icon: '🧬', cost: 400, desc: 'Ultieme lab-apparatuur' }
+          { id: 'nova', name: 'Digitale Microscoop', icon: '🔬', cost: 0, desc: 'Standaard uitrusting (1x Efficiëntie)', multDmg: 1, multBits: 1 },
+          { id: 'valkyrie', name: 'Laser Spectrometer', icon: '📡', cost: 100, desc: 'Snellere analyse (1.5x Schade)', multDmg: 1.5, multBits: 1 },
+          { id: 'dragon', name: 'Plasma Centrifuge', icon: '⚙️', cost: 250, desc: 'Dubbel voordeel (1.5x Schade & 1.5x Credits)', multDmg: 1.5, multBits: 1.5 },
+          { id: 'alien', name: 'Quantum Sequencer', icon: '🧬', cost: 400, desc: 'Topklasse (2x Schade & 2x Credits)', multDmg: 2, multBits: 2 }
         ]
       }
     };
@@ -647,8 +647,10 @@
       document.getElementById('currency-label').textContent = t.currency;
       document.getElementById('hud-bits').textContent = `${t.currencySymbol} ${state.bits}`;
       
-      document.getElementById('player-bot-name').textContent = t.playerName;
-      document.getElementById('player-bot-avatar').textContent = t.playerAvatar;
+      const currentBotObj = t.bots.find(b => b.id === state.selectedBot) || t.bots[0];
+      document.getElementById('player-bot-name').textContent = currentBotObj.name;
+      document.getElementById('player-bot-avatar').textContent = currentBotObj.icon;
+      
       document.getElementById('enemy-bot-name').textContent = t.enemyName;
       document.getElementById('enemy-bot-avatar').textContent = t.enemyAvatar;
       document.getElementById('script-label-text').textContent = t.scriptLabel;
@@ -861,17 +863,17 @@
     }
 
     // ==========================================
-    // 2. SPRAAK (TTS) MODULE (ROBUUSTE NATIVE VERSIE)
+    // 2. SPRAAK (TTS) MODULE MET ANDROID FIXES
     // ==========================================
     let nlVoices = [];
     let currentUtterance = null;
     let audioUnlocked = false;
 
-    // Ontgrendel audio direct bij de eerste aanraking op Android
     function unlockAudioOnInteraction() {
       if (audioUnlocked) return;
       const ctx = getAudioCtx();
       if (ctx && ctx.state === 'suspended') ctx.resume();
+      
       if ('speechSynthesis' in window) {
         let u = new SpeechSynthesisUtterance('');
         u.volume = 0;
@@ -913,13 +915,12 @@
       if(document.getElementById('audio-status-indicator')) document.getElementById('audio-status-indicator').textContent = msg;
     }
 
-    // Extreem simpele Native TTS functie zonder fallbacks of strakke timeouts
     async function speakText(text, rate = 0.95) {
       return new Promise((resolve) => {
         if (!('speechSynthesis' in window)) return resolve();
         
         setAudioStatus("🔊 Spreekt uit via tablet...");
-        window.speechSynthesis.cancel(); // Wis vastgelopen wachtrij
+        window.speechSynthesis.cancel();
         
         setTimeout(() => {
           currentUtterance = new SpeechSynthesisUtterance(text);
@@ -937,8 +938,6 @@
           currentUtterance.onerror = () => resolve(); 
           
           window.speechSynthesis.speak(currentUtterance);
-          
-          // Forceer resolve na 3 seconden (zorgt dat de game niet vastloopt als TTS faalt)
           setTimeout(resolve, 3000); 
         }, 50);
       });
@@ -949,12 +948,8 @@
       document.getElementById('word-input').focus();
     }
 
-    function testAudioSystem() {
-      speakText("De ingebouwde spraakmodule werkt.", 0.95);
-    }
-    
-    // Dummy functies om de rest van de code niet te breken
     function changeTTSEngine() {}
+    function testAudioSystem() { speakText("De ingebouwde spraakmodule werkt.", 0.95); }
 
     // ==========================================
     // 3. AUDIO EFFECTS
@@ -1046,7 +1041,7 @@
     }
 
     // ==========================================
-    // 4. GAMEPLAY & WIN CONDITION
+    // 4. GAMEPLAY & WIN CONDITION MET BOOSTS
     // ==========================================
     function getCurrentItem() {
       if (state.currentPhase === 'words') {
@@ -1239,6 +1234,8 @@
 
     function handleCorrectCompile(item) {
       const isBossRush = (state.currentPhase === 'bossrush');
+      const t = THEMES[state.gameTheme];
+      const currentBotObj = t.bots.find(b => b.id === state.selectedBot) || t.bots[0];
 
       if (isBossRush) {
         playMegaLaserSound();
@@ -1249,8 +1246,14 @@
       }
 
       const elapsedSec = (Date.now() - state.wordStartTime) / 1000;
+      
+      // Basis schade & bits
       let damage = isBossRush ? 100 : 35;
       let creditsEarned = isBossRush ? 35 : 10;
+
+      // PAS MODIFIERS VAN DE GEKOZEN ROBOT TOE!
+      damage = Math.round(damage * currentBotObj.multDmg);
+      creditsEarned = Math.round(creditsEarned * currentBotObj.multBits);
 
       if (state.isPatchingBug) {
         state.shieldActive = true;
@@ -1281,7 +1284,6 @@
         }
       }
 
-      // Geef de verdiensten aan zowel het Totaal (shop) als de Sessie (highscore)
       state.bits += creditsEarned;
       state.sessionScore += creditsEarned;
       
@@ -1475,6 +1477,14 @@
 
     function selectBot(id) {
       state.selectedBot = id;
+      const t = THEMES[state.gameTheme];
+      const currentBotObj = t.bots.find(b => b.id === state.selectedBot) || t.bots[0];
+      
+      if(document.getElementById('player-bot-name')) {
+        document.getElementById('player-bot-name').textContent = currentBotObj.name;
+        document.getElementById('player-bot-avatar').textContent = currentBotObj.icon;
+      }
+      
       try { localStorage.setItem('codebot_selected_bot', id); } catch(e){}
       updateHUD();
       renderGarage();

@@ -79,12 +79,11 @@
       <div class="w-20 h-20 rounded-2xl bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center text-4xl shadow-[0_0_25px_rgba(6,182,212,0.4)] animate-float">🚀</div>
       <div>
         <h1 class="font-cyber text-2xl md:text-4xl font-black text-cyan-400 tracking-wider">CODEBOT GAMING HUB</h1>
-        <p class="text-xs md:text-sm text-slate-400 mt-2">Kies jouw missie om woorden en zinnen te compileren!</p>
+        <p class="text-xs md:text-sm text-slate-400 mt-2">Kies jouw missie om woorden en zinnen te oefenen!</p>
       </div>
 
       <!-- Game Mode Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mt-2">
-        <!-- Arena Mode Card -->
         <button onclick="startGameMode('arena')" class="cyber-panel cyber-border-cyan rounded-2xl p-6 flex flex-col items-center gap-3 text-left hover:scale-[1.02] active:scale-95 transition group">
           <span class="text-5xl group-hover:scale-110 transition">🤖⚔️</span>
           <div class="w-full">
@@ -94,12 +93,11 @@
           <span class="mt-2 px-4 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-cyber font-bold text-xs w-full text-center">START ARENA</span>
         </button>
 
-        <!-- Lab Mode Card -->
         <button onclick="startGameMode('lab')" class="cyber-panel lab-border rounded-2xl p-6 flex flex-col items-center gap-3 text-left hover:scale-[1.02] active:scale-95 transition group">
           <span class="text-5xl group-hover:scale-110 transition">🧪🔬</span>
           <div class="w-full">
             <h3 class="font-cyber text-base font-bold text-emerald-400">Bio-Chem Lab</h3>
-            <p class="text-xs text-slate-400 mt-1">Synthetiseer formules, brouwerijen en experimenten als Hoofdlaborant.</p>
+            <p class="text-xs text-slate-400 mt-1">Synthetiseer formules, reagens en experimenten als Hoofdlaborant.</p>
           </div>
           <span class="mt-2 px-4 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-cyber font-bold text-xs w-full text-center">START LAB</span>
         </button>
@@ -117,12 +115,12 @@
       <div class="text-6xl md:text-7xl" id="victory-emoji">🏆👑</div>
       <div>
         <h2 class="font-cyber text-2xl md:text-3xl font-black text-amber-400 tracking-wider" id="victory-title">MISSIE VOLTOOID!</h2>
-        <p class="text-xs md:text-sm text-slate-300 mt-2" id="victory-desc">Geweldig! Alle items van de finale zijn foutloos gecompileerd!</p>
+        <p class="text-xs md:text-sm text-slate-300 mt-2" id="victory-desc">Geweldig! Alle items zijn foutloos voltooid!</p>
       </div>
 
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 grid grid-cols-2 gap-4">
         <div class="text-center">
-          <span class="text-[10px] uppercase text-slate-400 block">Verdiende Bits / Credits</span>
+          <span class="text-[10px] uppercase text-slate-400 block" id="modal-currency-label">Verdiende Bits</span>
           <span id="victory-bits-text" class="font-cyber font-bold text-amber-400 text-lg">💎 0</span>
         </div>
         <div class="text-center">
@@ -148,7 +146,7 @@
       <button onclick="returnToHub()" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-lg hover:bg-slate-700 transition" title="Terug naar Hub">🏠</button>
       <div>
         <h1 id="app-title-header" class="font-cyber text-lg md:text-xl font-black tracking-wider text-cyan-400">CODEBOT ARENA</h1>
-        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v3.0</p>
+        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v3.1</p>
       </div>
     </div>
 
@@ -292,7 +290,7 @@
         <div id="debugger-panel" class="hidden bg-rose-950/30 border-2 border-rose-500/60 rounded-xl p-4 flex flex-col gap-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <span id="debugger-title" class="font-cyber text-xs md:text-sm font-bold text-rose-400 flex items-center gap-2">
-              🐞 SYNTAX BUG GEDETECTEERD — VISUELE DEBUGGER
+              🐞 BUG GEDETECTEERD — VISUELE DEBUGGER
             </span>
             <span class="text-xs text-rose-300">Corrigeer je invoer hierboven om te patchen (+Schild!)</span>
           </div>
@@ -312,7 +310,7 @@
       </div>
     </section>
 
-    <!-- ================= TAB 2: CODE-LAB & GARAGE / LAB UPGRADES ================= -->
+    <!-- ================= TAB 2: CODE-LAB / LAB UPGRADES ================= -->
     <section id="view-codelab" class="hidden flex-col gap-4">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         
@@ -338,7 +336,7 @@
               <label class="text-xs font-bold text-emerald-400 block mb-1">DAN (THEN) Actie:</label>
               <select id="select-then" onchange="updateLogicRule()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-purple-400">
                 <option value="double_dmg">Dubbele Schade (+50%)</option>
-                <option value="mine_bits">Actief Extra Credits (+15)</option>
+                <option value="mine_bits">Activeer Extra Credits (+15)</option>
                 <option value="shield">Activeer Schild + Herstel 20 HP</option>
               </select>
             </div>
@@ -354,7 +352,7 @@
         <div class="cyber-panel rounded-2xl p-5 flex flex-col gap-4">
           <div>
             <h2 id="shop-title" class="font-cyber text-base md:text-lg font-bold text-cyan-400">🔧 Robot Garage & Upgrades</h2>
-            <p id="shop-desc" class="text-xs text-slate-400">Gebruik je verdiende Data-Bits om nieuwe chassissen of lab-uitrusting te kopen.</p>
+            <p id="shop-desc" class="text-xs text-slate-400">Gebruik je verdiende Data-Bits om nieuwe chassissen te kopen.</p>
           </div>
 
           <div id="garage-list" class="flex flex-col gap-2.5">
@@ -471,7 +469,7 @@
 
   <script>
     // ==========================================
-    // 1. STATE & GAME MODES (ARENA vs LAB)
+    // 1. STATE & THEMA UPGRADES (ARENA vs LAB)
     // ==========================================
     const DEFAULT_LISTS = {
       "Blok 3 - Week 4": [
@@ -500,7 +498,7 @@
     };
 
     let state = {
-      gameTheme: 'arena', // 'arena' of 'lab'
+      gameTheme: 'arena',
       lists: JSON.parse(JSON.stringify(DEFAULT_LISTS)),
       activeListName: "Blok 3 - Week 4",
       wordsQueue: [],
@@ -529,7 +527,7 @@
     const THEMES = {
       arena: {
         title: "CODEBOT ARENA",
-        subtitle: "Spelling Compiler v3.0 • Cyber Arena",
+        subtitle: "Spelling Compiler v3.1 • Cyber Arena",
         currency: "Data-Bits",
         currencySymbol: "💎",
         playerName: "Nova-Bit v1",
@@ -544,11 +542,17 @@
         shopTitle: "🔧 Robot Garage & Upgrades",
         shopDesc: "Gebruik je Data-Bits om nieuwe chassissen vrij te spelen.",
         builderTitle: "🧠 Robot Logica Programmeren",
-        builderDesc: "Stel jouw eigen ALS -> DAN code-regel in!"
+        builderDesc: "Stel jouw eigen ALS -> DAN code-regel in!",
+        bots: [
+          { id: 'nova', name: 'Standard Unit', icon: '🤖', cost: 0, desc: 'Standaard model' },
+          { id: 'valkyrie', name: 'Quantum Mech', icon: '🦾', cost: 100, desc: 'Snelle upgrade' },
+          { id: 'dragon', name: 'Omega Core', icon: '🐉', cost: 250, desc: 'Geavanceerd model' },
+          { id: 'alien', name: 'Astro X9', icon: '🛸', cost: 400, desc: 'Ultieme machine' }
+        ]
       },
       lab: {
         title: "BIO-CHEM LAB",
-        subtitle: "Wetenschappelijk Synthese Lab v3.0",
+        subtitle: "Wetenschappelijk Synthese Lab v3.1",
         currency: "Lab Credits",
         currencySymbol: "⚗️",
         playerName: "Dr. Lab-Bot",
@@ -563,16 +567,15 @@
         shopTitle: "🧬 Lab Apparatuur & Upgrades",
         shopDesc: "Gebruik je Lab Credits om geavanceerde microscopen en reagens-injectoren te kopen.",
         builderTitle: "🔬 Experiment Protocol Configureren",
-        builderDesc: "Stel jouw ALS -> DAN reagens-voorwaarden in!"
+        builderDesc: "Stel jouw ALS -> DAN reagens-voorwaarden in!",
+        bots: [
+          { id: 'nova', name: 'Digitale Microscoop', icon: '🔬', cost: 0, desc: 'Standaard lab-instrument' },
+          { id: 'valkyrie', name: 'Laser Spectrometer', icon: '📡', cost: 100, desc: 'Snellere analyse' },
+          { id: 'dragon', name: 'Plasma Centrifuge', icon: '⚙️', cost: 250, desc: 'Hoogwaardige centrifuge' },
+          { id: 'alien', name: 'Quantum DNA-Sequencer', icon: '🧬', cost: 400, desc: 'Ultieme lab-apparatuur' }
+        ]
       }
     };
-
-    const BOTS = [
-      { id: 'nova', name: 'Standard Unit', icon: '🤖', cost: 0, desc: 'Standaard model' },
-      { id: 'valkyrie', name: 'Quantum Mech', icon: '🦾', cost: 100, desc: 'Snelle upgrade' },
-      { id: 'dragon', name: 'Omega Core', icon: '🐉', cost: 250, desc: 'Geavanceerd model' },
-      { id: 'alien', name: 'Astro X9', icon: '🛸', cost: 400, desc: 'Ultieme machine' }
-    ];
 
     const ENEMIES = [
       { name: 'Glitch-Spider', icon: '👾' },
@@ -612,7 +615,6 @@
         .replace(/\s+/g, ' ');
     }
 
-    // Hub Lobby Navigatie
     function startGameMode(theme) {
       state.gameTheme = theme;
       document.getElementById('hub-lobby').classList.add('hidden');
@@ -631,6 +633,7 @@
       document.getElementById('app-title-header').textContent = t.title;
       document.getElementById('app-subtitle-header').textContent = t.subtitle;
       document.getElementById('currency-label').textContent = t.currency;
+      document.getElementById('modal-currency-label').textContent = `Verdiende ${t.currency}`;
       document.getElementById('hud-bits').textContent = `${t.currencySymbol} ${state.bits}`;
       document.getElementById('player-bot-name').textContent = t.playerName;
       document.getElementById('player-bot-avatar').textContent = t.playerAvatar;
@@ -652,7 +655,6 @@
       renderGarage();
     }
 
-    // Automatisch woorden.json inlezen van GitHub
     async function fetchWordsJson() {
       try {
         const response = await fetch('woorden.json?t=' + Date.now());
@@ -1066,7 +1068,7 @@
         const totalSentences = state.sentencesQueue.length;
         document.getElementById('word-progress-badge').textContent = `Zin ${state.currentIndex + 1} / ${totalSentences}`;
         document.getElementById('boss-progress-badge').textContent = `Zin ${state.currentIndex + 1} / ${totalSentences}`;
-        document.getElementById('word-length-hint').textContent = `👑 Boss Rush`;
+        document.getElementById('word-length-hint').textContent = state.gameTheme === 'lab' ? '👑 Bio-Reactor' : '👑 Boss Rush';
         activateBossArenaUI(true);
       } else {
         const totalWords = state.wordsQueue.length;
@@ -1085,7 +1087,7 @@
       const t = THEMES[state.gameTheme];
       document.getElementById('victory-bits-text').textContent = `${t.currencySymbol} ${state.bits}`;
       document.getElementById('victory-title').textContent = state.gameTheme === 'lab' ? "LAB EXPERIMENT GESLAAGD!" : "EINDBAAS VERSLAGEN!";
-      document.getElementById('victory-desc').textContent = state.gameTheme === 'lab' ? "Fantastisch! Alle lab-formulieren zijn foutloos gesynthetiseerd." : "Geweldig! Alle zinnen van de Boss Rush Finale zijn foutloos gecompileerd!";
+      document.getElementById('victory-desc').textContent = state.gameTheme === 'lab' ? "Fantastisch! Alle formulieren zijn foutloos gesynthetiseerd." : "Geweldig! Alle zinnen zijn foutloos gecompileerd!";
       document.getElementById('victory-modal').classList.remove('hidden');
     }
 
@@ -1118,10 +1120,9 @@
         phaseHud.textContent = state.gameTheme === 'lab' ? "🔥 FASE 2: BIO-REACTOR" : "🔥 FASE 2: BOSS RUSH";
         phaseHud.className = "font-cyber font-bold text-amber-400 text-xs md:text-sm";
 
-        const boss = BOSSES[state.currentIndex % BOSSES.length];
-        enemyName.textContent = state.gameTheme === 'lab' ? t.bossName : boss.name;
+        enemyName.textContent = t.bossName;
         enemyName.className = "font-cyber text-xs md:text-sm font-black text-amber-400";
-        enemyAvatar.textContent = state.gameTheme === 'lab' ? t.bossAvatar : boss.icon;
+        enemyAvatar.textContent = t.bossAvatar;
         enemyAvatar.className = "text-7xl md:text-8xl animate-boss";
 
         compileBtn.innerHTML = t.megaBtn;
@@ -1134,7 +1135,6 @@
         phaseHud.textContent = "⚡ FASE 1";
         phaseHud.className = "font-cyber font-bold text-purple-400 text-xs md:text-sm";
 
-        const regularEnemy = ENEMIES[(state.level - 1) % ENEMIES.length];
         enemyName.textContent = t.enemyName;
         enemyName.className = "font-cyber text-xs md:text-sm font-bold text-rose-400";
         enemyAvatar.textContent = t.enemyAvatar;
@@ -1399,10 +1399,11 @@
       const container = document.getElementById('garage-list');
       if (!container) return;
       container.innerHTML = '';
-      BOTS.forEach(bot => {
+      
+      const t = THEMES[state.gameTheme];
+      t.bots.forEach(bot => {
         const unlocked = state.unlockedBots.includes(bot.id);
         const active = state.selectedBot === bot.id;
-        const t = THEMES[state.gameTheme];
 
         const row = document.createElement('div');
         row.className = `p-3 rounded-xl border flex items-center justify-between ${active ? 'bg-cyan-950/40 border-cyan-400' : 'bg-slate-900/80 border-slate-800'}`;
@@ -1428,7 +1429,8 @@
     }
 
     function buyBot(id, cost) {
-      if (state.bits < cost) { alert("Nog niet genoeg credits!"); return; }
+      const t = THEMES[state.gameTheme];
+      if (state.bits < cost) { alert(`Nog niet genoeg ${t.currency}!`); return; }
       state.bits -= cost;
       state.unlockedBots.push(id);
       try {

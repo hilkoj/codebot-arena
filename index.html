@@ -103,7 +103,7 @@
       <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-xl">🤖</div>
       <div>
         <h1 class="font-cyber text-lg md:text-xl font-black tracking-wider text-cyan-400">CODEBOT ARENA</h1>
-        <p class="text-xs text-slate-400">Spelling Compiler v2.7 • Multi-List Edition</p>
+        <p class="text-xs text-slate-400">Spelling Compiler v2.8 • Auto-JSON Edition</p>
       </div>
     </div>
 
@@ -320,15 +320,18 @@
       </div>
     </section>
 
-    <!-- ================= TAB 3: ADMIN & MULTI-LIST MANAGER ================= -->
+    <!-- ================= TAB 3: ADMIN & AUTO-JSON LOADER ================= -->
     <section id="view-admin" class="hidden flex-col gap-4">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        <!-- Multi-List Manager -->
+        <!-- Multi-List Manager & JSON status -->
         <div class="cyber-panel rounded-2xl p-5 flex flex-col gap-3">
-          <h2 class="font-cyber text-base md:text-lg font-bold text-cyan-400">📚 Meerdere Woordenlijsten Beheren</h2>
+          <div class="flex items-center justify-between">
+            <h2 class="font-cyber text-base md:text-lg font-bold text-cyan-400">📚 Woordenlijsten Beheren</h2>
+            <button type="button" onclick="fetchWordsJson()" class="px-2.5 py-1 rounded bg-cyan-500/20 border border-cyan-400 text-cyan-300 text-[11px] hover:bg-cyan-500/30">🔄 Herlaad woorden.json</button>
+          </div>
           <p class="text-xs text-slate-400">
-            Selecteer een actieve lijst of maak een nieuwe aan. Items met min. 3 woorden worden automatisch de Boss Rush Finale!
+            De app laadt automatisch lijsten uit <code class="text-cyan-300">woorden.json</code> op GitHub. Je kunt hieronder ook handmatig bijwerken.
           </p>
           
           <!-- List Selector & Actions -->
@@ -436,7 +439,7 @@
 
   <script>
     // ==========================================
-    // 1. MULTI-LIST STATE & PERSISTENT STORAGE
+    // 1. STATE & AUTO-JSON LOADER
     // ==========================================
     const DEFAULT_LISTS = {
       "Spelling Week 1": [
@@ -445,17 +448,24 @@
         "De professor werkt in het laboratorium",
         "Wij lenen spannende boeken in de bibliotheek"
       ],
-      "Cito Oefenlijst B": [
-        "ongeveer", "waarschijnlijk", "misschien", "vliegtuig",
-        "ongeluk", "vrijwilliger", "temperatuurmeter",
-        "De brandweer blust de grote brand",
-        "Morgen gaan wij op schoolreis naar Amsterdam"
+      "Blok 3 - Week 4": [
+        "De engelen", "Wij parkeren", "Het gebouw", "De planeten", "De iglo",
+        "De koeienvlaai", "Ik duw", "Inmiddels", "De kabeljauw", "Eerlijk", "Opgelucht",
+        "Het hoestdrankje", "De schutting", "Het raketje", "Eeuwig", "De televisie",
+        "De ooievaars", "De lachfilm", "De tribune", "Wij fladderen", "Het schroot",
+        "Moeilijk", "Terecht", "De ijsbergsla", "Wij verloren", "De matrozen",
+        "Het ivoor", "De beperking", "Het drinkwater", "De feiten",
+        "Rook Siem een vieze lucht op het zoldertje?",
+        "De rivier stroomt door een groot deel van Nederland.",
+        "De bezoekers treuzelen bij de dichte deur.",
+        "Kees en Stan sliepen op een groot matras.",
+        "De meneer wees ons een korte weg naar Rotterdam."
       ]
     };
 
     let state = {
       lists: JSON.parse(JSON.stringify(DEFAULT_LISTS)),
-      activeListName: "Spelling Week 1",
+      activeListName: "Blok 3 - Week 4",
       wordsQueue: [],
       sentencesQueue: [],
       currentPhase: 'words',
@@ -524,13 +534,42 @@
         .replace(/\s+/g, ' ');
     }
 
-    function loadState() {
+    // Automatisch woorden.json inlezen van GitHub (met LocalStorage fallback)
+    async function fetchWordsJson() {
+      try {
+        const response = await fetch('woorden.json?t=' + Date.now());
+        if (response.ok) {
+          const jsonDa = await response.json();
+          if (jsonDa && typeof jsonDa === 'object' && Object.keys(jsonDa).length > 0) {
+            state.lists = jsonDa;
+            if (!state.lists[state.activeListName]) {
+              state.activeListName = Object.keys(state.lists)[0];
+            }
+            saveAllListsToStorage();
+            renderListSelector();
+            processQueues();
+            updateDiag(null, undefined, "woorden.json succesvol geladen van GitHub!");
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn("Kon woorden.json niet ophalen, val terug op lokale opslag.");
+      }
+
+      // Fallback op LocalStorage
       try {
         const savedLists = localStorage.getItem('codebot_all_lists');
         if (savedLists) state.lists = JSON.parse(savedLists);
         const savedActive = localStorage.getItem('codebot_active_list_name');
         if (savedActive && state.lists[savedActive]) state.activeListName = savedActive;
+      } catch(e){}
 
+      renderListSelector();
+      processQueues();
+    }
+
+    function loadState() {
+      try {
         const savedBits = localStorage.getItem('codebot_bits');
         if (savedBits) state.bits = parseInt(savedBits, 10) || 0;
         const savedEngine = localStorage.getItem('codebot_tts_engine');
@@ -547,17 +586,27 @@
         console.warn("LocalStorage niet beschikbaar.");
       }
 
-      renderListSelector();
-      processQueues();
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('words')) {
+        const urlWords = params.get('words').split('|').map(w => w.trim()).filter(Boolean);
+        if (urlWords.length > 0) {
+          state.lists["URL Lijst"] = urlWords;
+          state.activeListName = "URL Lijst";
+        }
+      }
 
-      document.getElementById('tts-engine-select').value = state.ttsEngine;
-      document.getElementById('admin-game-mode').value = state.gameMode;
-      document.getElementById('admin-strict-punct').checked = state.strictPunctuation;
-      selectBot(state.selectedBot);
+      fetchWordsJson().then(() => {
+        document.getElementById('tts-engine-select').value = state.ttsEngine;
+        document.getElementById('admin-game-mode').value = state.gameMode;
+        document.getElementById('admin-strict-punct').checked = state.strictPunctuation;
+        selectBot(state.selectedBot);
+        loadNextWord(false);
+      });
     }
 
     function renderListSelector() {
       const select = document.getElementById('saved-lists-select');
+      if (!select) return;
       select.innerHTML = '';
       Object.keys(state.lists).forEach(name => {
         const opt = document.createElement('option');
@@ -585,7 +634,7 @@
     }
 
     function createNewListPrompt() {
-      const name = prompt("Geef een naam op voor deze nieuwe woordenlijst (bijv. 'Spelling Week 2'):");
+      const name = prompt("Geef een naam op voor deze nieuwe woordenlijst (bijv. 'Blok 3 - Week 5'):");
       if (!name || !name.trim()) return;
       const cleanName = name.trim();
       
@@ -659,9 +708,9 @@
     }
 
     function resetDefaultLists() {
-      if (!confirm("Weet je zeker dat je alle lijsten wilt herstellen naar de fabrieksinstellingen?")) return;
+      if (!confirm("Weet je zeker dat je wilt herstellen naar de standaardlijsten?")) return;
       state.lists = JSON.parse(JSON.stringify(DEFAULT_LISTS));
-      state.activeListName = "Spelling Week 1";
+      state.activeListName = "Blok 3 - Week 4";
       saveAllListsToStorage();
       renderListSelector();
       loadSelectedList();
@@ -679,6 +728,7 @@
         const allVoices = window.speechSynthesis.getVoices() || [];
         nlVoices = allVoices.filter(v => v.lang.toLowerCase().includes('nl'));
         const select = document.getElementById('tts-voice-select');
+        if (!select) return;
         select.innerHTML = '';
         if (nlVoices.length > 0) {
           nlVoices.forEach((v, idx) => {
@@ -1268,6 +1318,7 @@
 
     function renderGarage() {
       const container = document.getElementById('garage-list');
+      if (!container) return;
       container.innerHTML = '';
       BOTS.forEach(bot => {
         const unlocked = state.unlockedBots.includes(bot.id);
@@ -1334,6 +1385,7 @@
 
     function renderMistakeLog() {
       const logEl = document.getElementById('admin-mistake-log');
+      if (!logEl) return;
       const entries = Object.entries(state.mistakes);
       if (entries.length === 0) {
         logEl.textContent = "Nog geen foutjes gemaakt.";
@@ -1360,11 +1412,10 @@
     // 6. INITIALISATIE
     // ==========================================
     window.addEventListener('DOMContentLoaded', () => {
-      loadState();
       initSpeechVoices();
       updateLogicRule();
       renderGarage();
-      loadNextWord(false);
+      loadState();
     });
   </script>
 </body>

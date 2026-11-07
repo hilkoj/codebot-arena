@@ -861,130 +861,87 @@
     }
 
     // ==========================================
-    // 2. SPRAAK (TTS) MODULE MET ANDROID FIXES
+    // 2. SPRAAK (TTS) MODULE (ROBUUSTE NATIVE VERSIE)
     // ==========================================
     let nlVoices = [];
-    let currentAudioObj = null;
-    let currentUtterance = null; // Globaal object voor Android GC bug
-    let audioUnlocked = false;   // Autoplay status
+    let currentUtterance = null;
+    let audioUnlocked = false;
 
+    // Ontgrendel audio direct bij de eerste aanraking op Android
     function unlockAudioOnInteraction() {
       if (audioUnlocked) return;
       const ctx = getAudioCtx();
       if (ctx && ctx.state === 'suspended') ctx.resume();
-      
-      const silentAudio = new Audio();
-      silentAudio.play().catch(() => {});
-      
       if ('speechSynthesis' in window) {
-        const u = new SpeechSynthesisUtterance('');
+        let u = new SpeechSynthesisUtterance('');
         u.volume = 0;
         window.speechSynthesis.speak(u);
       }
-      
       audioUnlocked = true;
       document.removeEventListener('touchstart', unlockAudioOnInteraction);
       document.removeEventListener('click', unlockAudioOnInteraction);
     }
-
     document.addEventListener('touchstart', unlockAudioOnInteraction, { once: true });
     document.addEventListener('click', unlockAudioOnInteraction, { once: true });
 
     function initSpeechVoices() {
       if (!('speechSynthesis' in window)) return;
       const fetchVoices = () => {
-        const allVoices = window.speechSynthesis.getVoices() || [];
-        nlVoices = allVoices.filter(v => v.lang.toLowerCase().includes('nl'));
+        nlVoices = window.speechSynthesis.getVoices().filter(v => v.lang.toLowerCase().includes('nl'));
         const select = document.getElementById('tts-voice-select');
-        if (!select) return;
-        select.innerHTML = '';
-        if (nlVoices.length > 0) {
+        if (select) {
+          select.innerHTML = '';
           nlVoices.forEach((v, idx) => {
-            const opt = document.createElement('option');
+            let opt = document.createElement('option');
             opt.value = idx;
             opt.textContent = `${v.name} (${v.lang})`;
             select.appendChild(opt);
           });
-          updateDiag("Browser TTS gereed ✅", nlVoices.length);
-        } else {
-          updateDiag("Gereed (Cloud Fallback)", 0);
         }
+        updateDiag("Browser TTS actief ✅", nlVoices.length);
       };
       fetchVoices();
       window.speechSynthesis.onvoiceschanged = fetchVoices;
     }
 
-    function updateDiag(statusText, voiceCount, lastAction) {
-      if (statusText) document.getElementById('diag-status').textContent = statusText;
-      if (voiceCount !== undefined) document.getElementById('diag-voices').textContent = voiceCount;
-      if (lastAction) document.getElementById('diag-last-action').textContent = lastAction;
+    function updateDiag(statusText, voiceCount) {
+      if(document.getElementById('diag-status')) document.getElementById('diag-status').textContent = statusText;
+      if(document.getElementById('diag-voices') && voiceCount !== undefined) document.getElementById('diag-voices').textContent = voiceCount;
     }
 
     function setAudioStatus(msg) {
-      document.getElementById('audio-status-indicator').textContent = msg;
+      if(document.getElementById('audio-status-indicator')) document.getElementById('audio-status-indicator').textContent = msg;
     }
 
-    function speakViaCloud(text, rate = 1.0) {
-      return new Promise((resolve, reject) => {
-        try {
-          if (currentAudioObj) { currentAudioObj.pause(); currentAudioObj = null; }
-          const encoded = encodeURIComponent(text);
-          const urls = [
-            `https://translate.googleapis.com/translate_tts?ie=UTF-8&q=${encoded}&tl=nl&client=gtx`,
-            `https://translate.google.com/translate_tts?ie=UTF-8&q=${encoded}&tl=nl&client=tw-ob`
-          ];
-          let urlIndex = 0;
-          const tryPlay = () => {
-            if (urlIndex >= urls.length) { reject(new Error("Cloud faalde")); return; }
-            const audio = new Audio();
-            audio.referrerPolicy = "no-referrer"; 
-            audio.src = urls[urlIndex];
-            audio.playbackRate = Math.max(0.5, Math.min(1.5, rate));
-            currentAudioObj = audio;
-            audio.onplaying = () => { setAudioStatus(`🔊 Spreekt uit...`); resolve(true); };
-            audio.onerror = () => { urlIndex++; tryPlay(); };
-            audio.play().catch(() => { urlIndex++; tryPlay(); });
-          };
-          tryPlay();
-        } catch (err) { reject(err); }
-      });
-    }
-
-    function speakViaNative(text, rate = 0.95) {
-      return new Promise((resolve, reject) => {
-        if (!('speechSynthesis' in window)) { reject(new Error("Geen speechSynthesis")); return; }
-        try {
-          window.speechSynthesis.cancel();
+    // Extreem simpele Native TTS functie zonder fallbacks of strakke timeouts
+    async function speakText(text, rate = 0.95) {
+      return new Promise((resolve) => {
+        if (!('speechSynthesis' in window)) return resolve();
+        
+        setAudioStatus("🔊 Spreekt uit via tablet...");
+        window.speechSynthesis.cancel(); // Wis vastgelopen wachtrij
+        
+        setTimeout(() => {
           currentUtterance = new SpeechSynthesisUtterance(text);
           currentUtterance.lang = 'nl-NL';
           currentUtterance.rate = rate;
-          const selectedIdx = document.getElementById('tts-voice-select').value;
-          if (selectedIdx !== "" && nlVoices[selectedIdx]) currentUtterance.voice = nlVoices[selectedIdx];
-          else if (nlVoices.length > 0) currentUtterance.voice = nlVoices[0];
+          
+          const select = document.getElementById('tts-voice-select');
+          if (select && select.value !== "" && nlVoices[select.value]) {
+            currentUtterance.voice = nlVoices[select.value];
+          } else if (nlVoices.length > 0) {
+            currentUtterance.voice = nlVoices[0];
+          }
 
-          let started = false;
-          const watchdog = setTimeout(() => {
-            if (!started) { window.speechSynthesis.cancel(); reject(new Error("Timeout")); }
-          }, 1800);
-
-          currentUtterance.onstart = () => { started = true; clearTimeout(watchdog); setAudioStatus(`🔊 Spreekt uit...`); resolve(true); };
-          currentUtterance.onerror = (e) => {
-            clearTimeout(watchdog);
-            if (e.error === 'interrupted' || e.error === 'canceled') resolve(true);
-            else reject(e);
-          };
-          setTimeout(() => { window.speechSynthesis.speak(currentUtterance); }, 50);
-        } catch (err) { reject(err); }
+          currentUtterance.onend = () => resolve();
+          currentUtterance.onerror = () => resolve(); 
+          
+          window.speechSynthesis.speak(currentUtterance);
+          
+          // Forceer resolve na 3 seconden (zorgt dat de game niet vastloopt als TTS faalt)
+          setTimeout(resolve, 3000); 
+        }, 50);
       });
-    }
-
-    async function speakText(text, rate = 0.95) {
-      setAudioStatus("⏳ Audio laden...");
-      const engine = state.ttsEngine;
-      if (engine === 'cloud') { await speakViaCloud(text, rate).catch(() => {}); return; }
-      if (engine === 'native') { await speakViaNative(text, rate).catch(() => {}); return; }
-      try { await speakViaNative(text, rate); }
-      catch (err) { await speakViaCloud(text, rate).catch(() => {}); }
     }
 
     function speakCurrentWord(rate = 0.95) {
@@ -992,16 +949,12 @@
       document.getElementById('word-input').focus();
     }
 
-    function changeTTSEngine() {
-      state.ttsEngine = document.getElementById('tts-engine-select').value;
-      try { localStorage.setItem('codebot_tts_engine', state.ttsEngine); } catch(e){}
+    function testAudioSystem() {
+      speakText("De ingebouwde spraakmodule werkt.", 0.95);
     }
-
-    function testAudioSystem(mode) {
-      const prev = state.ttsEngine;
-      state.ttsEngine = mode;
-      speakText("Systeemtest geslaagd!", 0.95).finally(() => { state.ttsEngine = prev; });
-    }
+    
+    // Dummy functies om de rest van de code niet te breken
+    function changeTTSEngine() {}
 
     // ==========================================
     // 3. AUDIO EFFECTS

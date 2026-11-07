@@ -2,7 +2,10 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="CodeBot Arena" />
   <title>CodeBot Arena: Spelling & Programmeren</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
@@ -49,7 +52,7 @@
       <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-xl">🤖</div>
       <div>
         <h1 class="font-cyber text-lg md:text-xl font-black tracking-wider text-cyan-400">CODEBOT ARENA</h1>
-        <p class="text-xs text-slate-400">Spelling Compiler v2.1 (Dual-Audio)</p>
+        <p class="text-xs text-slate-400">Spelling Compiler v2.2</p>
       </div>
     </div>
 
@@ -134,20 +137,20 @@
         
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-2">
-            <span class="px-2.5 py-1 rounded bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 text-xs font-bold" id="word-progress-badge">Woord 1 / 10</span>
+            <span class="px-2.5 py-1 rounded bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 text-xs font-bold" id="word-progress-badge">Woord 1 / 12</span>
             <span class="text-xs text-slate-400" id="word-length-hint">Lengte: ? letters</span>
           </div>
 
           <!-- Audio Buttons -->
           <div class="flex items-center gap-2">
-            <button onclick="speakCurrentWord(0.95)" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs md:text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20 active:scale-95 transition">
+            <button type="button" onclick="speakCurrentWord(0.95)" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs md:text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20 active:scale-95 transition">
               🔊 Spreek Woord Uit
             </button>
-            <button onclick="speakCurrentWord(0.65)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs md:text-sm flex items-center gap-1 active:scale-95 transition" title="Langzaam uitspreken">
+            <button type="button" onclick="speakCurrentWord(0.65)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs md:text-sm flex items-center gap-1 active:scale-95 transition" title="Langzaam uitspreken">
               🐢 Langzaam
             </button>
-            <button onclick="triggerFlashHint()" id="btn-flash" class="px-3 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/40 font-bold text-xs md:text-sm active:scale-95 transition" title="Scan woord kort op het scherm">
-              👁️ Scan (1s)
+            <button type="button" onclick="triggerFlashHint()" id="btn-flash" class="px-3 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/40 font-bold text-xs md:text-sm active:scale-95 transition" title="Scan woord kort op het scherm">
+              👁️ Scan (1.5s)
             </button>
           </div>
         </div>
@@ -155,7 +158,7 @@
         <!-- Flash Preview Area / Masked Prompt -->
         <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-center min-h-[68px] flex flex-col items-center justify-center relative">
           <div id="word-display-box" class="font-cyber text-xl md:text-2xl tracking-[0.25em] text-cyan-300 font-bold">
-            KLIK OP 'START' OF 'SPREEK UIT'
+            KLIK OP 'SPREEK WOORD UIT'
           </div>
           <div id="audio-status-indicator" class="text-[11px] text-slate-500 mt-1">Klaar voor compilatie...</div>
         </div>
@@ -179,7 +182,7 @@
 
         <!-- VISUAL DEBUGGER (Shows up on spelling error) -->
         <div id="debugger-panel" class="hidden bg-rose-950/30 border-2 border-rose-500/60 rounded-xl p-4 flex flex-col gap-3">
-          <div class="flex items-center justify-between">
+          <div class="flex flex-wrap items-center justify-between gap-2">
             <span class="font-cyber text-xs md:text-sm font-bold text-rose-400 flex items-center gap-2">
               🐞 SYNTAX BUG GEDETECTEERD — VISUELE DEBUGGER
             </span>
@@ -279,10 +282,10 @@
           </div>
 
           <div class="flex gap-2 mt-1">
-            <button onclick="saveWordList()" class="flex-grow py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs md:text-sm transition">
+            <button type="button" onclick="saveWordList()" class="flex-grow py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs md:text-sm transition">
               💾 Woordenlijst Opslaan & Activeren
             </button>
-            <button onclick="resetDefaultWords()" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition">
+            <button type="button" onclick="resetDefaultWords()" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition">
               Standaardlijst
             </button>
           </div>
@@ -293,7 +296,7 @@
         <div class="cyber-panel rounded-2xl p-5 flex flex-col gap-4 border border-amber-500/40">
           <div>
             <h2 class="font-cyber text-base md:text-lg font-bold text-amber-400">🔊 Spraak (TTS) Diagnose & Instellingen</h2>
-            <p class="text-xs text-slate-400">Werkt het geluid niet in de preview? Kies hieronder een andere Spraak-Engine of test de verbinding.</p>
+            <p class="text-xs text-slate-400">Kies hieronder hoe de woorden uitgesproken worden en test het geluid.</p>
           </div>
 
           <!-- Engine Selection -->
@@ -301,7 +304,7 @@
             <label class="text-xs font-bold text-cyan-300">Kies Spraak-Engine (TTS Methode):</label>
             <select id="tts-engine-select" onchange="changeTTSEngine()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs md:text-sm text-white outline-none">
               <option value="auto">⚡ Automatisch (Browser Stem + Cloud Fallback)</option>
-              <option value="cloud">☁️ Forceer Cloud-Audio Stream (Lost browser-bugs op!)</option>
+              <option value="cloud">☁️ Forceer Cloud-Audio Stream (Google GTX)</option>
               <option value="native">💻 Alleen Ingebouwde Browser/OS Stem (Offline)</option>
             </select>
 
@@ -320,14 +323,14 @@
 
           <!-- Test Buttons -->
           <div class="flex flex-wrap gap-2">
-            <button onclick="testAudioSystem('native')" class="flex-1 py-2 px-3 rounded-xl bg-cyan-500/20 border border-cyan-500/50 hover:bg-cyan-500/30 text-cyan-300 font-bold text-xs transition">
+            <button type="button" onclick="testAudioSystem('native')" class="flex-1 py-2 px-3 rounded-xl bg-cyan-500/20 border border-cyan-500/50 hover:bg-cyan-500/30 text-cyan-300 font-bold text-xs transition">
               ▶️ Test Browser-Stem
             </button>
-            <button onclick="testAudioSystem('cloud')" class="flex-1 py-2 px-3 rounded-xl bg-amber-500/20 border border-amber-500/50 hover:bg-amber-500/30 text-amber-300 font-bold text-xs transition">
+            <button type="button" onclick="testAudioSystem('cloud')" class="flex-1 py-2 px-3 rounded-xl bg-amber-500/20 border border-amber-500/50 hover:bg-amber-500/30 text-amber-300 font-bold text-xs transition">
               ☁️ Test Cloud-Stem
             </button>
-            <button onclick="playLaserSound()" class="py-2 px-3 rounded-xl bg-purple-500/20 border border-purple-500/50 hover:bg-purple-500/30 text-purple-300 font-bold text-xs transition">
-              🎵 Test Beep (WebAudio)
+            <button type="button" onclick="playLaserSound()" class="py-2 px-3 rounded-xl bg-purple-500/20 border border-purple-500/50 hover:bg-purple-500/30 text-purple-300 font-bold text-xs transition">
+              🎵 Test Laser-Geluid
             </button>
           </div>
 
@@ -388,7 +391,6 @@
       { name: 'Null-Pointer Boss', icon: '👁️‍🗨️' }
     ];
 
-    // Load saved settings from localStorage safely
     function loadState() {
       try {
         const savedWords = localStorage.getItem('codebot_words');
@@ -399,12 +401,25 @@
         if (savedEngine) state.ttsEngine = savedEngine;
         const savedMode = localStorage.getItem('codebot_mode');
         if (savedMode) state.gameMode = savedMode;
+        const savedUnlocked = localStorage.getItem('codebot_unlocked_bots');
+        if (savedUnlocked) state.unlockedBots = JSON.parse(savedUnlocked);
+        const savedBot = localStorage.getItem('codebot_selected_bot');
+        if (savedBot) state.selectedBot = savedBot;
       } catch (e) {
-        console.warn("LocalStorage niet beschikbaar in deze sandbox.");
+        console.warn("LocalStorage niet beschikbaar.");
       }
+
+      // Check of er via de URL woorden zijn meegegeven (bijv. ?words=woord1,woord2,woord3)
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('words')) {
+        const urlWords = params.get('words').split(',').map(w => w.trim()).filter(Boolean);
+        if (urlWords.length > 0) state.words = urlWords;
+      }
+
       document.getElementById('admin-words-input').value = state.words.join('\n');
       document.getElementById('tts-engine-select').value = state.ttsEngine;
       document.getElementById('admin-game-mode').value = state.gameMode;
+      selectBot(state.selectedBot);
     }
 
     // ==========================================
@@ -437,11 +452,11 @@
         } else if (allVoices.length > 0) {
           const opt = document.createElement('option');
           opt.value = '';
-          opt.textContent = `Geen NL-stem gevonden (${allVoices.length} andere stemmen) - Gebruik Cloud-Stem!`;
+          opt.textContent = `Geen specifieke NL-stem in lijst (${allVoices.length} systeemstemmen)`;
           select.appendChild(opt);
-          updateDiag("Geen NL-stem in browser. Zet engine op Cloud-Audio!", 0);
+          updateDiag("Standaard systeemstem + Cloud Fallback gereed", 0);
         } else {
-          updateDiag("Wachten op browser-stemmen (of sandbox blokkade)...", 0);
+          updateDiag("Gereed (Stemmen laden bij eerste klik)", 0);
         }
       };
 
@@ -469,7 +484,6 @@
           }
           
           const encoded = encodeURIComponent(text);
-          // Google Translate TTS werkt stabiel zolang referrerPolicy op 'no-referrer' staat!
           const urls = [
             `https://translate.googleapis.com/translate_tts?ie=UTF-8&q=${encoded}&tl=nl&client=gtx`,
             `https://translate.google.com/translate_tts?ie=UTF-8&q=${encoded}&tl=nl&client=tw-ob`,
@@ -479,13 +493,13 @@
           let urlIndex = 0;
           const tryPlay = () => {
             if (urlIndex >= urls.length) {
-              setAudioStatus("⚠️ Cloud-streams niet bereikbaar. Schakel over op Browser-Stem.");
+              setAudioStatus("⚠️ Cloud-streams geblokkeerd. Kies Browser-Stem onder ⚙️ Woorden & Audio.");
               reject(new Error("Alle cloud streams faalden"));
               return;
             }
             
             const audio = new Audio();
-            // CRUCIAAL: voorkomt 401/403 en CORS/Referer blokkades op GitHub Pages
+            // Voorkomt 401/403 en Referer-blokkades op GitHub Pages
             audio.referrerPolicy = "no-referrer"; 
             audio.src = urls[urlIndex];
             audio.playbackRate = Math.max(0.5, Math.min(1.5, rate));
@@ -531,7 +545,6 @@
           utter.rate = rate;
           utter.pitch = 1.0;
 
-          // Kies geselecteerde stem of eerste NL-stem (indien geladen)
           const selectedIdx = document.getElementById('tts-voice-select').value;
           if (selectedIdx !== "" && nlVoices[selectedIdx]) {
             utter.voice = nlVoices[selectedIdx];
@@ -540,7 +553,6 @@
           }
 
           let started = false;
-          // Ruimere watchdog (1800ms) zodat OS-stemmen op iPad/Android/Windows tijd hebben om op te starten
           const watchdog = setTimeout(() => {
             if (!started) {
               window.speechSynthesis.cancel();
@@ -558,7 +570,6 @@
 
           utter.onerror = (e) => {
             clearTimeout(watchdog);
-            // Negeer 'interrupted' of 'canceled' errors bij snel klikken
             if (e.error === 'interrupted' || e.error === 'canceled') {
               resolve(true);
             } else {
@@ -573,6 +584,7 @@
       });
     }
 
+    // Hoofdfunctie voor het uitspreken van een woord
     async function speakText(text, rate = 0.95) {
       setAudioStatus("⏳ Audio-module aansturen...");
       const engine = state.ttsEngine;
@@ -589,7 +601,7 @@
         return;
       }
 
-      // 'auto': Probeer ALTIJD eerst Native (met lang='nl-NL'), val bij falen terug op Cloud
+      // 'auto': Probeer eerst Native (met lang='nl-NL'), val bij falen terug op Cloud
       try {
         await speakViaNative(text, rate);
       } catch (err) {
@@ -746,14 +758,12 @@
       let bitsEarned = 10;
 
       if (state.isPatchingBug) {
-        // Gepatcht na een foutje -> Activeer reparatie schild
         state.shieldActive = true;
         damage = 20;
         bitsEarned = 5;
         setAudioStatus("🛠️ Bug succesvol gepatcht! Firewall-schild geactiveerd.");
       } else {
         state.streak++;
-        // Check geprogrammeerde IF-THEN logica van je dochter!
         let conditionMet = false;
         if (state.ifRule === 'streak2' && state.streak >= 2) conditionMet = true;
         if (state.ifRule === 'len7' && word.length >= 7) conditionMet = true;
@@ -778,7 +788,6 @@
       state.bits += bitsEarned;
       try { localStorage.setItem('codebot_bits', state.bits); } catch(e){}
 
-      // Enemy damage
       state.enemyHp = Math.max(0, state.enemyHp - damage);
       if (state.enemyHp === 0) {
         state.level++;
@@ -798,8 +807,9 @@
       state.streak = 0;
       state.isPatchingBug = true;
 
-      // Registreer in het fouten-logboek en voeg het woord extra toe aan de wachtrij
       state.mistakes[target] = (state.mistakes[target] || 0) + 1;
+      // Voeg het moeilijke woord extra toe verderop in de lijst zodat ze het nog eens oefent
+      state.words.push(target);
       renderMistakeLog();
 
       if (state.shieldActive) {
@@ -808,7 +818,6 @@
         state.playerHp = Math.max(10, state.playerHp - 15);
       }
 
-      // Open de Visuele Debugger met letter-voor-letter vergelijking
       const debugPanel = document.getElementById('debugger-panel');
       const userContainer = document.getElementById('debug-user-chars');
       const targetContainer = document.getElementById('debug-target-chars');
@@ -839,7 +848,7 @@
       });
 
       debugPanel.classList.remove('hidden');
-      speakText(target, 0.75); // Spreek het woord rustig nog eens uit
+      speakText(target, 0.75);
       document.getElementById('word-input').select();
       updateHUD();
     }
@@ -909,8 +918,8 @@
             ${active 
               ? `<span class="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 text-xs font-bold">Actief</span>`
               : unlocked 
-                ? `<button onclick="selectBot('${bot.id}')" class="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold">Kies</button>`
-                : `<button onclick="buyBot('${bot.id}', ${bot.cost})" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold">Koop (💎 ${bot.cost})</button>`
+                ? `<button type="button" onclick="selectBot('${bot.id}')" class="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold">Kies</button>`
+                : `<button type="button" onclick="buyBot('${bot.id}', ${bot.cost})" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold">Koop (💎 ${bot.cost})</button>`
             }
           </div>
         `;
@@ -925,11 +934,16 @@
       }
       state.bits -= cost;
       state.unlockedBots.push(id);
+      try {
+        localStorage.setItem('codebot_bits', state.bits);
+        localStorage.setItem('codebot_unlocked_bots', JSON.stringify(state.unlockedBots));
+      } catch(e){}
       selectBot(id);
     }
 
     function selectBot(id) {
       state.selectedBot = id;
+      try { localStorage.setItem('codebot_selected_bot', id); } catch(e){}
       const bot = BOTS.find(b => b.id === id);
       if (bot) {
         document.getElementById('player-bot-name').textContent = bot.name;
@@ -998,7 +1012,7 @@
       initSpeechVoices();
       updateLogicRule();
       renderGarage();
-      loadNextWord(false); // Wacht op eerste klik van gebruiker zodat browser autoplay-policy audio toestaat
+      loadNextWord(false);
     });
   </script>
 </body>

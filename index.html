@@ -160,7 +160,7 @@
       <button onclick="returnToHub()" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-lg hover:bg-slate-700 transition" title="Terug naar Hub">🏠</button>
       <div>
         <h1 id="app-title-header" class="font-cyber text-lg md:text-xl font-black tracking-wider text-cyan-400">CODEBOT ARENA</h1>
-        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v3.2</p>
+        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v3.3</p>
       </div>
     </div>
 
@@ -266,16 +266,16 @@
             <button type="button" onclick="speakCurrentWord(0.95)" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs md:text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20 active:scale-95 transition">
               🔊 Spreek Uit
             </button>
-            <button type="button" onclick="speakCurrentWord(0.65)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs md:text-sm flex items-center gap-1 active:scale-95 transition" title="Langzaam">
+            <button type="button" onclick="speakCurrentWord(0.65)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs md:text-sm flex items-center gap-1 active:scale-95 transition" title="Langzaam uitspreken">
               🐢 Langzaam
             </button>
-            <button type="button" onclick="triggerFlashHint()" id="btn-flash" class="px-3 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/40 font-bold text-xs md:text-sm active:scale-95 transition" title="Scan">
+            <button type="button" onclick="triggerFlashHint()" id="btn-flash" class="px-3 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/40 font-bold text-xs md:text-sm active:scale-95 transition" title="Scan kort op het scherm">
               👁️ Scan
             </button>
           </div>
         </div>
 
-        <!-- Flash Preview Area -->
+        <!-- Flash Preview Area / Masked Prompt -->
         <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-center min-h-[76px] flex flex-col items-center justify-center relative">
           <div id="word-display-box" class="font-cyber text-lg md:text-2xl tracking-[0.2em] text-cyan-300 font-bold break-words max-w-full">
             KLIK OP 'SPREEK UIT'
@@ -519,8 +519,8 @@
       sentencesQueue: [],
       currentPhase: 'words',
       currentIndex: 0,
-      bits: 0,            // Totaal om uit te geven
-      sessionScore: 0,    // Score specifiek voor deze spelronde!
+      bits: 0,
+      sessionScore: 0,
       streak: 0,
       level: 1,
       playerHp: 100,
@@ -542,7 +542,7 @@
     const THEMES = {
       arena: {
         title: "CODEBOT ARENA",
-        subtitle: "Spelling Compiler v3.2 • Cyber Arena",
+        subtitle: "Spelling Compiler v3.3 • Cyber Arena",
         currency: "Data-Bits",
         currencySymbol: "💎",
         playerName: "Nova-Bit v1",
@@ -567,7 +567,7 @@
       },
       lab: {
         title: "BIO-CHEM LAB",
-        subtitle: "Wetenschappelijk Synthese Lab v3.2",
+        subtitle: "Wetenschappelijk Synthese Lab v3.3",
         currency: "Lab Credits",
         currencySymbol: "⚗️",
         playerName: "Dr. Lab-Bot",
@@ -626,7 +626,7 @@
     // Navigatie & Theme UI
     function startGameMode(theme) {
       state.gameTheme = theme;
-      state.sessionScore = 0; // Reset de ronde score bij de start!
+      state.sessionScore = 0;
       document.getElementById('hub-lobby').classList.add('hidden');
       applyThemeUI();
       loadNextWord(false);
@@ -635,7 +635,7 @@
     function returnToHub() {
       document.getElementById('victory-modal').classList.add('hidden');
       document.getElementById('hub-lobby').classList.remove('hidden');
-      renderHighscores(); // Ververs het scorebord
+      renderHighscores();
     }
 
     function applyThemeUI() {
@@ -708,11 +708,10 @@
 
       highscores.push({ name, score, date: new Date().toLocaleDateString() });
       highscores.sort((a,b) => b.score - a.score);
-      highscores = highscores.slice(0, 5); // Bewaar alleen de Top 5
+      highscores = highscores.slice(0, 5);
 
       try { localStorage.setItem('codebot_highscores', JSON.stringify(highscores)); } catch(e){}
       
-      // Clear input and return
       document.getElementById('player-name-input').value = "";
       returnToHub();
     }
@@ -862,10 +861,34 @@
     }
 
     // ==========================================
-    // 2. SPRAAK (TTS) MODULE
+    // 2. SPRAAK (TTS) MODULE MET ANDROID FIXES
     // ==========================================
     let nlVoices = [];
     let currentAudioObj = null;
+    let currentUtterance = null; // Globaal object voor Android GC bug
+    let audioUnlocked = false;   // Autoplay status
+
+    function unlockAudioOnInteraction() {
+      if (audioUnlocked) return;
+      const ctx = getAudioCtx();
+      if (ctx && ctx.state === 'suspended') ctx.resume();
+      
+      const silentAudio = new Audio();
+      silentAudio.play().catch(() => {});
+      
+      if ('speechSynthesis' in window) {
+        const u = new SpeechSynthesisUtterance('');
+        u.volume = 0;
+        window.speechSynthesis.speak(u);
+      }
+      
+      audioUnlocked = true;
+      document.removeEventListener('touchstart', unlockAudioOnInteraction);
+      document.removeEventListener('click', unlockAudioOnInteraction);
+    }
+
+    document.addEventListener('touchstart', unlockAudioOnInteraction, { once: true });
+    document.addEventListener('click', unlockAudioOnInteraction, { once: true });
 
     function initSpeechVoices() {
       if (!('speechSynthesis' in window)) return;
@@ -932,25 +955,25 @@
         if (!('speechSynthesis' in window)) { reject(new Error("Geen speechSynthesis")); return; }
         try {
           window.speechSynthesis.cancel();
-          const utter = new SpeechSynthesisUtterance(text);
-          utter.lang = 'nl-NL';
-          utter.rate = rate;
+          currentUtterance = new SpeechSynthesisUtterance(text);
+          currentUtterance.lang = 'nl-NL';
+          currentUtterance.rate = rate;
           const selectedIdx = document.getElementById('tts-voice-select').value;
-          if (selectedIdx !== "" && nlVoices[selectedIdx]) utter.voice = nlVoices[selectedIdx];
-          else if (nlVoices.length > 0) utter.voice = nlVoices[0];
+          if (selectedIdx !== "" && nlVoices[selectedIdx]) currentUtterance.voice = nlVoices[selectedIdx];
+          else if (nlVoices.length > 0) currentUtterance.voice = nlVoices[0];
 
           let started = false;
           const watchdog = setTimeout(() => {
             if (!started) { window.speechSynthesis.cancel(); reject(new Error("Timeout")); }
           }, 1800);
 
-          utter.onstart = () => { started = true; clearTimeout(watchdog); setAudioStatus(`🔊 Spreekt uit...`); resolve(true); };
-          utter.onerror = (e) => {
+          currentUtterance.onstart = () => { started = true; clearTimeout(watchdog); setAudioStatus(`🔊 Spreekt uit...`); resolve(true); };
+          currentUtterance.onerror = (e) => {
             clearTimeout(watchdog);
             if (e.error === 'interrupted' || e.error === 'canceled') resolve(true);
             else reject(e);
           };
-          window.speechSynthesis.speak(utter);
+          setTimeout(() => { window.speechSynthesis.speak(currentUtterance); }, 50);
         } catch (err) { reject(err); }
       });
     }

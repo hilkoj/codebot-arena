@@ -160,7 +160,7 @@
       <button onclick="returnToHub()" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-lg hover:bg-slate-700 transition" title="Terug naar Hub">🏠</button>
       <div>
         <h1 id="app-title-header" class="font-cyber text-lg md:text-xl font-black tracking-wider text-cyan-400">CODEBOT ARENA</h1>
-        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v3.4</p>
+        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v3.5</p>
       </div>
     </div>
 
@@ -269,7 +269,7 @@
             <button type="button" onclick="spellCurrentWord()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs md:text-sm flex items-center gap-1 active:scale-95 transition" title="Spel het woord letter voor letter">
               🐢 Spel
             </button>
-            <button type="button" onclick="triggerFlashHint()" id="btn-flash" class="px-3 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/40 font-bold text-xs md:text-sm active:scale-95 transition" title="Scan">
+            <button type="button" onclick="triggerFlashHint()" id="btn-flash" class="px-3 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/40 font-bold text-xs md:text-sm active:scale-95 transition" title="Scan kort op het scherm">
               👁️ Scan
             </button>
           </div>
@@ -542,7 +542,7 @@
     const THEMES = {
       arena: {
         title: "CODEBOT ARENA",
-        subtitle: "Spelling Compiler v3.4 • Cyber Arena",
+        subtitle: "Spelling Compiler v3.5 • Cyber Arena",
         currency: "Data-Bits",
         currencySymbol: "💎",
         playerName: "Nova-Bit v1",
@@ -567,7 +567,7 @@
       },
       lab: {
         title: "BIO-CHEM LAB",
-        subtitle: "Wetenschappelijk Synthese Lab v3.4",
+        subtitle: "Wetenschappelijk Synthese Lab v3.5",
         currency: "Lab Credits",
         currencySymbol: "⚗️",
         playerName: "Dr. Lab-Bot",
@@ -629,7 +629,8 @@
       state.sessionScore = 0;
       document.getElementById('hub-lobby').classList.add('hidden');
       applyThemeUI();
-      loadNextWord(false);
+      // Korte timeout om de UI te laten renderen, daarna true doorgeven om direct uit te spreken!
+      setTimeout(() => loadNextWord(true), 300);
     }
 
     function returnToHub() {
@@ -863,7 +864,7 @@
     }
 
     // ==========================================
-    // 2. SPRAAK (TTS) MODULE MET ANDROID FIXES
+    // 2. SPRAAK (TTS) MODULE (ROBUUSTE NATIVE VERSIE)
     // ==========================================
     let nlVoices = [];
     let currentUtterance = null;
@@ -947,20 +948,16 @@
       speakText(getCurrentItem(), rate);
       document.getElementById('word-input').focus();
     }
-    function spellCurrentWord() {
-  const item = getCurrentItem();
-  
-  // We splitsen het item op in losse karakters.
-  // Spaties worden hardop uitgesproken als 'spatie' en na elke letter komt een komma voor de pauze.
-  const spelledText = item.split('').map(char => {
-    return char === ' ' ? 'spatie' : char;
-  }).join(', ');
 
-  // Stuur de opgesplitste tekst naar de spraakmotor
-  speakText(spelledText, 0.95);
-  
-  document.getElementById('word-input').focus();
-}
+    function spellCurrentWord() {
+      const item = getCurrentItem();
+      const spelledText = item.split('').map(char => {
+        return char === ' ' ? 'spatie' : char;
+      }).join(', ');
+      speakText(spelledText, 0.95);
+      document.getElementById('word-input').focus();
+    }
+
     function changeTTSEngine() {}
     function testAudioSystem() { speakText("De ingebouwde spraakmodule werkt.", 0.95); }
 
@@ -1135,7 +1132,7 @@
       state.playerHp = 100;
       state.enemyHp = state.enemyMaxHp;
       processQueues();
-      loadNextWord(false);
+      setTimeout(() => loadNextWord(true), 300);
     }
 
     function activateBossArenaUI(isBoss) {

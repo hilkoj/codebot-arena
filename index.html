@@ -74,9 +74,9 @@
 <body id="body-root" class="min-h-screen flex flex-col justify-between p-3 md:p-6 select-none relative">
 
   <!-- ================= GAME HUB LOBBY (START SCREEN) ================= -->
-  <div id="hub-lobby" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-lg flex flex-col items-center justify-center p-4">
-    <div class="max-w-2xl w-full flex flex-col items-center gap-6 text-center">
-      <div class="w-20 h-20 rounded-2xl bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center text-4xl shadow-[0_0_25px_rgba(6,182,212,0.4)] animate-float">🚀</div>
+  <div id="hub-lobby" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-lg flex flex-col items-center justify-center p-4 overflow-y-auto">
+    <div class="max-w-2xl w-full flex flex-col items-center gap-6 text-center py-8">
+      <div class="w-20 h-20 rounded-2xl bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center text-4xl shadow-[0_0_25px_rgba(6,182,212,0.4)] animate-float shrink-0">🚀</div>
       <div>
         <h1 class="font-cyber text-2xl md:text-4xl font-black text-cyan-400 tracking-wider">CODEBOT GAMING HUB</h1>
         <p class="text-xs md:text-sm text-slate-400 mt-2">Kies jouw missie om woorden en zinnen te oefenen!</p>
@@ -84,59 +84,73 @@
 
       <!-- Game Mode Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mt-2">
-        <button onclick="startGameMode('arena')" class="cyber-panel cyber-border-cyan rounded-2xl p-6 flex flex-col items-center gap-3 text-left hover:scale-[1.02] active:scale-95 transition group">
+        <button onclick="startGameMode('arena')" class="cyber-panel cyber-border-cyan rounded-2xl p-5 flex flex-col items-center gap-3 text-left hover:scale-[1.02] active:scale-95 transition group">
           <span class="text-5xl group-hover:scale-110 transition">🤖⚔️</span>
-          <div class="w-full">
+          <div class="w-full text-center">
             <h3 class="font-cyber text-base font-bold text-cyan-300">CodeBot Arena</h3>
-            <p class="text-xs text-slate-400 mt-1">Programmeer je robot, vecht tegen Glitch-Bots en versla de Mecha-Eindbaas.</p>
+            <p class="text-[11px] text-slate-400 mt-1">Vecht tegen Glitch-Bots met spelling.</p>
           </div>
-          <span class="mt-2 px-4 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-cyber font-bold text-xs w-full text-center">START ARENA</span>
+          <span class="mt-1 px-4 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-cyber font-bold text-xs w-full text-center">START ARENA</span>
         </button>
 
-        <button onclick="startGameMode('lab')" class="cyber-panel lab-border rounded-2xl p-6 flex flex-col items-center gap-3 text-left hover:scale-[1.02] active:scale-95 transition group">
+        <button onclick="startGameMode('lab')" class="cyber-panel lab-border rounded-2xl p-5 flex flex-col items-center gap-3 text-left hover:scale-[1.02] active:scale-95 transition group">
           <span class="text-5xl group-hover:scale-110 transition">🧪🔬</span>
-          <div class="w-full">
+          <div class="w-full text-center">
             <h3 class="font-cyber text-base font-bold text-emerald-400">Bio-Chem Lab</h3>
-            <p class="text-xs text-slate-400 mt-1">Synthetiseer formules, reagens en experimenten als Hoofdlaborant.</p>
+            <p class="text-[11px] text-slate-400 mt-1">Synthetiseer formules als Hoofdlaborant.</p>
           </div>
-          <span class="mt-2 px-4 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-cyber font-bold text-xs w-full text-center">START LAB</span>
+          <span class="mt-1 px-4 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-cyber font-bold text-xs w-full text-center">START LAB</span>
         </button>
       </div>
 
-      <div class="text-[11px] text-slate-500 mt-4">
+      <!-- Highscores Paneel -->
+      <div class="w-full mt-4 cyber-panel rounded-2xl p-5 border border-amber-500/30">
+        <h3 class="font-cyber text-sm font-bold text-amber-400 mb-3 text-left flex items-center gap-2">
+          <span>🏆</span> TOP 5 HIGHSCORES
+        </h3>
+        <div id="highscores-list" class="flex flex-col gap-2">
+          <!-- Dynamically populated door JavaScript -->
+        </div>
+      </div>
+
+      <div class="text-[11px] text-slate-500 mt-2">
         Gedeelde woordenlijsten geladen vanuit <code class="text-cyan-400">woorden.json</code> 📚
       </div>
     </div>
   </div>
 
   <!-- VICTORY OVERLAY MODAL -->
-  <div id="victory-modal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="cyber-panel cyber-border-boss rounded-3xl p-6 md:p-10 max-w-lg w-full text-center flex flex-col gap-6 animate-float">
+  <div id="victory-modal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="cyber-panel cyber-border-boss rounded-3xl p-6 md:p-8 max-w-lg w-full text-center flex flex-col gap-5 animate-float my-8">
       <div class="text-6xl md:text-7xl" id="victory-emoji">🏆👑</div>
       <div>
         <h2 class="font-cyber text-2xl md:text-3xl font-black text-amber-400 tracking-wider" id="victory-title">MISSIE VOLTOOID!</h2>
-        <p class="text-xs md:text-sm text-slate-300 mt-2" id="victory-desc">Geweldig! Alle items zijn foutloos voltooid!</p>
+        <p class="text-xs md:text-sm text-slate-300 mt-2" id="victory-desc">Alle items zijn foutloos voltooid!</p>
       </div>
 
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 grid grid-cols-2 gap-4">
-        <div class="text-center">
-          <span class="text-[10px] uppercase text-slate-400 block" id="modal-currency-label">Verdiende Bits</span>
-          <span id="victory-bits-text" class="font-cyber font-bold text-amber-400 text-lg">💎 0</span>
+        <div class="text-center border-r border-slate-800">
+          <span class="text-[10px] uppercase text-slate-400 block mb-1">Ronde Score</span>
+          <span id="victory-session-score" class="font-cyber font-bold text-emerald-400 text-2xl">0</span>
+          <span class="text-[10px] text-slate-500 block">Punten</span>
         </div>
         <div class="text-center">
-          <span class="text-[10px] uppercase text-slate-400 block">Status</span>
-          <span class="font-cyber font-bold text-emerald-400 text-lg">EXCELLENT</span>
+          <span class="text-[10px] uppercase text-slate-400 block mb-1" id="modal-currency-label">Totaal Bits</span>
+          <span id="victory-bits-text" class="font-cyber font-bold text-amber-400 text-2xl">💎 0</span>
+          <span class="text-[10px] text-slate-500 block">Om te besteden</span>
         </div>
       </div>
 
-      <div class="flex gap-2">
-        <button type="button" onclick="returnToHub()" class="flex-1 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-cyber font-bold text-xs transition">
-          🏠 Terug naar Hub
-        </button>
-        <button type="button" onclick="restartGameSession()" class="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 hover:from-amber-300 hover:to-rose-400 text-slate-950 font-cyber font-black text-xs transition">
-          🚀 Opnieuw
-        </button>
+      <!-- Highscore Invoer -->
+      <div class="bg-slate-900/50 border border-amber-500/50 rounded-xl p-4 flex flex-col gap-3">
+        <label class="text-xs font-bold text-amber-300 text-left">Plaats je score op het bord!</label>
+        <div class="flex gap-2">
+          <input type="text" id="player-name-input" placeholder="Jouw naam..." maxlength="12" class="flex-grow bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white font-bold outline-none focus:border-amber-400">
+          <button type="button" onclick="saveHighscore()" class="px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm transition">Opslaan</button>
+        </div>
       </div>
+
+      <button type="button" onclick="returnToHub()" class="mt-2 text-xs text-slate-400 hover:text-white transition underline">Overslaan & Terug naar Hub</button>
     </div>
   </div>
 
@@ -146,7 +160,7 @@
       <button onclick="returnToHub()" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-lg hover:bg-slate-700 transition" title="Terug naar Hub">🏠</button>
       <div>
         <h1 id="app-title-header" class="font-cyber text-lg md:text-xl font-black tracking-wider text-cyan-400">CODEBOT ARENA</h1>
-        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v3.1</p>
+        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v3.2</p>
       </div>
     </div>
 
@@ -158,11 +172,11 @@
       </div>
       <div class="h-6 w-[1px] bg-slate-700"></div>
       <div class="text-center">
-        <span class="text-[10px] uppercase text-slate-400 block">Streak</span>
-        <span id="hud-streak" class="font-cyber font-bold text-emerald-400 text-base md:text-lg">⚡ 0</span>
+        <span class="text-[10px] uppercase text-slate-400 block">Ronde Pnt</span>
+        <span id="hud-session-score" class="font-cyber font-bold text-emerald-400 text-base md:text-lg">0</span>
       </div>
-      <div class="h-6 w-[1px] bg-slate-700"></div>
-      <div class="text-center">
+      <div class="h-6 w-[1px] bg-slate-700 hidden md:block"></div>
+      <div class="text-center hidden md:block">
         <span class="text-[10px] uppercase text-slate-400 block">Fase</span>
         <span id="hud-phase" class="font-cyber font-bold text-purple-400 text-xs md:text-sm">FASE 1</span>
       </div>
@@ -266,7 +280,7 @@
           <div id="word-display-box" class="font-cyber text-lg md:text-2xl tracking-[0.2em] text-cyan-300 font-bold break-words max-w-full">
             KLIK OP 'SPREEK UIT'
           </div>
-          <div id="audio-status-indicator" class="text-[11px] text-slate-500 mt-1.5">Klaar voor synthese...</div>
+          <div id="audio-status-indicator" class="text-[11px] text-slate-500 mt-1.5">Klaar voor invoer...</div>
         </div>
 
         <!-- Input Form -->
@@ -278,11 +292,11 @@
             autocorrect="off" 
             autocapitalize="off" 
             spellcheck="false"
-            placeholder="Typ hier de formule of het woord..."
+            placeholder="Typ hier de opdracht..."
             class="flex-grow bg-slate-900 border-2 border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-3.5 text-base md:text-xl font-bold text-white tracking-wide outline-none transition"
           />
           <button type="submit" id="btn-compile" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-cyan-500/25 active:scale-95 transition whitespace-nowrap">
-            ⚡ SYNTHETISEER
+            ⚡ COMPILEER
           </button>
         </form>
 
@@ -301,7 +315,7 @@
               <div id="debug-user-chars" class="flex flex-wrap gap-1.5"></div>
             </div>
             <div>
-              <span class="text-[10px] uppercase text-emerald-400 block mb-1.5">Verwachte Formule:</span>
+              <span class="text-[10px] uppercase text-emerald-400 block mb-1.5">Verwachte Invoer:</span>
               <div id="debug-target-chars" class="flex flex-wrap gap-1.5"></div>
             </div>
           </div>
@@ -469,7 +483,7 @@
 
   <script>
     // ==========================================
-    // 1. STATE & THEMA UPGRADES (ARENA vs LAB)
+    // 1. STATE, DATA & MODES
     // ==========================================
     const DEFAULT_LISTS = {
       "Blok 3 - Week 4": [
@@ -505,7 +519,8 @@
       sentencesQueue: [],
       currentPhase: 'words',
       currentIndex: 0,
-      bits: 50,
+      bits: 0,            // Totaal om uit te geven
+      sessionScore: 0,    // Score specifiek voor deze spelronde!
       streak: 0,
       level: 1,
       playerHp: 100,
@@ -527,7 +542,7 @@
     const THEMES = {
       arena: {
         title: "CODEBOT ARENA",
-        subtitle: "Spelling Compiler v3.1 • Cyber Arena",
+        subtitle: "Spelling Compiler v3.2 • Cyber Arena",
         currency: "Data-Bits",
         currencySymbol: "💎",
         playerName: "Nova-Bit v1",
@@ -552,7 +567,7 @@
       },
       lab: {
         title: "BIO-CHEM LAB",
-        subtitle: "Wetenschappelijk Synthese Lab v3.1",
+        subtitle: "Wetenschappelijk Synthese Lab v3.2",
         currency: "Lab Credits",
         currencySymbol: "⚗️",
         playerName: "Dr. Lab-Bot",
@@ -565,7 +580,7 @@
         compileBtn: "🧪 SYNTHETISEER",
         megaBtn: "💥 ACTIVEER BIO-CORE",
         shopTitle: "🧬 Lab Apparatuur & Upgrades",
-        shopDesc: "Gebruik je Lab Credits om geavanceerde microscopen en reagens-injectoren te kopen.",
+        shopDesc: "Gebruik je Lab Credits om geavanceerde microscopen en injectoren te kopen.",
         builderTitle: "🔬 Experiment Protocol Configureren",
         builderDesc: "Stel jouw ALS -> DAN reagens-voorwaarden in!",
         bots: [
@@ -583,7 +598,6 @@
       { name: 'Trojan-Golem', icon: '👹' },
       { name: 'Null-Pointer Drone', icon: '👁️‍🗨️' }
     ];
-
     const BOSSES = [
       { name: 'MEGA-OVERLORD TITAN', icon: '🐲' },
       { name: 'CYBER-KRAKEN PRIME', icon: '🦑' },
@@ -605,25 +619,23 @@
     }
 
     function normalizeText(str) {
-      if (state.strictPunctuation) {
-        return str.trim().replace(/\s+/g, ' ');
-      }
-      return str
-        .toLowerCase()
-        .replace(/[.,!?;:"'()]/g, '')
-        .trim()
-        .replace(/\s+/g, ' ');
+      if (state.strictPunctuation) { return str.trim().replace(/\s+/g, ' '); }
+      return str.toLowerCase().replace(/[.,!?;:"'()]/g, '').trim().replace(/\s+/g, ' ');
     }
 
+    // Navigatie & Theme UI
     function startGameMode(theme) {
       state.gameTheme = theme;
+      state.sessionScore = 0; // Reset de ronde score bij de start!
       document.getElementById('hub-lobby').classList.add('hidden');
       applyThemeUI();
       loadNextWord(false);
     }
 
     function returnToHub() {
+      document.getElementById('victory-modal').classList.add('hidden');
       document.getElementById('hub-lobby').classList.remove('hidden');
+      renderHighscores(); // Ververs het scorebord
     }
 
     function applyThemeUI() {
@@ -633,8 +645,8 @@
       document.getElementById('app-title-header').textContent = t.title;
       document.getElementById('app-subtitle-header').textContent = t.subtitle;
       document.getElementById('currency-label').textContent = t.currency;
-      document.getElementById('modal-currency-label').textContent = `Verdiende ${t.currency}`;
       document.getElementById('hud-bits').textContent = `${t.currencySymbol} ${state.bits}`;
+      
       document.getElementById('player-bot-name').textContent = t.playerName;
       document.getElementById('player-bot-avatar').textContent = t.playerAvatar;
       document.getElementById('enemy-bot-name').textContent = t.enemyName;
@@ -647,14 +659,65 @@
       document.getElementById('builder-title').textContent = t.builderTitle;
       document.getElementById('builder-desc').textContent = t.builderDesc;
 
-      if (state.gameTheme === 'lab') {
-        root.classList.add('lab-theme');
-      } else {
-        root.classList.remove('lab-theme');
-      }
+      if (state.gameTheme === 'lab') { root.classList.add('lab-theme'); } 
+      else { root.classList.remove('lab-theme'); }
+      
       renderGarage();
+      updateHUD();
     }
 
+    // Highscore Systeem
+    function renderHighscores() {
+      const list = document.getElementById('highscores-list');
+      if (!list) return;
+      let highscores = [];
+      try {
+        const hs = localStorage.getItem('codebot_highscores');
+        if (hs) highscores = JSON.parse(hs);
+      } catch(e){}
+
+      if (highscores.length === 0) {
+        list.innerHTML = '<div class="text-xs text-slate-500 text-center py-3 border border-dashed border-slate-700 rounded-lg">Speel een ronde om de eerste highscore te zetten!</div>';
+        return;
+      }
+
+      list.innerHTML = highscores.map((entry, i) => `
+        <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+          <div class="flex items-center gap-3">
+            <span class="font-cyber font-bold ${i===0 ? 'text-amber-400 text-sm' : 'text-slate-500 text-xs'}">#${i+1}</span>
+            <span class="font-bold text-sm text-cyan-300">${entry.name}</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-[10px] text-slate-500 hidden sm:block">${entry.date}</span>
+            <span class="font-cyber font-bold text-emerald-400 text-sm">${entry.score} pnt</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function saveHighscore() {
+      const nameInput = document.getElementById('player-name-input').value.trim();
+      const name = nameInput || "Onbekende Held";
+      const score = state.sessionScore;
+
+      let highscores = [];
+      try {
+        const hs = localStorage.getItem('codebot_highscores');
+        if (hs) highscores = JSON.parse(hs);
+      } catch(e){}
+
+      highscores.push({ name, score, date: new Date().toLocaleDateString() });
+      highscores.sort((a,b) => b.score - a.score);
+      highscores = highscores.slice(0, 5); // Bewaar alleen de Top 5
+
+      try { localStorage.setItem('codebot_highscores', JSON.stringify(highscores)); } catch(e){}
+      
+      // Clear input and return
+      document.getElementById('player-name-input').value = "";
+      returnToHub();
+    }
+
+    // JSON Fetch & Opslag
     async function fetchWordsJson() {
       try {
         const response = await fetch('woorden.json?t=' + Date.now());
@@ -662,9 +725,7 @@
           const jsonDa = await response.json();
           if (jsonDa && typeof jsonDa === 'object' && Object.keys(jsonDa).length > 0) {
             state.lists = jsonDa;
-            if (!state.lists[state.activeListName]) {
-              state.activeListName = Object.keys(state.lists)[0];
-            }
+            if (!state.lists[state.activeListName]) state.activeListName = Object.keys(state.lists)[0];
             saveAllListsToStorage();
             renderListSelector();
             processQueues();
@@ -672,9 +733,7 @@
             return;
           }
         }
-      } catch (e) {
-        console.warn("Kon woorden.json niet ophalen, val terug op lokale opslag.");
-      }
+      } catch (e) { console.warn("Kon woorden.json niet ophalen."); }
 
       try {
         const savedLists = localStorage.getItem('codebot_all_lists');
@@ -701,9 +760,7 @@
         if (savedUnlocked) state.unlockedBots = JSON.parse(savedUnlocked);
         const savedBot = localStorage.getItem('codebot_selected_bot');
         if (savedBot) state.selectedBot = savedBot;
-      } catch (e) {
-        console.warn("LocalStorage niet beschikbaar.");
-      }
+      } catch (e) {}
 
       fetchWordsJson().then(() => {
         document.getElementById('tts-engine-select').value = state.ttsEngine;
@@ -734,11 +791,9 @@
       state.currentPhase = 'words';
       state.currentIndex = 0;
       processQueues();
-
       try { localStorage.setItem('codebot_active_list_name', state.activeListName); } catch(e){}
       const currentItems = state.lists[state.activeListName] || [];
       document.getElementById('admin-words-input').value = currentItems.join('\n');
-      loadNextWord(false);
     }
 
     function createNewListPrompt() {
@@ -746,7 +801,6 @@
       if (!name || !name.trim()) return;
       const cleanName = name.trim();
       if (state.lists[cleanName]) { alert("Bestaat al!"); return; }
-
       state.lists[cleanName] = ["voorbeeld", "lijst", "zin van drie woorden"];
       state.activeListName = cleanName;
       saveAllListsToStorage();
@@ -760,7 +814,6 @@
       if (!name || !name.trim() || name.trim() === oldName) return;
       const newName = name.trim();
       if (state.lists[newName]) { alert("Bestaat al!"); return; }
-
       state.lists[newName] = state.lists[oldName];
       delete state.lists[oldName];
       state.activeListName = newName;
@@ -782,17 +835,14 @@
       const raw = document.getElementById('admin-words-input').value;
       const parsed = raw.split(/[\n;]+/).map(w => w.trim()).filter(w => w.length > 0);
       if (parsed.length === 0) return;
-
       state.lists[state.activeListName] = parsed;
       state.currentPhase = 'words';
       state.currentIndex = 0;
       processQueues();
       saveAllListsToStorage();
-
       const msg = document.getElementById('admin-save-msg');
       msg.classList.remove('hidden');
       setTimeout(() => msg.classList.add('hidden'), 3000);
-      loadNextWord(false);
     }
 
     function saveAllListsToStorage() {
@@ -1085,7 +1135,9 @@
     function triggerVictory() {
       playVictoryFanfare();
       const t = THEMES[state.gameTheme];
+      document.getElementById('modal-currency-label').textContent = `Totaal ${t.currency}`;
       document.getElementById('victory-bits-text').textContent = `${t.currencySymbol} ${state.bits}`;
+      document.getElementById('victory-session-score').textContent = state.sessionScore;
       document.getElementById('victory-title').textContent = state.gameTheme === 'lab' ? "LAB EXPERIMENT GESLAAGD!" : "EINDBAAS VERSLAGEN!";
       document.getElementById('victory-desc').textContent = state.gameTheme === 'lab' ? "Fantastisch! Alle formulieren zijn foutloos gesynthetiseerd." : "Geweldig! Alle zinnen zijn foutloos gecompileerd!";
       document.getElementById('victory-modal').classList.remove('hidden');
@@ -1095,6 +1147,7 @@
       document.getElementById('victory-modal').classList.add('hidden');
       state.currentPhase = 'words';
       state.currentIndex = 0;
+      state.sessionScore = 0;
       state.playerHp = 100;
       state.enemyHp = state.enemyMaxHp;
       processQueues();
@@ -1227,7 +1280,7 @@
         state.shieldActive = true;
         damage = isBossRush ? 75 : 20;
         creditsEarned = isBossRush ? 20 : 5;
-        setAudioStatus("🛠️ Bug gepatcht! Schild actief.");
+        setAudioStatus("🛠️ Fout hersteld! Schild actief.");
       } else {
         state.streak++;
         let conditionMet = false;
@@ -1252,7 +1305,10 @@
         }
       }
 
+      // Geef de verdiensten aan zowel het Totaal (shop) als de Sessie (highscore)
       state.bits += creditsEarned;
+      state.sessionScore += creditsEarned;
+      
       try { localStorage.setItem('codebot_bits', state.bits); } catch(e){}
 
       state.enemyHp = Math.max(0, state.enemyHp - damage);
@@ -1377,6 +1433,7 @@
     function updateHUD() {
       const t = THEMES[state.gameTheme];
       document.getElementById('hud-bits').textContent = `${t.currencySymbol} ${state.bits}`;
+      document.getElementById('hud-session-score').textContent = state.sessionScore;
       document.getElementById('hud-streak').textContent = `⚡ ${state.streak}`;
 
       document.getElementById('player-hp-bar').style.width = `${state.playerHp}%`;
@@ -1482,6 +1539,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       initSpeechVoices();
       updateLogicRule();
+      renderHighscores();
       loadState();
     });
   </script>

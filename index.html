@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="CodeBot Arena" />
+  <title>CodeBot Arena: Spelling & Programmeren</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background-color: #0b0f19;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+    .font-cyber { font-family: 'Orbitron', sans-serif; }
+    .cyber-panel {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid #1e293b;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.1);
+      backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+    }
+    .cyber-border-cyan { border-color: #06b6d4; box-shadow: 0 0 12px rgba(6, 182, 212, 0.3); }
+    .cyber-border-purple { border-color: #a855f7; box-shadow: 0 0 12px rgba(168, 85, 247, 0.3); }
+    .cyber-border-boss { 
+      border-color: #f59e0b !important; 
+      box-shadow: 0 0 35px rgba(245, 158, 11, 0.4), inset 0 0 20px rgba(225, 29, 72, 0.25) !important; 
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    
+    @keyframes boss-pulse {
+      0%, 100% { transform: scale(1) translateY(0px); filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.8)); }
+      50% { transform: scale(1.08) translateY(-6px); filter: drop-shadow(0 0 28px rgba(225, 29, 72, 0.9)); }
+    }
+    .animate-boss { animation: boss-pulse 2s ease-in-out infinite; }
+
+    @keyframes laser-shoot {
+      0% { width: 0%; opacity: 1; }
+      50% { width: 100%; opacity: 1; }
+      100% { width: 100%; opacity: 0; }
+    }
+    .laser-beam {
+      height: 8px;
+      border-radius: 999px;
+      animation: laser-shoot 0.5s ease-out forwards;
+    }
+    .mega-laser-beam {
+      height: 22px;
+      border-radius: 999px;
+      animation: laser-shoot 0.85s ease-out forwards;
+    }
+
+    @keyframes screen-shake {
+      0%, 100% { transform: translate(0, 0); }
+      20% { transform: translate(-6px, 4px); }
+      40% { transform: translate(6px, -4px); }
+      60% { transform: translate(-4px, -3px); }
+      80% { transform: translate(4px, 3px); }
+    }
+    .shake-effect { animation: screen-shake 0.45s ease-in-out; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-3 md:p-6 select-none relative">
+
+  <!-- VICTORY OVERLAY MODAL -->
+  <div id="victory-modal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="cyber-panel cyber-border-boss rounded-3xl p-6 md:p-10 max-w-lg w-full text-center flex flex-col gap-6 animate-float">
+      <div class="text-6xl md:text-7xl">🏆👑</div>
+      <div>
+        <h2 class="font-cyber text-2xl md:text-3xl font-black text-amber-400 tracking-wider">EINDBAAS VERSLAGEN!</h2>
+        <p class="text-xs md:text-sm text-slate-300 mt-2">Geweldig! Alle zinnen van de Boss Rush Finale (minimaal 3 woorden) zijn foutloos gecompileerd!</p>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 grid grid-cols-2 gap-4">
+        <div class="text-center">
+          <span class="text-[10px] uppercase text-slate-400 block">Verdiende Bits</span>
+          <span id="victory-bits-text" class="font-cyber font-bold text-amber-400 text-lg">💎 0</span>
+        </div>
+        <div class="text-center">
+          <span class="text-[10px] uppercase text-slate-400 block">Status</span>
+          <span class="font-cyber font-bold text-emerald-400 text-lg">GEWINNER</span>
+        </div>
+      </div>
+
+      <button type="button" onclick="restartGameSession()" class="w-full py-4 rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 hover:from-amber-300 hover:to-rose-400 text-slate-950 font-cyber font-black text-base tracking-wider shadow-lg shadow-amber-500/30 active:scale-95 transition">
+        🚀 OPNIEUW SPELEN / NIEUWE RONDE
+      </button>
+    </div>
+  </div>
+
+  <!-- TOP NAVIGATION & HUD -->
+  <header class="max-w-5xl w-full mx-auto cyber-panel rounded-2xl p-4 mb-4 flex flex-wrap items-center justify-between gap-4 border-b-2 border-cyan-500/40">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-xl">🤖</div>
+      <div>
+        <h1 class="font-cyber text-lg md:text-xl font-black tracking-wider text-cyan-400">CODEBOT ARENA</h1>
+        <p class="text-xs text-slate-400">Spelling Compiler v2.6</p>
+      </div>
+    </div>
+
+    <!-- Stats HUD -->
+    <div class="flex items-center gap-4 md:gap-6 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800">
+      <div class="text-center">
+        <span class="text-[10px] uppercase text-slate-400 block">Data-Bits</span>
+        <span id="hud-bits" class="font-cyber font-bold text-amber-400 text-base md:text-lg">💎 0</span>
+      </div>
+      <div class="h-6 w-[1px] bg-slate-700"></div>
+      <div class="text-center">
+        <span class="text-[10px] uppercase text-slate-400 block">Streak</span>
+        <span id="hud-streak" class="font-cyber font-bold text-emerald-400 text-base md:text-lg">⚡ 0</span>
+      </div>
+      <div class="h-6 w-[1px] bg-slate-700"></div>
+      <div class="text-center">
+        <span class="text-[10px] uppercase text-slate-400 block">Fase</span>
+        <span id="hud-phase" class="font-cyber font-bold text-purple-400 text-xs md:text-sm">FASE 1: WOORDEN</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex items-center gap-2">
+      <button onclick="switchTab('arena')" id="tab-arena" class="px-3 py-2 rounded-lg text-xs md:text-sm font-bold bg-cyan-500 text-slate-950 transition">⚔️ Arena</button>
+      <button onclick="switchTab('codelab')" id="tab-codelab" class="px-3 py-2 rounded-lg text-xs md:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">💻 Code-Lab</button>
+      <button onclick="switchTab('admin')" id="tab-admin" class="px-3 py-2 rounded-lg text-xs md:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition" title="Ouder / Woorden Paneel">⚙️ Woorden & Audio</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT AREA -->
+  <main id="main-container" class="max-w-5xl w-full mx-auto flex-grow flex flex-col gap-4">
+
+    <!-- ================= TAB 1: ARENA (BATTLE) ================= -->
+    <section id="view-arena" class="flex flex-col gap-4">
+      
+      <!-- BOSS RUSH FINALE BANNER -->
+      <div id="boss-alert-banner" class="hidden bg-gradient-to-r from-amber-600/30 via-rose-600/40 to-amber-600/30 border-2 border-amber-400 rounded-2xl px-4 py-2.5 flex items-center justify-between animate-pulse">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">👑</span>
+          <div>
+            <span class="font-cyber text-xs md:text-sm font-black text-amber-300 tracking-wider block">🚨 GROTE FINALE: BOSS RUSH MODE! 🚨</span>
+            <span class="text-[11px] text-amber-100">Losse woorden voltooid! Versla de eindbaas met deze zinnen (min. 3 woorden) om te winnen!</span>
+          </div>
+        </div>
+        <span id="boss-progress-badge" class="px-2.5 py-1 rounded-full bg-amber-400 text-slate-950 font-cyber font-black text-xs">Zin 1 / 1</span>
+      </div>
+
+      <!-- Battle Stage -->
+      <div id="battle-stage-panel" class="cyber-panel rounded-2xl p-6 relative overflow-hidden min-h-[230px] flex flex-col justify-between border border-slate-800">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#06b6d4 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+        <div class="relative z-10 grid grid-cols-2 gap-4 items-center">
+          <!-- Player Bot -->
+          <div class="flex flex-col items-center sm:items-start">
+            <div class="flex items-center gap-2 mb-1">
+              <span id="player-bot-name" class="font-cyber text-xs md:text-sm font-bold text-cyan-400">Nova-Bit v1</span>
+              <span id="shield-badge" class="hidden px-2 py-0.5 text-[10px] bg-blue-500/30 border border-blue-400 text-blue-300 rounded-full">🛡️ Schild Actief</span>
+            </div>
+            <div class="w-full max-w-[200px] bg-slate-800 h-3 rounded-full overflow-hidden mb-3 border border-slate-700">
+              <div id="player-hp-bar" class="bg-gradient-to-r from-emerald-500 to-cyan-400 h-full transition-all duration-300" style="width: 100%"></div>
+            </div>
+            <div id="player-bot-avatar" class="text-6xl md:text-7xl animate-float filter drop-shadow-[0_0_12px_rgba(6,182,212,0.5)]">🤖</div>
+          </div>
+
+          <!-- Enemy Glitch Bot / Boss -->
+          <div class="flex flex-col items-center sm:items-end">
+            <div class="flex items-center gap-2 mb-1">
+              <span id="boss-crown-badge" class="hidden px-2 py-0.5 text-[10px] bg-amber-500 text-slate-950 font-cyber font-black rounded">👑 BOSS</span>
+              <span id="enemy-bot-name" class="font-cyber text-xs md:text-sm font-bold text-rose-400">Glitch-Spider #1</span>
+              <span id="enemy-hp-text" class="text-xs text-slate-400">(100/100)</span>
+            </div>
+            <div class="w-full max-w-[200px] bg-slate-800 h-3 rounded-full overflow-hidden mb-3 border border-slate-700">
+              <div id="enemy-hp-bar" class="bg-gradient-to-r from-rose-600 to-orange-500 h-full transition-all duration-300" style="width: 100%"></div>
+            </div>
+            <div id="enemy-bot-avatar" class="text-6xl md:text-7xl animate-float filter drop-shadow-[0_0_12px_rgba(244,63,94,0.5)]">👾</div>
+          </div>
+        </div>
+
+        <!-- Laser Container -->
+        <div id="laser-container" class="my-2 h-6 flex items-center justify-center relative"></div>
+
+        <!-- Active IF-THEN Rule Banner -->
+        <div class="relative z-10 bg-slate-900/90 border border-purple-500/40 rounded-xl px-3 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div>
+            <span class="text-purple-400 font-bold">ACTIEF SCRIPT:</span>
+            <span id="active-script-display" class="text-slate-300 ml-1">ALS [Streak >= 2] DAN [Vuur Dubbele Laser]</span>
+          </div>
+          <span id="script-trigger-status" class="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400">Wacht op conditie...</span>
+        </div>
+      </div>
+
+      <!-- Compiler Console -->
+      <div id="compiler-console-panel" class="cyber-panel cyber-border-cyan rounded-2xl p-5 md:p-6 flex flex-col gap-4">
+        
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 text-xs font-bold" id="word-progress-badge">Opdracht 1 / 10</span>
+            <span class="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-xs" id="word-length-hint">Lengte: ? letters</span>
+          </div>
+
+          <!-- Audio Buttons -->
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="speakCurrentWord(0.95)" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs md:text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20 active:scale-95 transition">
+              🔊 Spreek Uit
+            </button>
+            <button type="button" onclick="speakCurrentWord(0.65)" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs md:text-sm flex items-center gap-1 active:scale-95 transition" title="Langzaam uitspreken">
+              🐢 Langzaam
+            </button>
+            <button type="button" onclick="triggerFlashHint()" id="btn-flash" class="px-3 py-2 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/40 font-bold text-xs md:text-sm active:scale-95 transition" title="Scan kort op het scherm">
+              👁️ Scan
+            </button>
+          </div>
+        </div>
+
+        <!-- Flash Preview Area / Masked Prompt -->
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-center min-h-[76px] flex flex-col items-center justify-center relative">
+          <div id="word-display-box" class="font-cyber text-lg md:text-2xl tracking-[0.2em] text-cyan-300 font-bold break-words max-w-full">
+            KLIK OP 'SPREEK UIT'
+          </div>
+          <div id="audio-status-indicator" class="text-[11px] text-slate-500 mt-1.5">Klaar voor compilatie...</div>
+        </div>
+
+        <!-- Input Form -->
+        <form onsubmit="handleCompileSubmit(event)" class="flex flex-col sm:flex-row gap-3">
+          <input 
+            type="text" 
+            id="word-input" 
+            autocomplete="off" 
+            autocorrect="off" 
+            autocapitalize="off" 
+            spellcheck="false"
+            placeholder="Typ hier het woord of de zin..."
+            class="flex-grow bg-slate-900 border-2 border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-3.5 text-base md:text-xl font-bold text-white tracking-wide outline-none transition"
+          />
+          <button type="submit" id="btn-compile" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-cyan-500/25 active:scale-95 transition whitespace-nowrap">
+            ⚡ COMPILEER
+          </button>
+        </form>
+
+        <!-- VISUAL DEBUGGER -->
+        <div id="debugger-panel" class="hidden bg-rose-950/30 border-2 border-rose-500/60 rounded-xl p-4 flex flex-col gap-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span id="debugger-title" class="font-cyber text-xs md:text-sm font-bold text-rose-400 flex items-center gap-2">
+              🐞 SYNTAX BUG GEDETECTEERD — VISUELE DEBUGGER
+            </span>
+            <span class="text-xs text-rose-300">Corrigeer je invoer hierboven om te patchen (+Schild!)</span>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-950/90 p-3 rounded-lg border border-slate-800">
+            <div>
+              <span class="text-[10px] uppercase text-slate-400 block mb-1.5">Jouw Invoer (Groen = Goed, Rood = Bug):</span>
+              <div id="debug-user-chars" class="flex flex-wrap gap-1.5"></div>
+            </div>
+            <div>
+              <span class="text-[10px] uppercase text-emerald-400 block mb-1.5">Verwachte Broncode (Doel):</span>
+              <div id="debug-target-chars" class="flex flex-wrap gap-1.5"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= TAB 2: CODE-LAB & GARAGE ================= -->
+    <section id="view-codelab" class="hidden flex-col gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- IF-THEN Logic Builder -->
+        <div class="cyber-panel cyber-border-purple rounded-2xl p-5 flex flex-col gap-4">
+          <div>
+            <h2 class="font-cyber text-base md:text-lg font-bold text-purple-400">🧠 Robot Logica Programmeren</h2>
+            <p class="text-xs text-slate-400">Stel jouw eigen <code class="text-purple-300">ALS -> DAN</code> code-regel in voor tijdens het gevecht!</p>
+          </div>
+
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col gap-3">
+            <div>
+              <label class="text-xs font-bold text-cyan-400 block mb-1">ALS (IF) Conditie:</label>
+              <select id="select-if" onchange="updateLogicRule()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-purple-400">
+                <option value="streak2">Streak >= 2 achter elkaar goed</option>
+                <option value="len7">Lengte >= 7 letters (Lange code)</option>
+                <option value="bossrush">We zitten in de Boss Rush Finale (Zinnen)</option>
+                <option value="fast">Snel gecompileerd (Binnen 6 seconden)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="text-xs font-bold text-emerald-400 block mb-1">DAN (THEN) Actie:</label>
+              <select id="select-then" onchange="updateLogicRule()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-purple-400">
+                <option value="double_dmg">Vuur Dubbele Laser (+50% Schade)</option>
+                <option value="mine_bits">Activeer Bit-Miner (+15 Extra Data-Bits)</option>
+                <option value="shield">Activeer Firewall Schild + Herstel 20 HP</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="bg-purple-950/30 border border-purple-500/30 rounded-xl p-3 text-xs font-mono text-purple-200">
+            <div class="text-slate-500">// Voorbeeld van jouw gecompileerde robot-code:</div>
+            <div id="code-preview-block" class="mt-1 text-emerald-300"></div>
+          </div>
+        </div>
+
+        <!-- Bot Garage / Shop -->
+        <div class="cyber-panel rounded-2xl p-5 flex flex-col gap-4">
+          <div>
+            <h2 class="font-cyber text-base md:text-lg font-bold text-cyan-400">🔧 Robot Garage & Upgrades</h2>
+            <p class="text-xs text-slate-400">Gebruik je verdiende Data-Bits om nieuwe Chassissen vrij te spelen.</p>
+          </div>
+
+          <div id="garage-list" class="flex flex-col gap-2.5">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= TAB 3: ADMIN & AUDIO DIAGNOSE ================= -->
+    <section id="view-admin" class="hidden flex-col gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <!-- Word & Sentence List Editor -->
+        <div class="cyber-panel rounded-2xl p-5 flex flex-col gap-3">
+          <h2 class="font-cyber text-base md:text-lg font-bold text-cyan-400">📋 Woorden & Zinnen Plakken</h2>
+          <p class="text-xs text-slate-400">
+            Zet elk item op een eigen regel. Items met <strong>minimaal 3 woorden</strong> worden automatisch de <strong>👑 Boss Rush Finale</strong>!
+          </p>
+          
+          <textarea 
+            id="admin-words-input" 
+            rows="8"
+            class="w-full bg-slate-950 border border-slate-700 focus:border-cyan-400 rounded-xl p-3 text-sm text-white font-mono outline-none"
+            placeholder="bibliotheek&#10;chauffeur&#10;laboratorium&#10;De professor werkt in het laboratorium&#10;Wij lenen boeken in de bibliotheek"
+          ></textarea>
+
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs text-slate-400">Modus bij items:</span>
+            <select id="admin-game-mode" onchange="saveAdminSettings()" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
+              <option value="flash">Flits-Scan (Kort tonen + uitspreken)</option>
+              <option value="audio">Blind Audio-Dictee (Alleen uitspreken)</option>
+              <option value="vowels">Klinker-Puzzel (Klinkers verborgen als _)</option>
+            </select>
+          </div>
+
+          <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer mt-1">
+            <input type="checkbox" id="admin-strict-punct" onchange="saveAdminSettings()" class="rounded bg-slate-900 border-slate-700 text-cyan-500" />
+            <span>Strenge controle op hoofdletters en punten in zinnen (Standaard: uit)</span>
+          </label>
+
+          <div class="flex gap-2 mt-1">
+            <button type="button" onclick="saveWordList()" class="flex-grow py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs md:text-sm transition">
+              💾 Lijst Opslaan & Activeren
+            </button>
+            <button type="button" onclick="resetDefaultWords()" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition">
+              Standaardlijst
+            </button>
+          </div>
+          <div id="admin-save-msg" class="text-xs text-emerald-400 hidden">✅ Lijst opgeslagen (min. 3 woorden = Boss Rush)!</div>
+        </div>
+
+        <!-- Audio Troubleshooter & Engine Selector -->
+        <div class="cyber-panel rounded-2xl p-5 flex flex-col gap-4 border border-amber-500/40">
+          <div>
+            <h2 class="font-cyber text-base md:text-lg font-bold text-amber-400">🔊 Spraak (TTS) Diagnose & Instellingen</h2>
+            <p class="text-xs text-slate-400">Kies hieronder hoe de items uitgesproken worden.</p>
+          </div>
+
+          <!-- Engine Selection -->
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex flex-col gap-2">
+            <label class="text-xs font-bold text-cyan-300">Kies Spraak-Engine (TTS Methode):</label>
+            <select id="tts-engine-select" onchange="changeTTSEngine()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs md:text-sm text-white outline-none">
+              <option value="auto">⚡ Automatisch (Browser Stem + Cloud Fallback)</option>
+              <option value="cloud">☁️ Forceer Cloud-Audio Stream (Google GTX)</option>
+              <option value="native">💻 Alleen Ingebouwde Browser/OS Stem (Offline)</option>
+            </select>
+
+            <label class="text-xs font-bold text-slate-400 mt-2">Specifieke Browser-stem (indien beschikbaar):</label>
+            <select id="tts-voice-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-300 outline-none">
+              <option value="">Zoeken naar Nederlandse stemmen...</option>
+            </select>
+          </div>
+
+          <!-- Diagnostic Status Box -->
+          <div id="tts-diagnostic-box" class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-300 space-y-1">
+            <div>Status: <span id="diag-status" class="text-amber-400">Controleren...</span></div>
+            <div>Gevonden NL-stemmen: <span id="diag-voices">0</span></div>
+            <div>Laatste actie: <span id="diag-last-action" class="text-cyan-300">Geen</span></div>
+          </div>
+
+          <!-- Test Buttons -->
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="testAudioSystem('native')" class="flex-1 py-2 px-3 rounded-xl bg-cyan-500/20 border border-cyan-500/50 hover:bg-cyan-500/30 text-cyan-300 font-bold text-xs transition">
+              ▶️ Test Browser-Stem
+            </button>
+            <button type="button" onclick="testAudioSystem('cloud')" class="flex-1 py-2 px-3 rounded-xl bg-amber-500/20 border border-amber-500/50 hover:bg-amber-500/30 text-amber-300 font-bold text-xs transition">
+              ☁️ Test Cloud-Stem
+            </button>
+            <button type="button" onclick="playMegaLaserSound()" class="py-2 px-3 rounded-xl bg-purple-500/20 border border-purple-500/50 hover:bg-purple-500/30 text-purple-300 font-bold text-xs transition">
+              💥 Test Mega-Laser
+            </button>
+          </div>
+
+          <!-- Mistake Log -->
+          <div class="border-t border-slate-800 pt-3">
+            <span class="text-xs font-bold text-rose-400 block mb-1">🐞 Debug-Logboek (Moeilijke items deze sessie):</span>
+            <div id="admin-mistake-log" class="text-xs text-slate-400 italic">Nog geen foutjes gemaakt.</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ==========================================
+    // 1. STATE & MINIMAAL 3 WOORDEN LOGICA
+    // ==========================================
+    const DEFAULT_INPUTS = [
+      "bibliotheek",
+      "laboratorium",
+      "programmeur",
+      "elektriciteit",
+      "microscoop",
+      "satelliet",
+      "temperatuur",
+      "rechercheur",
+      "De professor werkt in het laboratorium",
+      "Wij lenen spannende boeken in de bibliotheek"
+    ];
+
+    let state = {
+      rawItems: [...DEFAULT_INPUTS],
+      wordsQueue: [],
+      sentencesQueue: [],
+      currentPhase: 'words', // 'words' of 'bossrush'
+      currentIndex: 0,
+      bits: 50,
+      streak: 0,
+      level: 1,
+      playerHp: 100,
+      enemyHp: 100,
+      enemyMaxHp: 100,
+      shieldActive: false,
+      wordStartTime: Date.now(),
+      isPatchingBug: false,
+      gameMode: 'flash',
+      strictPunctuation: false,
+      ttsEngine: 'auto',
+      ifRule: 'streak2',
+      thenRule: 'double_dmg',
+      mistakes: {},
+      selectedBot: 'nova',
+      unlockedBots: ['nova']
+    };
+
+    const BOTS = [
+      { id: 'nova', name: 'Nova-Bit v1', icon: '🤖', cost: 0, desc: 'Standaard gevechts-compiler' },
+      { id: 'valkyrie', name: 'Quantum-Valkyrie', icon: '🦾', cost: 100, desc: 'Snelle cyber-mecha' },
+      { id: 'dragon', name: 'Omega-Dragon.exe', icon: '🐉', cost: 250, desc: 'Vuurspuwende code-draak' },
+      { id: 'alien', name: 'Astro-Synth X9', icon: '🛸', cost: 400, desc: 'Intergalactische cruiser' }
+    ];
+
+    const ENEMIES = [
+      { name: 'Glitch-Spider #1', icon: '👾' },
+      { name: 'Syntax-Creeper', icon: '🕷️' },
+      { name: 'Trojan-Golem', icon: '👹' },
+      { name: 'Null-Pointer Drone', icon: '👁️‍🗨️' }
+    ];
+
+    const BOSSES = [
+      { name: 'MEGA-OVERLORD TITAN', icon: '🐲' },
+      { name: 'CYBER-KRAKEN PRIME', icon: '🦑' },
+      { name: 'QUANTUM DOOM-CORE', icon: '☄️' }
+    ];
+
+    // NIEUW: Een item telt pas als zin/boss als het minimaal 3 woorden bevat!
+    function isSentenceItem(text) {
+      const words = text.trim().split(/\s+/).filter(Boolean);
+      return words.length >= 3;
+    }
+
+    function processQueues() {
+      state.wordsQueue = state.rawItems.filter(item => !isSentenceItem(item));
+      state.sentencesQueue = state.rawItems.filter(item => isSentenceItem(item));
+      if (state.wordsQueue.length === 0 && state.sentencesQueue.length > 0) {
+        state.currentPhase = 'bossrush';
+      }
+    }
+
+    function normalizeText(str) {
+      if (state.strictPunctuation) {
+        return str.trim().replace(/\s+/g, ' ');
+      }
+      return str
+        .toLowerCase()
+        .replace(/[.,!?;:"'()]/g, '')
+        .trim()
+        .replace(/\s+/g, ' ');
+    }
+
+    function loadState() {
+      try {
+        const savedRaw = localStorage.getItem('codebot_raw_items');
+        if (savedRaw) state.rawItems = JSON.parse(savedRaw);
+        const savedBits = localStorage.getItem('codebot_bits');
+        if (savedBits) state.bits = parseInt(savedBits, 10) || 0;
+        const savedEngine = localStorage.getItem('codebot_tts_engine');
+        if (savedEngine) state.ttsEngine = savedEngine;
+        const savedMode = localStorage.getItem('codebot_mode');
+        if (savedMode) state.gameMode = savedMode;
+        const savedStrict = localStorage.getItem('codebot_strict');
+        if (savedStrict) state.strictPunctuation = savedStrict === 'true';
+        const savedUnlocked = localStorage.getItem('codebot_unlocked_bots');
+        if (savedUnlocked) state.unlockedBots = JSON.parse(savedUnlocked);
+        const savedBot = localStorage.getItem('codebot_selected_bot');
+        if (savedBot) state.selectedBot = savedBot;
+      } catch (e) {
+        console.warn("LocalStorage niet beschikbaar.");
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('words')) {
+        const urlWords = params.get('words').split('|').map(w => w.trim()).filter(Boolean);
+        if (urlWords.length > 0) state.rawItems = urlWords;
+      }
+
+      processQueues();
+      document.getElementById('admin-words-input').value = state.rawItems.join('\n');
+      document.getElementById('tts-engine-select').value = state.ttsEngine;
+      document.getElementById('admin-game-mode').value = state.gameMode;
+      document.getElementById('admin-strict-punct').checked = state.strictPunctuation;
+      selectBot(state.selectedBot);
+    }
+
+    // ==========================================
+    // 2. SPRAAK (TTS) MODULE
+    // ==========================================
+    let nlVoices = [];
+    let currentAudioObj = null;
+
+    function initSpeechVoices() {
+      if (!('speechSynthesis' in window)) return;
+      const fetchVoices = () => {
+        const allVoices = window.speechSynthesis.getVoices() || [];
+        nlVoices = allVoices.filter(v => v.lang.toLowerCase().includes('nl'));
+        const select = document.getElementById('tts-voice-select');
+        select.innerHTML = '';
+        if (nlVoices.length > 0) {
+          nlVoices.forEach((v, idx) => {
+            const opt = document.createElement('option');
+            opt.value = idx;
+            opt.textContent = `${v.name} (${v.lang})`;
+            select.appendChild(opt);
+          });
+          updateDiag("Browser TTS gereed ✅", nlVoices.length);
+        } else {
+          updateDiag("Gereed (Cloud Fallback actief)", 0);
+        }
+      };
+      fetchVoices();
+      window.speechSynthesis.onvoiceschanged = fetchVoices;
+    }
+
+    function updateDiag(statusText, voiceCount, lastAction) {
+      if (statusText) document.getElementById('diag-status').textContent = statusText;
+      if (voiceCount !== undefined) document.getElementById('diag-voices').textContent = voiceCount;
+      if (lastAction) document.getElementById('diag-last-action').textContent = lastAction;
+    }
+
+    function setAudioStatus(msg) {
+      document.getElementById('audio-status-indicator').textContent = msg;
+    }
+
+    function speakViaCloud(text, rate = 1.0) {
+      return new Promise((resolve, reject) => {
+        try {
+          if (currentAudioObj) { currentAudioObj.pause(); currentAudioObj = null; }
+          const encoded = encodeURIComponent(text);
+          const urls = [
+            `https://translate.googleapis.com/translate_tts?ie=UTF-8&q=${encoded}&tl=nl&client=gtx`,
+            `https://translate.google.com/translate_tts?ie=UTF-8&q=${encoded}&tl=nl&client=tw-ob`
+          ];
+          let urlIndex = 0;
+          const tryPlay = () => {
+            if (urlIndex >= urls.length) { reject(new Error("Cloud faalden")); return; }
+            const audio = new Audio();
+            audio.referrerPolicy = "no-referrer"; 
+            audio.src = urls[urlIndex];
+            audio.playbackRate = Math.max(0.5, Math.min(1.5, rate));
+            currentAudioObj = audio;
+            audio.onplaying = () => { setAudioStatus(`🔊 Spreekt uit via Cloud-Stem...`); resolve(true); };
+            audio.onerror = () => { urlIndex++; tryPlay(); };
+            audio.play().catch(() => { urlIndex++; tryPlay(); });
+          };
+          tryPlay();
+        } catch (err) { reject(err); }
+      });
+    }
+
+    function speakViaNative(text, rate = 0.95) {
+      return new Promise((resolve, reject) => {
+        if (!('speechSynthesis' in window)) { reject(new Error("Geen speechSynthesis")); return; }
+        try {
+          window.speechSynthesis.cancel();
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = 'nl-NL';
+          utter.rate = rate;
+          const selectedIdx = document.getElementById('tts-voice-select').value;
+          if (selectedIdx !== "" && nlVoices[selectedIdx]) utter.voice = nlVoices[selectedIdx];
+          else if (nlVoices.length > 0) utter.voice = nlVoices[0];
+
+          let started = false;
+          const watchdog = setTimeout(() => {
+            if (!started) { window.speechSynthesis.cancel(); reject(new Error("Timeout")); }
+          }, 1800);
+
+          utter.onstart = () => { started = true; clearTimeout(watchdog); setAudioStatus(`🔊 Spreekt uit via Browser-Stem...`); resolve(true); };
+          utter.onerror = (e) => {
+            clearTimeout(watchdog);
+            if (e.error === 'interrupted' || e.error === 'canceled') resolve(true);
+            else reject(e);
+          };
+          window.speechSynthesis.speak(utter);
+        } catch (err) { reject(err); }
+      });
+    }
+
+    async function speakText(text, rate = 0.95) {
+      setAudioStatus("⏳ Audio-module aansturen...");
+      const engine = state.ttsEngine;
+      if (engine === 'cloud') { await speakViaCloud(text, rate).catch(() => {}); return; }
+      if (engine === 'native') { await speakViaNative(text, rate).catch(() => {}); return; }
+      try { await speakViaNative(text, rate); }
+      catch (err) { await speakViaCloud(text, rate).catch(() => {}); }
+    }
+
+    function speakCurrentWord(rate = 0.95) {
+      speakText(getCurrentItem(), rate);
+      document.getElementById('word-input').focus();
+    }
+
+    function changeTTSEngine() {
+      state.ttsEngine = document.getElementById('tts-engine-select').value;
+      try { localStorage.setItem('codebot_tts_engine', state.ttsEngine); } catch(e){}
+    }
+
+    function testAudioSystem(mode) {
+      const prev = state.ttsEngine;
+      state.ttsEngine = mode;
+      speakText("Systeemtest geslaagd. Klaar voor de overwinning!", 0.95).finally(() => { state.ttsEngine = prev; });
+    }
+
+    // ==========================================
+    // 3. WEB AUDIO API GELUIDSEFFECTEN
+    // ==========================================
+    let audioCtx = null;
+    function getAudioCtx() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playLaserSound() {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(780, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.25);
+      gain.gain.setValueAtTime(0.18, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime + 0.25);
+    }
+
+    function playMegaLaserSound() {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      [523.25, 659.25, 1046.5].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = idx === 2 ? 'sawtooth' : 'triangle';
+        osc.frequency.setValueAtTime(freq, now);
+        osc.frequency.exponentialRampToValueAtTime(90 + idx * 40, now + 0.75);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.005, now + 0.75);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(now); osc.stop(now + 0.75);
+      });
+    }
+
+    function playBossAlertSound() {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(220, now);
+      osc.frequency.linearRampToValueAtTime(440, now + 0.25);
+      osc.frequency.linearRampToValueAtTime(220, now + 0.5);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.55);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(now); osc.stop(now + 0.55);
+    }
+
+    function playVictoryFanfare() {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.18);
+        gain.gain.setValueAtTime(0.2, now + idx * 0.18);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.18 + 0.5);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(now + idx * 0.18);
+        osc.stop(now + idx * 0.18 + 0.5);
+      });
+    }
+
+    function playErrorSound() {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(160, ctx.currentTime);
+      osc.frequency.setValueAtTime(110, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(); osc.stop(ctx.currentTime + 0.35);
+    }
+
+    // ==========================================
+    // 4. GAMEPLAY & WIN CONDITION
+    // ==========================================
+    function getCurrentItem() {
+      if (state.currentPhase === 'words') {
+        if (state.currentIndex >= state.wordsQueue.length) {
+          state.currentPhase = 'bossrush';
+          state.currentIndex = 0;
+          playBossAlertSound();
+        } else {
+          return state.wordsQueue[state.currentIndex].trim();
+        }
+      }
+      
+      if (state.currentIndex >= state.sentencesQueue.length) {
+        triggerVictory();
+        return state.sentencesQueue[state.sentencesQueue.length - 1] || "Klaar";
+      }
+      return state.sentencesQueue[state.currentIndex].trim();
+    }
+
+    let flashTimeout = null;
+    function loadNextWord(speakImmediately = true) {
+      if (state.currentPhase === 'bossrush' && state.currentIndex >= state.sentencesQueue.length) {
+        triggerVictory();
+        return;
+      }
+
+      if (state.currentPhase === 'words' && state.currentIndex >= state.wordsQueue.length) {
+        state.currentPhase = 'bossrush';
+        state.currentIndex = 0;
+        playBossAlertSound();
+      }
+
+      const item = getCurrentItem();
+      const isBossRush = (state.currentPhase === 'bossrush');
+      state.wordStartTime = Date.now();
+      state.isPatchingBug = false;
+
+      document.getElementById('debugger-panel').classList.add('hidden');
+      const inputEl = document.getElementById('word-input');
+      inputEl.value = '';
+      inputEl.focus();
+
+      if (isBossRush) {
+        const totalSentences = state.sentencesQueue.length;
+        document.getElementById('word-progress-badge').textContent = `Zin ${state.currentIndex + 1} / ${totalSentences}`;
+        document.getElementById('boss-progress-badge').textContent = `Zin ${state.currentIndex + 1} / ${totalSentences}`;
+        document.getElementById('word-length-hint').textContent = `👑 Boss Rush`;
+        activateBossArenaUI(true);
+      } else {
+        const totalWords = state.wordsQueue.length;
+        document.getElementById('word-progress-badge').textContent = `Woord ${state.currentIndex + 1} / ${totalWords}`;
+        document.getElementById('word-length-hint').textContent = `Lengte: ${item.length} letters`;
+        activateBossArenaUI(false);
+      }
+
+      renderWordDisplay(item, state.gameMode === 'flash', isBossRush);
+      if (speakImmediately) speakText(item, 0.95);
+      updateHUD();
+    }
+
+    function triggerVictory() {
+      playVictoryFanfare();
+      document.getElementById('victory-bits-text').textContent = `💎 ${state.bits}`;
+      document.getElementById('victory-modal').classList.remove('hidden');
+    }
+
+    function restartGameSession() {
+      document.getElementById('victory-modal').classList.add('hidden');
+      state.currentPhase = 'words';
+      state.currentIndex = 0;
+      state.playerHp = 100;
+      state.enemyHp = state.enemyMaxHp;
+      processQueues();
+      loadNextWord(false);
+    }
+
+    function activateBossArenaUI(isBoss) {
+      const banner = document.getElementById('boss-alert-banner');
+      const stagePanel = document.getElementById('battle-stage-panel');
+      const consolePanel = document.getElementById('compiler-console-panel');
+      const bossCrown = document.getElementById('boss-crown-badge');
+      const enemyAvatar = document.getElementById('enemy-bot-avatar');
+      const enemyName = document.getElementById('enemy-bot-name');
+      const compileBtn = document.getElementById('btn-compile');
+      const phaseHud = document.getElementById('hud-phase');
+
+      if (isBoss) {
+        banner.classList.remove('hidden');
+        stagePanel.classList.add('cyber-border-boss');
+        consolePanel.classList.add('cyber-border-boss');
+        bossCrown.classList.remove('hidden');
+        phaseHud.textContent = "🔥 FASE 2: BOSS RUSH";
+        phaseHud.className = "font-cyber font-bold text-amber-400 text-xs md:text-sm";
+
+        const boss = BOSSES[state.currentIndex % BOSSES.length];
+        enemyName.textContent = boss.name;
+        enemyName.className = "font-cyber text-xs md:text-sm font-black text-amber-400";
+        enemyAvatar.textContent = boss.icon;
+        enemyAvatar.className = "text-7xl md:text-8xl animate-boss";
+
+        compileBtn.innerHTML = "☄️ VUUR OMEGA-KANON";
+        compileBtn.className = "px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 hover:from-amber-300 hover:to-rose-400 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-amber-500/30 active:scale-95 transition whitespace-nowrap";
+      } else {
+        banner.classList.add('hidden');
+        stagePanel.classList.remove('cyber-border-boss');
+        consolePanel.classList.remove('cyber-border-boss');
+        bossCrown.classList.add('hidden');
+        phaseHud.textContent = "⚡ FASE 1: WOORDEN";
+        phaseHud.className = "font-cyber font-bold text-purple-400 text-xs md:text-sm";
+
+        const regularEnemy = ENEMIES[(state.level - 1) % ENEMIES.length];
+        enemyName.textContent = `${regularEnemy.name} (v${state.level})`;
+        enemyName.className = "font-cyber text-xs md:text-sm font-bold text-rose-400";
+        enemyAvatar.textContent = regularEnemy.icon;
+        enemyAvatar.className = "text-6xl md:text-7xl animate-float filter drop-shadow-[0_0_12px_rgba(244,63,94,0.5)]";
+
+        compileBtn.innerHTML = "⚡ COMPILEER";
+        compileBtn.className = "px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-cyan-500/25 active:scale-95 transition whitespace-nowrap";
+      }
+    }
+
+    function renderWordDisplay(item, showTemporarily, isBossRush) {
+      const box = document.getElementById('word-display-box');
+      if (flashTimeout) clearTimeout(flashTimeout);
+
+      const scanDuration = isBossRush ? 3500 : 1600;
+      document.getElementById('btn-flash').textContent = isBossRush ? '👁️ Scan Zin (3.5s)' : '👁️ Scan (1.5s)';
+
+      if (showTemporarily) {
+        box.textContent = isBossRush ? item : item.toUpperCase();
+        box.className = isBossRush 
+          ? "font-cyber text-base md:text-xl tracking-wider text-amber-300 font-bold animate-pulse"
+          : "font-cyber text-2xl md:text-3xl tracking-[0.25em] text-amber-300 font-bold animate-pulse";
+        
+        flashTimeout = setTimeout(() => {
+          applyMaskedDisplay(box, item, isBossRush);
+        }, scanDuration);
+      } else {
+        applyMaskedDisplay(box, item, isBossRush);
+      }
+    }
+
+    function applyMaskedDisplay(box, item, isBossRush) {
+      box.className = isBossRush
+        ? "font-cyber text-sm md:text-lg tracking-widest text-cyan-300 font-bold"
+        : "font-cyber text-xl md:text-2xl tracking-[0.25em] text-cyan-300 font-bold";
+
+      if (state.gameMode === 'vowels') {
+        box.textContent = maskVowels(item);
+      } else if (isBossRush) {
+        box.textContent = item.split(/\s+/).map(w => "•".repeat(w.length)).join('   ');
+      } else {
+        box.textContent = "• ".repeat(item.length).trim();
+      }
+    }
+
+    function maskVowels(text) {
+      return text.split('').map(ch => {
+        if (ch === ' ') return '   ';
+        return /[aeiouyäëïöü]/i.test(ch) ? '_' : ch.toUpperCase();
+      }).join(' ');
+    }
+
+    function triggerFlashHint() {
+      const item = getCurrentItem();
+      renderWordDisplay(item, true, state.currentPhase === 'bossrush');
+      document.getElementById('word-input').focus();
+    }
+
+    function handleCompileSubmit(e) {
+      e.preventDefault();
+      const inputEl = document.getElementById('word-input');
+      const typed = inputEl.value.trim();
+      if (!typed) return;
+
+      const target = getCurrentItem();
+
+      if (normalizeText(typed) === normalizeText(target)) {
+        handleCorrectCompile(target);
+      } else {
+        handleSyntaxBug(typed, target);
+      }
+    }
+
+    function handleCorrectCompile(item) {
+      const isBossRush = (state.currentPhase === 'bossrush');
+
+      if (isBossRush) {
+        playMegaLaserSound();
+        shootLaserEffect(true);
+      } else {
+        playLaserSound();
+        shootLaserEffect(false);
+      }
+
+      const elapsedSec = (Date.now() - state.wordStartTime) / 1000;
+      let damage = isBossRush ? 100 : 35;
+      let bitsEarned = isBossRush ? 35 : 10;
+
+      if (state.isPatchingBug) {
+        state.shieldActive = true;
+        damage = isBossRush ? 75 : 20;
+        bitsEarned = isBossRush ? 20 : 5;
+        setAudioStatus("🛠️ Bug gepatcht! Firewall-schild actief.");
+      } else {
+        state.streak++;
+        let conditionMet = false;
+        if (state.ifRule === 'streak2' && state.streak >= 2) conditionMet = true;
+        if (state.ifRule === 'len7' && item.length >= 7) conditionMet = true;
+        if (state.ifRule === 'bossrush' && isBossRush) conditionMet = true;
+        if (state.ifRule === 'fast' && elapsedSec <= 6) conditionMet = true;
+
+        const statusBadge = document.getElementById('script-trigger-status');
+        if (conditionMet) {
+          statusBadge.textContent = "🔥 SCRIPT GEACTIVEERD!";
+          statusBadge.className = "text-[11px] px-2 py-0.5 rounded bg-emerald-500/30 border border-emerald-400 text-emerald-300 font-bold";
+          if (state.thenRule === 'double_dmg') damage = Math.round(damage * 1.5);
+          if (state.thenRule === 'mine_bits') bitsEarned += 15;
+          if (state.thenRule === 'shield') {
+            state.shieldActive = true;
+            state.playerHp = Math.min(100, state.playerHp + 20);
+          }
+        } else {
+          statusBadge.textContent = "Conditie niet bereikt";
+          statusBadge.className = "text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400";
+        }
+      }
+
+      state.bits += bitsEarned;
+      try { localStorage.setItem('codebot_bits', state.bits); } catch(e){}
+
+      state.enemyHp = Math.max(0, state.enemyHp - damage);
+      if (state.enemyHp === 0) {
+        state.level++;
+        state.enemyMaxHp = 80 + (state.level * 20);
+        state.enemyHp = state.enemyMaxHp;
+      }
+
+      state.currentIndex++;
+      
+      if (isBossRush && state.currentIndex >= state.sentencesQueue.length) {
+        setTimeout(triggerVictory, 700);
+      } else {
+        setTimeout(() => loadNextWord(true), isBossRush ? 850 : 450);
+      }
+    }
+
+    function handleSyntaxBug(typed, target) {
+      playErrorSound();
+      state.streak = 0;
+      state.isPatchingBug = true;
+
+      state.mistakes[target] = (state.mistakes[target] || 0) + 1;
+      if (state.currentPhase === 'bossrush') {
+        state.sentencesQueue.push(target);
+      } else {
+        state.wordsQueue.push(target);
+      }
+      renderMistakeLog();
+
+      if (state.shieldActive) {
+        state.shieldActive = false;
+      } else {
+        state.playerHp = Math.max(10, state.playerHp - 15);
+      }
+
+      const debugPanel = document.getElementById('debugger-panel');
+      const userContainer = document.getElementById('debug-user-chars');
+      const targetContainer = document.getElementById('debug-target-chars');
+      userContainer.innerHTML = '';
+      targetContainer.innerHTML = '';
+
+      const isBossRush = (state.currentPhase === 'bossrush');
+
+      if (isBossRush) {
+        document.getElementById('debugger-title').textContent = "🐞 ZIN-DEBUGGER: WOORD-VOOR-WOORD ANALYSE";
+        const targetWords = target.trim().split(/\s+/);
+        const userWords = typed.trim().split(/\s+/);
+
+        userWords.forEach((uw, i) => {
+          const span = document.createElement('span');
+          span.textContent = uw;
+          const tw = targetWords[i] || '';
+          if (normalizeText(uw) === normalizeText(tw)) {
+            span.className = "px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500 text-emerald-300 font-bold text-xs md:text-sm";
+          } else {
+            span.className = "px-2.5 py-1 rounded-lg bg-rose-500/30 border border-rose-500 text-rose-300 font-bold text-xs md:text-sm underline decoration-wavy";
+          }
+          userContainer.appendChild(span);
+        });
+
+        targetWords.forEach((tw, i) => {
+          const span = document.createElement('span');
+          span.textContent = tw;
+          const uw = userWords[i] || '';
+          const isMatch = normalizeText(uw) === normalizeText(tw);
+          span.className = isMatch
+            ? "px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 font-bold text-xs md:text-sm"
+            : "px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-400 text-amber-300 font-bold text-xs md:text-sm";
+          targetContainer.appendChild(span);
+        });
+      } else {
+        document.getElementById('debugger-title').textContent = "🐞 SYNTAX BUG GEDETECTEERD — VISUELE DEBUGGER";
+        const tChars = target.toLowerCase().split('');
+        const uChars = typed.toLowerCase().split('');
+
+        uChars.forEach((ch, i) => {
+          const span = document.createElement('span');
+          span.textContent = ch.toUpperCase();
+          if (tChars[i] === ch) {
+            span.className = "w-7 h-8 flex items-center justify-center rounded bg-emerald-500/20 border border-emerald-500 text-emerald-300 font-bold text-sm";
+          } else if (tChars.includes(ch)) {
+            span.className = "w-7 h-8 flex items-center justify-center rounded bg-amber-500/20 border border-amber-500 text-amber-300 font-bold text-sm";
+          } else {
+            span.className = "w-7 h-8 flex items-center justify-center rounded bg-rose-500/30 border border-rose-500 text-rose-300 font-bold text-sm";
+          }
+          userContainer.appendChild(span);
+        });
+
+        tChars.forEach((ch) => {
+          const span = document.createElement('span');
+          span.textContent = ch.toUpperCase();
+          span.className = "w-7 h-8 flex items-center justify-center rounded bg-cyan-500/20 border border-cyan-500 text-cyan-300 font-bold text-sm";
+          targetContainer.appendChild(span);
+        });
+      }
+
+      debugPanel.classList.remove('hidden');
+      speakText(target, 0.8);
+      document.getElementById('word-input').focus();
+      updateHUD();
+    }
+
+    function shootLaserEffect(isMega) {
+      const container = document.getElementById('laser-container');
+      const mainContainer = document.getElementById('main-container');
+
+      if (isMega) {
+        container.innerHTML = '<div class="mega-laser-beam bg-gradient-to-r from-amber-300 via-fuchsia-500 to-cyan-400 shadow-[0_0_30px_#f59e0b]"></div>';
+        mainContainer.classList.add('shake-effect');
+        setTimeout(() => {
+          container.innerHTML = '';
+          mainContainer.classList.remove('shake-effect');
+        }, 850);
+      } else {
+        container.innerHTML = '<div class="laser-beam bg-gradient-to-r from-cyan-400 via-purple-400 to-rose-500 shadow-[0_0_15px_#06b6d4]"></div>';
+        setTimeout(() => { container.innerHTML = ''; }, 500);
+      }
+    }
+
+    // ==========================================
+    // 5. UI, CODE-LAB & ADMIN FUNCTIES
+    // ==========================================
+    function updateHUD() {
+      document.getElementById('hud-bits').textContent = `💎 ${state.bits}`;
+      document.getElementById('hud-streak').textContent = `⚡ ${state.streak}`;
+
+      document.getElementById('player-hp-bar').style.width = `${state.playerHp}%`;
+      const enemyPct = Math.round((state.enemyHp / state.enemyMaxHp) * 100);
+      document.getElementById('enemy-hp-bar').style.width = `${enemyPct}%`;
+      document.getElementById('enemy-hp-text').textContent = `(${state.enemyHp}/${state.enemyMaxHp})`;
+
+      const shieldBadge = document.getElementById('shield-badge');
+      if (state.shieldActive) shieldBadge.classList.remove('hidden');
+      else shieldBadge.classList.add('hidden');
+    }
+
+    function updateLogicRule() {
+      state.ifRule = document.getElementById('select-if').value;
+      state.thenRule = document.getElementById('select-then').value;
+
+      const ifTextMap = {
+        streak2: 'Streak >= 2',
+        len7: 'Lengte >= 7',
+        bossrush: 'Boss Rush Finale',
+        fast: 'Tijd <= 6 sec'
+      };
+      const thenTextMap = {
+        double_dmg: 'Vuur Dubbele Laser (+50% Schade)',
+        mine_bits: 'Activeer Bit-Miner (+15 Bits)',
+        shield: 'Activeer Schild + Herstel 20 HP'
+      };
+
+      document.getElementById('active-script-display').textContent = `ALS [${ifTextMap[state.ifRule]}] DAN [${thenTextMap[state.thenRule]}]`;
+      document.getElementById('code-preview-block').innerHTML = 
+        `if (invoer.correct && ${ifTextMap[state.ifRule]}) {<br>&nbsp;&nbsp;robot.execute("${thenTextMap[state.thenRule]}");<br>}`;
+    }
+
+    function renderGarage() {
+      const container = document.getElementById('garage-list');
+      container.innerHTML = '';
+      BOTS.forEach(bot => {
+        const unlocked = state.unlockedBots.includes(bot.id);
+        const active = state.selectedBot === bot.id;
+
+        const row = document.createElement('div');
+        row.className = `p-3 rounded-xl border flex items-center justify-between ${active ? 'bg-cyan-950/40 border-cyan-400' : 'bg-slate-900/80 border-slate-800'}`;
+        row.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="text-3xl">${bot.icon}</span>
+            <div>
+              <div class="font-cyber text-xs md:text-sm font-bold text-white">${bot.name}</div>
+              <div class="text-[11px] text-slate-400">${bot.desc}</div>
+            </div>
+          </div>
+          <div>
+            ${active 
+              ? `<span class="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 text-xs font-bold">Actief</span>`
+              : unlocked 
+                ? `<button type="button" onclick="selectBot('${bot.id}')" class="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold">Kies</button>`
+                : `<button type="button" onclick="buyBot('${bot.id}', ${bot.cost})" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold">Koop (💎 ${bot.cost})</button>`
+            }
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function buyBot(id, cost) {
+      if (state.bits < cost) {
+        alert("Nog niet genoeg Data-Bits! Versla meer eindbazen.");
+        return;
+      }
+      state.bits -= cost;
+      state.unlockedBots.push(id);
+      try {
+        localStorage.setItem('codebot_bits', state.bits);
+        localStorage.setItem('codebot_unlocked_bots', JSON.stringify(state.unlockedBots));
+      } catch(e){}
+      selectBot(id);
+    }
+
+    function selectBot(id) {
+      state.selectedBot = id;
+      try { localStorage.setItem('codebot_selected_bot', id); } catch(e){}
+      const bot = BOTS.find(b => b.id === id);
+      if (bot) {
+        document.getElementById('player-bot-name').textContent = bot.name;
+        document.getElementById('player-bot-avatar').textContent = bot.icon;
+      }
+      updateHUD();
+      renderGarage();
+    }
+
+    function saveWordList() {
+      const raw = document.getElementById('admin-words-input').value;
+      const parsed = raw.split(/[\n;]+/).map(w => w.trim()).filter(w => w.length > 0);
+      if (parsed.length === 0) return;
+
+      state.rawItems = parsed;
+      state.currentPhase = 'words';
+      state.currentIndex = 0;
+      processQueues();
+
+      try { localStorage.setItem('codebot_raw_items', JSON.stringify(parsed)); } catch(e){}
+
+      const msg = document.getElementById('admin-save-msg');
+      msg.classList.remove('hidden');
+      setTimeout(() => msg.classList.add('hidden'), 3000);
+      loadNextWord(false);
+    }
+
+    function resetDefaultWords() {
+      state.rawItems = [...DEFAULT_INPUTS];
+      document.getElementById('admin-words-input').value = state.rawItems.join('\n');
+      saveWordList();
+    }
+
+    function saveAdminSettings() {
+      state.gameMode = document.getElementById('admin-game-mode').value;
+      state.strictPunctuation = document.getElementById('admin-strict-punct').checked;
+      try {
+        localStorage.setItem('codebot_mode', state.gameMode);
+        localStorage.setItem('codebot_strict', String(state.strictPunctuation));
+      } catch(e){}
+      loadNextWord(false);
+    }
+
+    function renderMistakeLog() {
+      const logEl = document.getElementById('admin-mistake-log');
+      const entries = Object.entries(state.mistakes);
+      if (entries.length === 0) {
+        logEl.textContent = "Nog geen foutjes gemaakt.";
+        return;
+      }
+      logEl.innerHTML = entries.map(([w, count]) => `<span class="inline-block bg-rose-950 border border-rose-500/40 text-rose-300 px-2 py-0.5 rounded mr-1.5 mb-1 not-italic">${w} (${count}x)</span>`).join('');
+    }
+
+    function switchTab(tab) {
+      ['arena', 'codelab', 'admin'].forEach(t => {
+        document.getElementById(`view-${t}`).classList.add('hidden');
+        document.getElementById(`view-${t}`).classList.remove('flex');
+        document.getElementById(`tab-${t}`).className = "px-3 py-2 rounded-lg text-xs md:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition";
+      });
+      document.getElementById(`view-${tab}`).classList.remove('hidden');
+      document.getElementById(`view-${tab}`).classList.add('flex');
+      document.getElementById(`tab-${tab}`).className = "px-3 py-2 rounded-lg text-xs md:text-sm font-bold bg-cyan-500 text-slate-950 transition";
+
+      if (tab === 'arena') document.getElementById('word-input').focus();
+      if (tab === 'codelab') renderGarage();
+    }
+
+    // ==========================================
+    // 6. INITIALISATIE
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      initSpeechVoices();
+      updateLogicRule();
+      renderGarage();
+      loadNextWord(false);
+    });
+  </script>
+</body>
+</html>

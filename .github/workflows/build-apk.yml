@@ -108,18 +108,39 @@ jobs:
           gradle assembleRelease --no-daemon
     
       - name: 7. APK Digitaal Ondertekenen
-        uses: r0adkll/sign-android-release@v1
-        id: sign_app
-        with:
-          releaseDirectory: android/app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.KEYSTORE_BASE64 }}
-          alias: ${{ secrets.KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-          buildToolsVersion: '34.0.0'
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          # Ga naar de map waar Gradle de release APK heeft gebouwd
+          cd android/app/build/outputs/apk/release
+          
+          # 1. Zet de Base64 tekst veilig terug naar een fysiek .jks sleutelbestand
+          echo "$KEYSTORE_BASE64" | base64 --decode > keystore.jks
+          
+          # 2. Zoek automatisch de allernieuwste Android Build Tools map op de server
+          BUILD_TOOLS=$(ls -d $ANDROID_HOME/build-tools/* | tail -1)
+          echo "✅ Gebruik Android build tools vanuit: $BUILD_TOOLS"
+          
+          # 3. Zipalign (optimaliseert het geheugengebruik van de APK)
+          $BUILD_TOOLS/zipalign -v -p 4 app-release-unsigned.apk app-release-aligned.apk
+          
+          # 4. Apksigner (Ondertekenen met jouw unieke keystore)
+          $BUILD_TOOLS/apksigner sign \
+            --ks keystore.jks \
+            --ks-key-alias "$KEY_ALIAS" \
+            --ks-pass "pass:$KEYSTORE_PASSWORD" \
+            --key-pass "pass:$KEY_PASSWORD" \
+            --out app-release.apk \
+            app-release-aligned.apk
+            
+          # 5. Keystore direct verwijderen voor de veiligheid
+          rm keystore.jks
     
       - name: 8. Zet de ondertekende APK klaar als Download
         uses: actions/upload-artifact@v4
         with:
           name: CodeBot-Arena-Android-APK
-          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+          path: android/app/build/outputs/apk/release/app-release.apk

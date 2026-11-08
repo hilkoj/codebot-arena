@@ -1,0 +1,68 @@
+name: Build CodeBot Android APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch: # Geeft je een handmatige 'Run workflow' knop
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Code ophalen uit repository
+        uses: actions/checkout@v4
+
+      - name: 2. Node.js 20 installeren
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 3. Java JDK 21 installeren (Vereist voor Android Gradle)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: 4. Android SDK omgeving klaarmaken
+        uses: android-actions/setup-android@v3
+
+      - name: 5. Capacitor & Native TTS Plugin installeren en configureren
+        run: |
+          # Maak een schone web-map voor de app-bestanden
+          mkdir -p www
+          cp index.html www/
+          if [ -f woorden.json ]; then cp woorden.json www/; fi
+
+          # Initialiseer NPM en installeer Capacitor 6 + Native TTS
+          npm init -y
+          npm install @capacitor/core@^6.0.0 @capacitor/cli@^6.0.0 @capacitor/android@^6.0.0 @capacitor-community/text-to-speech@^6.0.0
+
+          # Genereer capacitor.config.json (injecteert de Capacitor bridge automatisch in index.html)
+          cat << 'EOF' > capacitor.config.json
+          {
+            "appId": "nl.codebot.arena",
+            "appName": "CodeBot Arena",
+            "webDir": "www",
+            "bundledWebRuntime": false,
+            "android": {
+              "includePlugins": ["@capacitor-community/text-to-speech"]
+            }
+          }
+          EOF
+
+          # Genereer het native Android-project
+          npx cap add android
+          npx cap sync android
+
+      - name: 6. Bouw het Android APK-bestand
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: 7. Zet de APK klaar als Download (Artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodeBot-Arena-Android-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk

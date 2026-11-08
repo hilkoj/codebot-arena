@@ -38,7 +38,7 @@ jobs:
           cp index.html www/
           if [ -f woorden.json ]; then cp woorden.json www/; fi
 
-          # Maak package.json aan inclusief de asset-configuratie voor logo.png
+          # Maak package.json aan inclusief de asset-configuratie
           cat << 'EOF' > package.json
           {
             "name": "codebot-arena",
@@ -69,11 +69,13 @@ jobs:
 
           npx cap add android
           
-          # Genereer automatisch alle app-icoontjes uit jouw logo.png
-          if [ -f logo.png ]; then
-            npx capacitor-assets generate --android
+          # EXPLICIETE LOGO CHECK EN GENERATOR AANROEP
+          if [ -f "logo.png" ]; then
+            echo "✅ logo.png gevonden in de root! Start asset generator..."
+            npx capacitor-assets generate --android --iconOnly
           else
-            echo "Geen logo.png gevonden, standaard icoon wordt gebruikt."
+            echo "❌ WAARSCHUWING: logo.png NIET gevonden in de root van de repository!"
+            ls -la
           fi
 
           npx cap sync android

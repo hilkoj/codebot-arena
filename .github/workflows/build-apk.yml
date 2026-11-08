@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 
 env:
-  # Onderdrukt de Node 20 -> 24 waarschuwingen van oudere community actions
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
@@ -28,14 +27,17 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: 4. Capacitor & Native TTS Plugin configureren
+      - name: 4. Gradle instellen met verruimde time-out
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.2.1'
+
+      - name: 5. Capacitor & Native TTS Plugin configureren
         run: |
-          # Maak de web-map aan en kopieer je spelbestanden
           mkdir -p www
           cp index.html www/
           if [ -f woorden.json ]; then cp woorden.json www/; fi
 
-          # Maak een schone package.json aan
           cat << 'EOF' > package.json
           {
             "name": "codebot-arena",
@@ -45,16 +47,13 @@ jobs:
           }
           EOF
 
-          # Installeer Capacitor 6 en de Text-to-Speech plugin (met legacy-peer-deps tegen conflicten)
           npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6 @capacitor-community/text-to-speech@6 --legacy-peer-deps
 
-          # Kopieer de gecompileerde Capacitor browser-runtime naar www en injecteer deze in index.html
           if [ -f node_modules/@capacitor/core/dist/capacitor.js ]; then
             cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js
             sed -i 's|<head>|<head>\n  <script src="capacitor.js"></script>|' www/index.html
           fi
 
-          # Maak de Capacitor configuratie aan
           cat << 'EOF' > capacitor.config.json
           {
             "appId": "nl.codebot.arena",
@@ -63,17 +62,16 @@ jobs:
           }
           EOF
 
-          # Genereer en synchroniseer het Android project
           npx cap add android
           npx cap sync android
 
-      - name: 5. Bouw het Android APK-bestand
+      - name: 6. Bouw het Android APK-bestand
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug --no-daemon --connect-timeout 120000 --read-timeout 120000
 
-      - name: 6. Zet de APK klaar als Download (Artifact)
+      - name: 7. Zet de APK klaar als Download (Artifact)
         uses: actions/upload-artifact@v4
         with:
           name: CodeBot-Arena-Android-APK

@@ -1,0 +1,21 @@
+{
+  "name": "CodeBot Gaming Hub",
+  "short_name": "CodeBot",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#060913",
+  "theme_color": "#06b6d4",
+  "icons": [
+    {
+      "src": "https://api.dicebear.com/7.x/bottts/png?seed=CodeBot&size=192",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://api.dicebear.com/7.x/bottts/png?seed=CodeBot&size=512",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

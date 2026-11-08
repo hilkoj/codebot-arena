@@ -1342,23 +1342,42 @@
     }
 
     // JSON Fetch & Opslag
-    async function fetchWordsJson() {
-      try {
-        const response = await fetch('woorden.json?t=' + Date.now());
-        if (response.ok) {
-          const jsonDa = await response.json();
-          if (jsonDa && typeof jsonDa === 'object' && Object.keys(jsonDa).length > 0) {
-            state.lists = jsonDa;
-            if (!state.lists[state.activeListName]) state.activeListName = Object.keys(state.lists)[0];
-            saveAllListsToStorage();
-            renderListSelector();
-            processQueues();
-            updateDiag(null, undefined, "woorden.json succesvol geladen!");
-            return;
-          }
-        }
-      } catch (e) { console.warn("Kon woorden.json niet ophalen."); }
+    // Pas deze URL aan naar jouw exacte GitHub Pages adres:
+    const GITHUB_PAGES_JSON_URL = 'https://hilkoj.github.io/codebot-arena/woorden.json';
 
+    async function fetchWordsJson() {
+      // Lijst met plekken om te zoeken: 
+      // 1. Eerst live op jouw GitHub Pages (zodat de APK altijd de nieuwste wekelijkse lijst binnenhaalt)
+      // 2. Als fallback het lokale woorden.json bestand dat in de APK / webmap zelf zit ingebakken
+      const urlsToTry = [
+        `${GITHUB_PAGES_JSON_URL}?t=${Date.now()}`,
+        `woorden.json?t=${Date.now()}`
+      ];
+
+      for (const url of urlsToTry) {
+        try {
+          const response = await fetch(url, { cache: 'no-store' });
+          if (response.ok) {
+            const jsonData = await response.json();
+            if (jsonData && typeof jsonData === 'object' && Object.keys(jsonData).length > 0) {
+              state.lists = jsonData;
+              if (!state.lists[state.activeListName]) {
+                state.activeListName = Object.keys(state.lists)[0];
+              }
+              saveAllListsToStorage();
+              renderListSelector();
+              processQueues();
+              const bron = url.startsWith('http') ? 'Online GitHub' : 'Lokale App';
+              updateDiag(null, undefined, `woorden.json geladen (${bron})!`);
+              return;
+            }
+          }
+        } catch (e) {
+          console.warn(`Kon niet laden van ${url}, probeer volgende bron...`);
+        }
+      }
+
+      // 3. Laatste vangnet: LocalStorage van de tablet zelf
       try {
         const savedLists = localStorage.getItem('codebot_all_lists');
         if (savedLists) state.lists = JSON.parse(savedLists);
@@ -1531,32 +1550,52 @@
     }
 
     async function speakText(text, rate = 0.95) {
-      return new Promise((resolve) => {
-        if (!('speechSynthesis' in window)) return resolve();
-        
-        setAudioStatus("🔊 Spreekt uit via tablet...");
-        window.speechSynthesis.cancel();
-        
-        setTimeout(() => {
-          currentUtterance = new SpeechSynthesisUtterance(text);
-          currentUtterance.lang = 'nl-NL';
-          currentUtterance.rate = rate;
-          
-          const select = document.getElementById('tts-voice-select');
-          if (select && select.value !== "" && nlVoices[select.value]) {
-            currentUtterance.voice = nlVoices[select.value];
-          } else if (nlVoices.length > 0) {
-            currentUtterance.voice = nlVoices[0];
-          }
-
-          currentUtterance.onend = () => resolve();
-          currentUtterance.onerror = () => resolve(); 
-          
-          window.speechSynthesis.speak(currentUtterance);
-          setTimeout(resolve, 3000); 
-        }, 50);
-      });
+    // 1. NATIVE ANDROID APP ROUTE (Capacitor Plugin)
+    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.TextToSpeech) {
+      try {
+        setAudioStatus("🔊 Spreekt uit via Android Native TTS...");
+        await window.Capacitor.Plugins.TextToSpeech.stop().catch(() => {});
+        await window.Capacitor.Plugins.TextToSpeech.speak({
+          text: text,
+          lang: 'nl-NL',
+          rate: rate,
+          pitch: 1.0,
+          volume: 1.0,
+          category: 'ambient'
+        });
+        return;
+      } catch (err) {
+        console.warn("Native TTS fout, val terug op Web Speech:", err);
+      }
     }
+  
+    // 2. STANDAARD WEB BROWSER ROUTE (Fallback voor PC / Web)
+    return new Promise((resolve) => {
+      if (!('speechSynthesis' in window)) return resolve();
+      
+      setAudioStatus("🔊 Spreekt uit via browser...");
+      window.speechSynthesis.cancel();
+      
+      setTimeout(() => {
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        currentUtterance.lang = 'nl-NL';
+        currentUtterance.rate = rate;
+        
+        const select = document.getElementById('tts-voice-select');
+        if (select && select.value !== "" && nlVoices[select.value]) {
+          currentUtterance.voice = nlVoices[select.value];
+        } else if (nlVoices.length > 0) {
+          currentUtterance.voice = nlVoices[0];
+        }
+  
+        currentUtterance.onend = () => resolve();
+        currentUtterance.onerror = () => resolve(); 
+        
+        window.speechSynthesis.speak(currentUtterance);
+        setTimeout(resolve, 3000); 
+      }, 50);
+    });
+  }
 
     function speakCurrentWord(rate = 0.95) {
       speakText(getCurrentItem(), rate);

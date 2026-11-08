@@ -72,7 +72,7 @@ jobs:
           # EXPLICIETE LOGO CHECK EN GENERATOR AANROEP
           if [ -f "logo.png" ]; then
             echo "✅ logo.png gevonden in de root! Start asset generator..."
-            npx capacitor-assets generate --android --iconOnly
+            npx capacitor-assets generate --android
           else
             echo "❌ WAARSCHUWING: logo.png NIET gevonden in de root van de repository!"
             ls -la

@@ -1,0 +1,110 @@
+name: Build CodeBot Android APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build-android:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: 1. Code ophalen uit repository
+        uses: actions/checkout@v4
+
+      - name: 2. Node.js 22 installeren
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: 3. Java JDK 21 installeren
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: 4. Gradle installeren
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.5'
+
+      - name: 5. Capacitor, TTS Plugin, Logo & Versienummer configureren
+        run: |
+          mkdir -p www
+          cp index.html www/
+          if [ -f woorden.json ]; then cp woorden.json www/; fi
+
+          # Maak package.json aan inclusief de asset-configuratie voor logo.png
+          cat << 'EOF' > package.json
+          {
+            "name": "codebot-arena",
+            "version": "1.0.0",
+            "description": "CodeBot Gaming Hub",
+            "private": true,
+            "capacitor-assets": {
+              "input": "logo.png"
+            }
+          }
+          EOF
+
+          # Installeer Capacitor 6, de TTS plugin én de asset-generator
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6 @capacitor-community/text-to-speech@6 @capacitor/assets --save-dev --legacy-peer-deps
+
+          if [ -f node_modules/@capacitor/core/dist/capacitor.js ]; then
+            cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js
+            sed -i 's|<head>|<head>\n  <script src="capacitor.js"></script>|' www/index.html
+          fi
+
+          cat << 'EOF' > capacitor.config.json
+          {
+            "appId": "nl.codebot.arena",
+            "appName": "CodeBot Arena",
+            "webDir": "www"
+          }
+          EOF
+
+          npx cap add android
+          
+          # Genereer automatisch alle app-icoontjes uit jouw logo.png
+          if [ -f logo.png ]; then
+            npx capacitor-assets generate --android
+          else
+            echo "Geen logo.png gevonden, standaard icoon wordt gebruikt."
+          fi
+
+          npx cap sync android
+
+          # Automatisch uniek versienummer instellen op basis van GitHub Build nummer
+          BUILD_NUM=${{ github.run_number }}
+          VERSION_NAME="3.9.$BUILD_NUM"
+          echo "Automatisch versienummer ingesteld op: $VERSION_NAME (Code: $BUILD_NUM)"
+          
+          BUILD_GRADLE="android/app/build.gradle"
+          if [ -f "$BUILD_GRADLE" ]; then
+            sed -i "s/versionCode [0-9]*/versionCode $BUILD_NUM/" "$BUILD_GRADLE"
+            sed -i "s/versionName \".*\"/versionName \"$VERSION_NAME\"/" "$BUILD_GRADLE"
+            echo "build.gradle succesvol bijgewerkt met versie $VERSION_NAME"
+          fi
+
+          # Forceer stabiele Gradle distributie in het Android project
+          echo "distributionBase=GRADLE_USER_HOME" > android/gradle/wrapper/gradle-wrapper.properties
+          echo "distributionPath=wrapper/dists" >> android/gradle/wrapper/gradle-wrapper.properties
+          echo "distributionUrl=https\://services.gradle.org/distributions/gradle-8.5-all.zip" >> android/gradle/wrapper/gradle-wrapper.properties
+          echo "zipStoreBase=GRADLE_USER_HOME" >> android/gradle/wrapper/gradle-wrapper.properties
+          echo "zipStorePath=wrapper/dists" >> android/gradle/wrapper/gradle-wrapper.properties
+
+      - name: 6. Bouw het Android APK-bestand
+        run: |
+          cd android
+          chmod +x gradlew
+          gradle assembleDebug --no-daemon
+
+      - name: 7. Zet de APK klaar als Download (Artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodeBot-Arena-Android-APK
+          path: android/app/build/outputs/apk/debug/CodeBot-Arena.apk

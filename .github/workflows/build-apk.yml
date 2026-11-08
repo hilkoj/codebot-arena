@@ -46,7 +46,7 @@ jobs:
             "description": "CodeBot Gaming Hub",
             "private": true,
             "capacitor-assets": {
-              "input": "logo.png"
+              "input": "assets/logo.png"
             }
           }
           EOF
@@ -69,12 +69,14 @@ jobs:
 
           npx cap add android
           
-          # EXPLICIETE LOGO CHECK EN GENERATOR AANROEP
+          # MAAK DE ASSETS-MAP AAN EN KOPIEER LOGO.PNG DAARIN
+          mkdir -p assets
           if [ -f "logo.png" ]; then
-            echo "✅ logo.png gevonden in de root! Start asset generator..."
-            npx capacitor-assets generate --android
+            cp logo.png assets/logo.png
+            echo "✅ logo.png gekopieerd naar de assets-map! Start asset generator..."
+            npx capacitor-assets generate --android --assetPath assets
           else
-            echo "❌ WAARSCHUWING: logo.png NIET gevonden in de root van de repository!"
+            echo "❌ WAARSCHUWING: logo.png NIET gevonden in de root!"
             ls -la
           fi
 

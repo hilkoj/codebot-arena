@@ -32,7 +32,7 @@ jobs:
         with:
           gradle-version: '8.5'
 
-      - name: 5. Capacitor, TTS Plugin, URL, Logo & Versienummer configureren
+      - name: 5. Capacitor, TTS Plugin, URLs, Logo & Versienummer configureren
         run: |
           mkdir -p www
           cp index.html www/
@@ -54,12 +54,15 @@ jobs:
           fi
           echo "✅ Woordenlijst URL automatisch ingesteld op: $TARGET_URL"
           sed -i "s|const GITHUB_PAGES_JSON_URL = .*|const GITHUB_PAGES_JSON_URL = '$TARGET_URL';|" www/index.html
-          
+
           # 4. Injecteer automatisch de Firebase Realtime Database URL voor online highscores
           if [ -n "${{ vars.FIREBASE_DB_URL }}" ]; then
             sed -i "s|const FIREBASE_DB_URL = .*|const FIREBASE_DB_URL = '${{ vars.FIREBASE_DB_URL }}';|" www/index.html
-            echo "✅ Firebase Highscore URL gekoppeld!"
+            echo "✅ Firebase Highscore URL gekoppeld: ${{ vars.FIREBASE_DB_URL }}"
+          else
+            echo "ℹ️ Geen FIREBASE_DB_URL variabele gevonden; app gebruikt lokale highscores."
           fi
+
           # Maak package.json aan inclusief de asset-configuratie
           cat << 'EOF' > package.json
           {

@@ -1,1 +1,3 @@
 # codebot-arena
+
+Optioneel: Handmatig een eigen URL instellen in GitHub   Stel dat je ooit besluit om woorden.json ergens anders te hosten (of rechtstreeks via [https://raw.githubusercontent.com/](https://raw.githubusercontent.com/)... zonder GitHub Pages), dan hoef je de code niet aan te raken:   Ga in je GitHub-repository naar Settings en kies in het menu Secrets and variables gevolgd door Actions.   Klik op het tabblad Variables (naast Secrets).   Klik op New repository variable, noem deze WOORDEN_JSON_URL en plak je link erin. Zolang die variabele niet bestaat, valt de build automatisch terug op je standaard GitHub Pages adres.   

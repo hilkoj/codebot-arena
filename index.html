@@ -279,15 +279,42 @@
   <!-- LIVE BADGE UNLOCK POPUP (TOAST) -->
   <div id="badge-toast-container" class="fixed top-4 left-0 right-0 z-[70] flex flex-col items-center pointer-events-none px-4"></div>
 
-  <!-- ================= GAME HUB LOBBY (START SCREEN MET 4 THEMA'S) ================= -->
+  <!-- ================= GAME HUB LOBBY (START SCREEN MET 4 THEMA'S & LIJSTEN KNOP) ================= -->
   <div id="hub-lobby" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-start p-4 overflow-y-auto">
     <div class="max-w-4xl w-full flex flex-col items-center gap-4 text-center py-4 relative z-10 my-auto">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center text-2xl md:text-3xl shadow-[0_0_25px_rgba(6,182,212,0.4)] animate-float shrink-0">🎮</div>
-        <div class="text-left">
-          <h1 class="font-cyber text-xl md:text-3xl font-black text-cyan-400 tracking-wider">SPELLING GAMING HUB</h1>
-          <p class="text-[11px] md:text-xs text-slate-300">Kies jouw wereld! Spaar credits, ontgrendel upgrades en verzamel alle badges.</p>
+      
+      <!-- Hub Top Bar: Titel, Versie & Lijsten-Knop -->
+      <div class="w-full flex flex-wrap items-center justify-between gap-3 cyber-panel rounded-2xl p-4 border-b-2 border-cyan-500/40">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center text-2xl shadow-[0_0_20px_rgba(6,182,212,0.4)] animate-float shrink-0">🎮</div>
+          <div class="text-left">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h1 class="font-cyber text-lg md:text-2xl font-black text-cyan-400 tracking-wider">SPELLING GAMING HUB</h1>
+              <span class="px-2 py-0.5 rounded-md bg-slate-800 border border-slate-700 text-[10px] font-cyber font-bold text-slate-400">v4.7</span>
+            </div>
+            <p class="text-[11px] text-slate-300">Kies je woordenlijst en start een avontuur in één van de 4 werelden!</p>
+          </div>
         </div>
+
+        <!-- Lijsten & Instellingen Knop op de Hub -->
+        <button 
+          type="button" 
+          onclick="openAdminModal()" 
+          class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-cyan-500/50 text-cyan-300 font-cyber font-bold text-xs md:text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/10 active:scale-95 transition"
+        >
+          <span>⚙️ Lijsten & Instellingen</span>
+        </button>
+      </div>
+
+      <!-- Actieve Woordenlijst Snel-Balk -->
+      <div class="w-full bg-slate-900/80 border border-slate-800 rounded-xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-slate-400">📚 Actieve woordenlijst:</span>
+          <strong id="hub-active-list-label" class="font-cyber text-cyan-300 text-xs md:text-sm">Blok 3 - Week 4</strong>
+        </div>
+        <button type="button" onclick="openAdminModal()" class="text-cyan-400 hover:text-cyan-300 font-bold underline text-[11px] transition">
+          Wijzig lijst of spelmodus →
+        </button>
       </div>
 
       <!-- 4 Game Mode Cards (2x2 Grid) -->
@@ -371,15 +398,148 @@
         </div>
       </div>
 
-      <div class="text-[11px] text-slate-400 flex items-center gap-2">
-        <span>Actieve woordenlijst: <strong id="hub-active-list-label" class="text-cyan-400">Blok 3 - Week 4</strong></span>
+      <!-- Footer met Versie-informatie op de Hub -->
+      <div class="text-[11px] text-slate-500 flex flex-wrap items-center justify-center gap-2 pt-1">
+        <span>CodeBot Gaming Hub <strong class="text-slate-400">v4.7</strong> (4 Werelden Edition)</span>
         <span>•</span>
-        <button onclick="document.getElementById('hub-lobby').classList.add('hidden'); switchTab('admin');" class="underline hover:text-white transition">⚙️ Lijsten & Bronnen bekijken</button>
+        <span>Woordenlijsten via <code class="text-cyan-400/80">woorden.json</code></span>
       </div>
     </div>
   </div>
 
-  <!-- ================= UPGRADES, LOGICA & BADGES POP-UP MODAL ================= -->
+  <!-- ================= LIJSTEN & INSTELLINGEN POP-UP MODAL (VANUIT DE HUB) ================= -->
+  <div id="admin-modal" onclick="handleAdminBackdropClick(event)" class="hidden fixed inset-0 z-[55] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 md:p-6 overflow-y-auto">
+    <div class="cyber-panel cyber-border-cyan rounded-3xl p-4 md:p-6 max-w-5xl w-full flex flex-col gap-4 my-auto animate-modal-pop max-h-[92vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">⚙️</span>
+          <div>
+            <h2 class="font-cyber text-base md:text-xl font-black text-cyan-400">Woordenlijsten & Instellingen</h2>
+            <p class="text-xs text-slate-400">Kies de actieve woordenlijst, spelmodus en test het geluid voordat je gaat spelen.</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeAdminModal()" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-cyber font-black text-xs md:text-sm shadow-lg shadow-cyan-500/20 active:scale-95 transition">
+          ⬅️ Terug naar Hub
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <!-- Links: Multi-List Manager + URL Diagnose -->
+        <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-cyber text-sm md:text-base font-bold text-cyan-400">📚 Woordenlijsten Beheren</h3>
+            <button type="button" onclick="fetchWordsJson()" class="px-3 py-1 rounded-lg bg-cyan-500/20 border border-cyan-400 text-cyan-300 font-bold text-xs hover:bg-cyan-500/30 active:scale-95 transition">🔄 Herlaad JSON</button>
+          </div>
+          
+          <!-- WOORDEN.JSON BRON & URL MONITOR -->
+          <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-3 flex flex-col gap-1.5 text-xs font-mono">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-slate-400 font-sans font-bold">Bron Status:</span>
+              <span id="json-source-badge" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[11px] font-bold">⏳ Controleren...</span>
+            </div>
+            <div class="text-[11px] text-slate-400 break-all">
+              <span class="text-slate-500">Geconfigureerde URL:</span><br/>
+              <span id="json-configured-url" class="text-cyan-300 select-all">-</span>
+            </div>
+            <div class="text-[10px] text-slate-500 flex justify-between pt-1 border-t border-slate-800/80">
+              <span>Actieve bron: <strong id="json-active-url" class="text-slate-300">-</strong></span>
+              <span id="json-last-sync">-</span>
+            </div>
+          </div>
+          
+          <div class="flex flex-col gap-2 bg-slate-950/90 p-3 rounded-xl border border-slate-800">
+            <div class="flex gap-2">
+              <select id="saved-lists-select" onchange="loadSelectedList()" class="flex-grow bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white outline-none">
+                <!-- Dynamically populated -->
+              </select>
+              <button type="button" onclick="createNewListPrompt()" class="px-3 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition whitespace-nowrap">
+                ➕ Nieuw
+              </button>
+            </div>
+            <div class="flex gap-2 justify-end">
+              <button type="button" onclick="renameCurrentList()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px]">Hernoem</button>
+              <button type="button" onclick="deleteCurrentList()" class="px-2.5 py-1 rounded bg-rose-950/60 hover:bg-rose-900 text-rose-300 text-[11px]">Verwijder</button>
+            </div>
+          </div>
+
+          <textarea 
+            id="admin-words-input" 
+            rows="6"
+            class="w-full bg-slate-950/90 border border-slate-700 focus:border-cyan-400 rounded-xl p-3 text-sm text-white font-mono outline-none"
+            placeholder="bibliotheek..."
+          ></textarea>
+
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs text-slate-400">Spelmodus:</span>
+            <select id="admin-game-mode" onchange="saveAdminSettings()" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
+              <option value="flash">Flits-Scan (Kort tonen)</option>
+              <option value="audio">Blind Audio-Dictee</option>
+              <option value="vowels">Klinker-Puzzel</option>
+            </select>
+          </div>
+
+          <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer mt-1">
+            <input type="checkbox" id="admin-strict-punct" onchange="saveAdminSettings()" class="rounded bg-slate-900 border-slate-700 text-cyan-500" />
+            <span>Strenge hoofdletter- en puntcontrole</span>
+          </label>
+
+          <div class="flex gap-2 mt-1">
+            <button type="button" onclick="saveActiveWordList()" class="flex-grow py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs md:text-sm transition">
+              💾 Opslaan & Activeren
+            </button>
+            <button type="button" onclick="resetDefaultLists()" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition">
+              Reset
+            </button>
+          </div>
+          <div id="admin-save-msg" class="text-xs text-emerald-400 hidden">✅ Lijst opgeslagen en geactiveerd!</div>
+        </div>
+
+        <!-- Rechts: Audio Settings & Foutenlogboek -->
+        <div class="bg-slate-900/70 rounded-2xl p-4 flex flex-col gap-4 border border-amber-500/30">
+          <div>
+            <h3 class="font-cyber text-sm md:text-base font-bold text-amber-400">🔊 Spraak (TTS) & Geluid Diagnose</h3>
+            <p class="text-xs text-slate-400">Test hieronder de spraakmodule en de thema-geluidjes.</p>
+          </div>
+
+          <div class="bg-slate-950/90 p-3.5 rounded-xl border border-slate-800 flex flex-col gap-2">
+            <label class="text-xs font-bold text-cyan-300">Spraak-Engine:</label>
+            <select id="tts-engine-select" onchange="changeTTSEngine()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs md:text-sm text-white outline-none">
+              <option value="auto">⚡ Automatisch (Ingebouwde Tablet/Browser Stem)</option>
+              <option value="native">💻 Alleen Ingebouwde Browser Stem</option>
+            </select>
+
+            <label class="text-xs font-bold text-slate-400 mt-2">Browser-stem:</label>
+            <select id="tts-voice-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-300 outline-none">
+              <option value="">Zoeken naar NL-stemmen...</option>
+            </select>
+          </div>
+
+          <div id="tts-diagnostic-box" class="bg-slate-950/90 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-300 space-y-1">
+            <div>Status: <span id="diag-status" class="text-amber-400">Controleren...</span></div>
+            <div>Gevonden NL-stemmen: <span id="diag-voices">0</span></div>
+            <div>Laatste actie: <span id="diag-last-action" class="text-cyan-300">Geen</span></div>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <button type="button" onclick="testAudioSystem()" class="flex-1 py-2 px-3 rounded-xl bg-cyan-500/20 border border-cyan-500/50 hover:bg-cyan-500/30 text-cyan-300 font-bold text-xs transition">▶️ Test Spraak</button>
+            <button type="button" onclick="playMegaLaserSound()" class="flex-1 py-2 px-3 rounded-xl bg-purple-500/20 border border-purple-500/50 hover:bg-purple-500/30 text-purple-300 font-bold text-xs transition">💥 Test Finale Geluid</button>
+            <button type="button" onclick="testKawaiiSoundPreview()" class="flex-1 py-2 px-3 rounded-xl bg-pink-500/20 border border-pink-400/50 hover:bg-pink-500/30 text-pink-300 font-bold text-xs transition">🌸 Test Kawaii Toverstaf</button>
+          </div>
+
+          <div class="border-t border-slate-800 pt-3">
+            <span class="text-xs font-bold text-rose-400 block mb-1">🐞 Laatste Foutjes-Logboek:</span>
+            <div id="admin-mistake-log" class="text-xs text-slate-400 italic">Nog geen foutjes gemaakt.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= UPGRADES, LOGICA & BADGES POP-UP MODAL (IN-GAME) ================= -->
   <div id="upgrades-modal" onclick="handleModalBackdropClick(event)" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 md:p-6 overflow-y-auto">
     <div id="upgrades-modal-panel" class="cyber-panel cyber-border-cyan rounded-3xl p-4 md:p-6 max-w-5xl w-full flex flex-col gap-4 my-auto animate-modal-pop max-h-[92vh] overflow-y-auto">
       
@@ -581,13 +741,13 @@
     </div>
   </div>
 
-  <!-- TOP NAVIGATION & HUD -->
+  <!-- TOP NAVIGATION & HUD (TIJDENS HET SPELEN - ZONDER VERSIENUMMER EN ZONDER LIJSTEN-KNOP) -->
   <header class="max-w-5xl w-full mx-auto cyber-panel rounded-2xl p-4 mb-4 flex flex-wrap items-center justify-between gap-4 border-b-2 border-cyan-500/40 relative z-10">
     <div class="flex items-center gap-3">
       <button onclick="returnToHub()" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-lg hover:bg-slate-700 transition" title="Terug naar Hub">🏠</button>
       <div>
         <h1 id="app-title-header" class="font-cyber text-lg md:text-xl font-black tracking-wider text-cyan-400">CODEBOT ARENA</h1>
-        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v4.6 • Kawaii Sound Edition</p>
+        <p id="app-subtitle-header" class="text-xs text-slate-400">Cyber Spelling Compiler</p>
       </div>
     </div>
 
@@ -614,21 +774,19 @@
       </div>
     </div>
 
-    <!-- Navigation Buttons -->
+    <!-- In-Game Action Button: Alleen Upgrades -->
     <div class="flex items-center gap-2">
-      <button onclick="switchTab('arena')" id="tab-arena" class="px-3 py-2 rounded-lg text-xs md:text-sm font-bold bg-cyan-500 text-slate-950 transition">⚔️ Speel</button>
-      <button onclick="openUpgradesModal()" id="btn-top-upgrades" class="px-3 py-2 rounded-lg text-xs md:text-sm font-bold bg-purple-600/30 border border-purple-400/50 text-purple-200 hover:bg-purple-600/50 transition relative">
-        🔧 Upgrades
+      <button onclick="openUpgradesModal()" id="btn-top-upgrades" class="px-4 py-2.5 rounded-xl text-xs md:text-sm font-cyber font-bold bg-purple-600/30 border border-purple-400/50 text-purple-200 hover:bg-purple-600/50 transition relative">
+        <span id="btn-top-upgrades-label">🔧 Upgrades</span>
         <span id="upgrade-affordable-dot" class="hidden absolute -top-1 -right-1 w-3 h-3 rounded-full bg-amber-400 animate-ping"></span>
       </button>
-      <button onclick="switchTab('admin')" id="tab-admin" class="px-3 py-2 rounded-lg text-xs md:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition" title="Woordenlijsten & URL Status">⚙️ Lijsten</button>
     </div>
   </header>
 
   <!-- MAIN CONTENT AREA -->
   <main id="main-container" class="max-w-5xl w-full mx-auto flex-grow flex flex-col gap-4 relative z-10">
 
-    <!-- ================= TAB 1: ARENA / LAB / SPACE / KAWAII GAMEPLAY ================= -->
+    <!-- ================= ARENA / LAB / SPACE / KAWAII GAMEPLAY ================= -->
     <section id="view-arena" class="flex flex-col gap-4">
       
       <!-- BOSS / EXPERIMENT ALERT BANNER -->
@@ -790,121 +948,6 @@
               <span class="text-[10px] uppercase text-emerald-400 block mb-1.5">Verwachte Invoer:</span>
               <div id="debug-target-chars" class="flex flex-wrap gap-1.5"></div>
             </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ================= TAB 2: ADMIN & MULTI-LIST MANAGER ================= -->
-    <section id="view-admin" class="hidden flex-col gap-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <!-- Multi-List Manager + URL Diagnose -->
-        <div class="cyber-panel rounded-2xl p-5 flex flex-col gap-3">
-          <div class="flex items-center justify-between">
-            <h2 class="font-cyber text-base md:text-lg font-bold text-cyan-400">📚 Woordenlijsten Beheren</h2>
-            <button type="button" onclick="fetchWordsJson()" class="px-3 py-1 rounded-lg bg-cyan-500/20 border border-cyan-400 text-cyan-300 font-bold text-xs hover:bg-cyan-500/30 active:scale-95 transition">🔄 Herlaad JSON</button>
-          </div>
-          
-          <!-- WOORDEN.JSON BRON & URL MONITOR -->
-          <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-3 flex flex-col gap-1.5 text-xs font-mono">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-slate-400 font-sans font-bold">Bron Status:</span>
-              <span id="json-source-badge" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[11px] font-bold">⏳ Controleren...</span>
-            </div>
-            <div class="text-[11px] text-slate-400 break-all">
-              <span class="text-slate-500">Geconfigureerde URL:</span><br/>
-              <span id="json-configured-url" class="text-cyan-300 select-all">-</span>
-            </div>
-            <div class="text-[10px] text-slate-500 flex justify-between pt-1 border-t border-slate-800/80">
-              <span>Actieve bron: <strong id="json-active-url" class="text-slate-300">-</strong></span>
-              <span id="json-last-sync">-</span>
-            </div>
-          </div>
-          
-          <div class="flex flex-col gap-2 bg-slate-950/90 p-3 rounded-xl border border-slate-800">
-            <div class="flex gap-2">
-              <select id="saved-lists-select" onchange="loadSelectedList()" class="flex-grow bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white outline-none">
-                <!-- Dynamically populated -->
-              </select>
-              <button type="button" onclick="createNewListPrompt()" class="px-3 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition whitespace-nowrap">
-                ➕ Nieuw
-              </button>
-            </div>
-            <div class="flex gap-2 justify-end">
-              <button type="button" onclick="renameCurrentList()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px]">Hernoem</button>
-              <button type="button" onclick="deleteCurrentList()" class="px-2.5 py-1 rounded bg-rose-950/60 hover:bg-rose-900 text-rose-300 text-[11px]">Verwijder</button>
-            </div>
-          </div>
-
-          <textarea 
-            id="admin-words-input" 
-            rows="6"
-            class="w-full bg-slate-950/90 border border-slate-700 focus:border-cyan-400 rounded-xl p-3 text-sm text-white font-mono outline-none"
-            placeholder="bibliotheek..."
-          ></textarea>
-
-          <div class="flex flex-wrap items-center justify-between gap-2">
-            <span class="text-xs text-slate-400">Modus:</span>
-            <select id="admin-game-mode" onchange="saveAdminSettings()" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
-              <option value="flash">Flits-Scan (Kort tonen)</option>
-              <option value="audio">Blind Audio-Dictee</option>
-              <option value="vowels">Klinker-Puzzel</option>
-            </select>
-          </div>
-
-          <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer mt-1">
-            <input type="checkbox" id="admin-strict-punct" onchange="saveAdminSettings()" class="rounded bg-slate-900 border-slate-700 text-cyan-500" />
-            <span>Strenge hoofdletter- en puntcontrole</span>
-          </label>
-
-          <div class="flex gap-2 mt-1">
-            <button type="button" onclick="saveActiveWordList()" class="flex-grow py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs md:text-sm transition">
-              💾 Opslaan & Activeren
-            </button>
-            <button type="button" onclick="resetDefaultLists()" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition">
-              Reset
-            </button>
-          </div>
-          <div id="admin-save-msg" class="text-xs text-emerald-400 hidden">✅ Lijst opgeslagen!</div>
-        </div>
-
-        <!-- Audio Settings -->
-        <div class="cyber-panel rounded-2xl p-5 flex flex-col gap-4 border border-amber-500/40">
-          <div>
-            <h2 class="font-cyber text-base md:text-lg font-bold text-amber-400">🔊 Spraak (TTS) & Geluid Diagnose</h2>
-            <p class="text-xs text-slate-400">Test hieronder de spraakmodule en de thema-geluidjes.</p>
-          </div>
-
-          <div class="bg-slate-950/90 p-3.5 rounded-xl border border-slate-800 flex flex-col gap-2">
-            <label class="text-xs font-bold text-cyan-300">Spraak-Engine:</label>
-            <select id="tts-engine-select" onchange="changeTTSEngine()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs md:text-sm text-white outline-none">
-              <option value="auto">⚡ Automatisch (Ingebouwde Tablet/Browser Stem)</option>
-              <option value="native">💻 Alleen Ingebouwde Browser Stem</option>
-            </select>
-
-            <label class="text-xs font-bold text-slate-400 mt-2">Browser-stem:</label>
-            <select id="tts-voice-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-300 outline-none">
-              <option value="">Zoeken naar NL-stemmen...</option>
-            </select>
-          </div>
-
-          <div id="tts-diagnostic-box" class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-xs font-mono text-slate-300 space-y-1">
-            <div>Status: <span id="diag-status" class="text-amber-400">Controleren...</span></div>
-            <div>Gevonden NL-stemmen: <span id="diag-voices">0</span></div>
-            <div>Laatste actie: <span id="diag-last-action" class="text-cyan-300">Geen</span></div>
-          </div>
-
-          <div class="flex flex-wrap gap-2">
-            <button type="button" onclick="testAudioSystem()" class="flex-1 py-2 px-3 rounded-xl bg-cyan-500/20 border border-cyan-500/50 hover:bg-cyan-500/30 text-cyan-300 font-bold text-xs transition">▶️ Test Spraak</button>
-            <button type="button" onclick="playMegaLaserSound()" class="flex-1 py-2 px-3 rounded-xl bg-purple-500/20 border border-purple-500/50 hover:bg-purple-500/30 text-purple-300 font-bold text-xs transition">💥 Test Finale Geluid</button>
-            <button type="button" onclick="testKawaiiSoundPreview()" class="flex-1 py-2 px-3 rounded-xl bg-pink-500/20 border border-pink-400/50 hover:bg-pink-500/30 text-pink-300 font-bold text-xs transition">🌸 Test Kawaii Toverstaf</button>
-          </div>
-
-          <div class="border-t border-slate-800 pt-3">
-            <span class="text-xs font-bold text-rose-400 block mb-1">🐞 Debug-Logboek:</span>
-            <div id="admin-mistake-log" class="text-xs text-slate-400 italic">Nog geen foutjes gemaakt.</div>
           </div>
         </div>
 
@@ -1310,7 +1353,7 @@
     const THEMES = {
       arena: {
         title: "CODEBOT ARENA",
-        subtitle: "Spelling Compiler v4.6 • Cyber Arena",
+        subtitle: "Cyber Spelling Compiler",
         currency: "Data-Bits",
         currencySymbol: "💎",
         repairName: "Nano-Repair Kit",
@@ -1355,7 +1398,7 @@
 
       lab: {
         title: "BIO-CHEM LAB",
-        subtitle: "Wetenschappelijk Synthese Lab v4.6",
+        subtitle: "Wetenschappelijk Synthese Lab",
         currency: "Lab Credits",
         currencySymbol: "⚗️",
         repairName: "Bio-Medisch Serum",
@@ -1400,7 +1443,7 @@
 
       space: {
         title: "STAR-BLASTER GALAXY",
-        subtitle: "Galactische Boordcomputer v4.6 • Space Shooter",
+        subtitle: "Galactische Boordcomputer",
         currency: "Sterrenstof",
         currencySymbol: "🌟",
         repairName: "Nano-Schild Batterij",
@@ -1445,7 +1488,7 @@
 
       kawaii: {
         title: "KAWAII DROOMWERELD",
-        subtitle: "Magische Spelling Studio v4.6 • Cute Sounds Edition",
+        subtitle: "Magische Spelling Studio",
         currency: "Sterretjes",
         currencySymbol: "⭐",
         repairName: "Aardbeien Boba-Thee",
@@ -1500,7 +1543,7 @@
     }
 
     // ==========================================
-    // POP-UP WAPENKAMER (MODAL) FUNCTIES
+    // POP-UP MODALS: UPGRADES (IN-GAME) & LIJSTEN (OP DE HUB)
     // ==========================================
     function openUpgradesModal() {
       renderGarage();
@@ -1512,7 +1555,7 @@
     function closeUpgradesModal() {
       document.getElementById('upgrades-modal').classList.add('hidden');
       const inputEl = document.getElementById('word-input');
-      if (inputEl && !document.getElementById('view-arena').classList.contains('hidden')) {
+      if (inputEl && document.getElementById('hub-lobby').classList.contains('hidden')) {
         inputEl.focus();
       }
     }
@@ -1523,9 +1566,30 @@
       }
     }
 
+    function openAdminModal() {
+      renderListSelector();
+      renderMistakeLog();
+      document.getElementById('admin-modal').classList.remove('hidden');
+    }
+
+    function closeAdminModal() {
+      document.getElementById('admin-modal').classList.add('hidden');
+    }
+
+    function handleAdminBackdropClick(event) {
+      if (event.target.id === 'admin-modal') {
+        closeAdminModal();
+      }
+    }
+
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !document.getElementById('upgrades-modal').classList.contains('hidden')) {
-        closeUpgradesModal();
+      if (e.key === 'Escape') {
+        if (!document.getElementById('upgrades-modal').classList.contains('hidden')) {
+          closeUpgradesModal();
+        }
+        if (!document.getElementById('admin-modal').classList.contains('hidden')) {
+          closeAdminModal();
+        }
       }
     });
 
@@ -1693,10 +1757,10 @@
       state.hubBadgePreviewTheme = theme;
       resetSessionProgress();
       document.getElementById('hub-lobby').classList.add('hidden');
+      document.getElementById('admin-modal').classList.add('hidden');
       document.getElementById('gameover-modal').classList.add('hidden');
       document.getElementById('victory-modal').classList.add('hidden');
       document.getElementById('upgrades-modal').classList.add('hidden');
-      switchTab('arena');
       applyThemeUI();
       initBgParticles();
       setTimeout(() => loadNextWord(true), 300);
@@ -1706,6 +1770,7 @@
       document.getElementById('victory-modal').classList.add('hidden');
       document.getElementById('gameover-modal').classList.add('hidden');
       document.getElementById('upgrades-modal').classList.add('hidden');
+      document.getElementById('admin-modal').classList.add('hidden');
       document.getElementById('hub-lobby').classList.remove('hidden');
       renderHighscores();
       renderBadgesUI();
@@ -1747,6 +1812,11 @@
 
       document.getElementById('btn-speak').innerHTML = `🔊 Spreek Uit (${t.currencySymbol} ${COST_SPEAK})`;
       document.getElementById('btn-spell').innerHTML = `🐢 Spel (${t.currencySymbol} ${COST_SPELL})`;
+
+      const topUpgradeLabel = document.getElementById('btn-top-upgrades-label');
+      if (topUpgradeLabel) {
+        topUpgradeLabel.textContent = state.gameTheme === 'kawaii' ? '🎀 Boetiek' : (state.gameTheme === 'space' ? '🛸 Hangar' : '🔧 Upgrades');
+      }
 
       root.classList.remove('lab-theme', 'space-theme', 'kawaii-theme');
       consolePanel.classList.remove('cyber-border-cyan', 'lab-border', 'space-border', 'kawaii-border');
@@ -1940,7 +2010,7 @@
       document.getElementById('admin-words-input').value = currentItems.join('\n');
 
       const hubLabel = document.getElementById('hub-active-list-label');
-      if (hubLabel) hubLabel.textContent = state.activeListName;
+      if (hubLabel) hubLabel.textContent = `${state.activeListName} (${currentItems.length} items)`;
     }
 
     function loadSelectedList() {
@@ -1951,7 +2021,7 @@
       const currentItems = state.lists[state.activeListName] || [];
       document.getElementById('admin-words-input').value = currentItems.join('\n');
       const hubLabel = document.getElementById('hub-active-list-label');
-      if (hubLabel) hubLabel.textContent = state.activeListName;
+      if (hubLabel) hubLabel.textContent = `${state.activeListName} (${currentItems.length} items)`;
       applyThemeUI();
     }
 
@@ -1997,6 +2067,7 @@
       state.lists[state.activeListName] = parsed;
       resetSessionProgress();
       saveAllListsToStorage();
+      renderListSelector();
       const msg = document.getElementById('admin-save-msg');
       msg.classList.remove('hidden');
       setTimeout(() => msg.classList.add('hidden'), 3000);
@@ -2178,7 +2249,6 @@
       return audioCtx;
     }
 
-    // Hulpfunctie voor zachte, klik-vrije muzikale tonen en bellen
     function playCuteTone(ctx, freq, startOffset, duration, type = 'sine', maxGain = 0.15, slideToFreq = null) {
       const now = ctx.currentTime + startOffset;
       const osc = ctx.createOscillator();
@@ -2190,7 +2260,6 @@
         osc.frequency.exponentialRampToValueAtTime(slideToFreq, now + duration * 0.85);
       }
 
-      // Zachte attack (voorkomt tikken) en bel-achtige uitdoving
       gain.gain.setValueAtTime(0.001, now);
       gain.gain.linearRampToValueAtTime(maxGain, now + 0.012);
       gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
@@ -2201,46 +2270,37 @@
       osc.stop(now + duration + 0.02);
     }
 
-    // Specifieke Schattige Kawaii Toverstaf-Geluidjes (8 Tiers)
     function playKawaiiWeaponSound(ctx, weaponType = 'pulse') {
       if (weaponType === 'pulse') {
-        // 🐱 T1 Glitter-Stafje: Drietonige sterren-twinkel (C6 -> E6 -> G6)
         [1046.50, 1318.51, 1567.98].forEach((f, i) => {
           playCuteTone(ctx, f, i * 0.055, 0.22, 'sine', 0.16);
         });
       } else if (weaponType === 'twin') {
-        // 🐰 T2 Hartjes-Boog: Dubbele schattige zeepbel-pop ("blub-bloop!")
         playCuteTone(ctx, 520, 0.00, 0.14, 'sine', 0.18, 980);
         playCuteTone(ctx, 680, 0.11, 0.16, 'sine', 0.18, 1320);
       } else if (weaponType === 'plasma') {
-        // 🦊 T3 Suikerspin-Wolk: Vrolijke 5-toons toverstaf-sprankel
         [783.99, 987.77, 1174.66, 1567.98, 1975.53].forEach((f, i) => {
           playCuteTone(ctx, f, i * 0.045, 0.24, 'triangle', 0.14);
         });
       } else if (weaponType === 'shock') {
-        // 🐹 T4 Knetter-Sterren: Vrolijke 8-bit muntjes/sterretjes chime
         [987.77, 1318.51, 1479.98, 1975.53].forEach((f, i) => {
           playCuteTone(ctx, f, i * 0.04, 0.18, 'triangle', 0.16);
         });
       } else if (weaponType === 'cryo') {
-        // 🐻‍❄️ T5 Sneeuwvlok-Staf: Heldere ijskristal-windgong
         [1318.51, 1567.98, 2093.00, 2637.02].forEach((f, i) => {
           playCuteTone(ctx, f, i * 0.06, 0.38, 'sine', 0.13);
         });
       } else if (weaponType === 'vortex') {
-        // 🦎 T6 Droomwolk-Kolk: Dromerige harp-glissando omhoog
         [587.33, 739.99, 880.00, 1174.66, 1479.98, 1760.00].forEach((f, i) => {
           playCuteTone(ctx, f, i * 0.045, 0.32, 'sine', 0.14);
         });
       } else if (weaponType === 'crush') {
-        // 🐶 T7 Kroon-Glitterstraal: Koninklijk akkoord + diamant-tingel
         [523.25, 659.25, 783.99, 1046.50].forEach((f) => {
           playCuteTone(ctx, f, 0, 0.30, 'triangle', 0.10);
         });
         playCuteTone(ctx, 1567.98, 0.10, 0.28, 'sine', 0.16);
         playCuteTone(ctx, 2093.00, 0.16, 0.35, 'sine', 0.16);
       } else if (weaponType === 'nova') {
-        // 🦄 T8 Regenboog-Eenhoorn: Magische Regenboog-Harp over 2 octaven!
         const scale = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50, 1174.66, 1318.51, 1567.98, 2093.00];
         scale.forEach((f, i) => {
           playCuteTone(ctx, f, i * 0.04, 0.38, 'sine', 0.14);
@@ -2260,7 +2320,6 @@
       const ctx = getAudioCtx();
       if (!ctx) return;
 
-      // Gebruik de schattige geluiden-synthesizer in de Kawaii Droomwereld!
       if (state.gameTheme === 'kawaii') {
         playKawaiiWeaponSound(ctx, weaponType);
         return;
@@ -2315,7 +2374,6 @@
       const ctx = getAudioCtx();
       if (!ctx) return;
       if (state.gameTheme === 'kawaii') {
-        // Schattig Boba-slurp / hartjes-geluidje
         playCuteTone(ctx, 480, 0.00, 0.12, 'sine', 0.16, 860);
         playCuteTone(ctx, 640, 0.10, 0.14, 'sine', 0.16, 1180);
         playCuteTone(ctx, 1046.50, 0.22, 0.30, 'triangle', 0.16);
@@ -2331,7 +2389,6 @@
       const ctx = getAudioCtx();
       if (!ctx) return;
 
-      // In Kawaii: Vrolijke Regenboog-Waterval i.p.v. zware laser-dreun!
       if (state.gameTheme === 'kawaii') {
         const notes = [523.25, 659.25, 783.99, 987.77, 1046.50, 1318.51, 1567.98, 1975.53, 2093.00];
         notes.forEach((f, idx) => {
@@ -2359,7 +2416,6 @@
       if (!ctx) return;
 
       if (state.gameTheme === 'kawaii') {
-        // Speelse tover-aankondiging voor Koning Donderwolk
         [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
           playCuteTone(ctx, f, i * 0.09, 0.3, 'triangle', 0.15);
         });
@@ -2391,7 +2447,6 @@
       if (!ctx) return;
 
       if (state.gameTheme === 'kawaii') {
-        // Zacht speeldoos-slaapliedje als de hartjes op zijn
         [783.99, 659.25, 587.33, 523.25].forEach((freq, idx) => {
           playCuteTone(ctx, freq, idx * 0.22, 0.45, 'sine', 0.15);
         });
@@ -2417,7 +2472,6 @@
       if (!ctx) return;
 
       if (state.gameTheme === 'kawaii') {
-        // Schattig zacht "Oepsie / Uh-oh" geluidje i.p.v. harde fout-zoemer
         playCuteTone(ctx, 523.25, 0.00, 0.14, 'triangle', 0.15, 440);
         playCuteTone(ctx, 392.00, 0.13, 0.24, 'triangle', 0.15, 330);
         return;
@@ -2517,7 +2571,10 @@
       document.getElementById('debugger-panel').classList.add('hidden');
       const inputEl = document.getElementById('word-input');
       inputEl.value = '';
-      if (document.getElementById('upgrades-modal').classList.contains('hidden')) {
+      if (
+        document.getElementById('upgrades-modal').classList.contains('hidden') &&
+        document.getElementById('hub-lobby').classList.contains('hidden')
+      ) {
         inputEl.focus();
       }
 
@@ -3206,33 +3263,6 @@
       const entries = Object.entries(state.mistakes);
       if (entries.length === 0) { logEl.textContent = "Nog geen foutjes gemaakt."; return; }
       logEl.innerHTML = entries.map(([w, count]) => `<span class="inline-block bg-rose-950 border border-rose-500/40 text-rose-300 px-2 py-0.5 rounded mr-1.5 mb-1 not-italic">${w} (${count}x)</span>`).join('');
-    }
-
-    function switchTab(tab) {
-      ['arena', 'admin'].forEach(t => {
-        const viewEl = document.getElementById(`view-${t}`);
-        const tabEl = document.getElementById(`tab-${t}`);
-        if (viewEl) {
-          viewEl.classList.add('hidden');
-          viewEl.classList.remove('flex');
-        }
-        if (tabEl) {
-          tabEl.className = "px-3 py-2 rounded-lg text-xs md:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition relative";
-        }
-      });
-
-      const activeView = document.getElementById(`view-${tab}`);
-      const activeTab = document.getElementById(`tab-${tab}`);
-      if (activeView) {
-        activeView.classList.remove('hidden');
-        activeView.classList.add('flex');
-      }
-      if (activeTab) {
-        activeTab.className = "px-3 py-2 rounded-lg text-xs md:text-sm font-bold bg-cyan-500 text-slate-950 transition relative";
-      }
-
-      if (tab === 'arena') document.getElementById('word-input').focus();
-      updateHUD();
     }
 
     window.addEventListener('DOMContentLoaded', () => {

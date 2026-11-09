@@ -38,7 +38,15 @@ jobs:
           cp index.html www/
           if [ -f woorden.json ]; then cp woorden.json www/; fi
 
-          # Injecteer automatisch de juiste woorden.json URL in www/index.html
+          # 1. Bepaal het automatische versienummer op basis van het GitHub Build nummer
+          BUILD_NUM=${{ github.run_number }}
+          VERSION_NAME="4.7.$BUILD_NUM"
+          echo "✅ Automatisch versienummer ingesteld op: v$VERSION_NAME (Build code: $BUILD_NUM)"
+
+          # 2. Injecteer het versienummer direct in de Hub van www/index.html
+          sed -i "s|v4\.7|v$VERSION_NAME|g" www/index.html
+
+          # 3. Injecteer automatisch de juiste woorden.json URL in www/index.html
           if [ -n "${{ vars.WOORDEN_JSON_URL }}" ]; then
             TARGET_URL="${{ vars.WOORDEN_JSON_URL }}"
           else
@@ -91,16 +99,12 @@ jobs:
 
           npx cap sync android
 
-          # Automatisch uniek versienummer instellen op basis van GitHub Build nummer
-          BUILD_NUM=${{ github.run_number }}
-          VERSION_NAME="4.2.$BUILD_NUM"
-          echo "Automatisch versienummer ingesteld op: $VERSION_NAME (Code: $BUILD_NUM)"
-          
+          # Werk ook build.gradle bij met exact hetzelfde versienummer
           BUILD_GRADLE="android/app/build.gradle"
           if [ -f "$BUILD_GRADLE" ]; then
             sed -i "s/versionCode [0-9]*/versionCode $BUILD_NUM/" "$BUILD_GRADLE"
             sed -i "s/versionName \".*\"/versionName \"$VERSION_NAME\"/" "$BUILD_GRADLE"
-            echo "build.gradle succesvol bijgewerkt met versie $VERSION_NAME"
+            echo "✅ build.gradle succesvol bijgewerkt met versie $VERSION_NAME"
           fi
 
           # Forceer stabiele Gradle distributie in het Android project

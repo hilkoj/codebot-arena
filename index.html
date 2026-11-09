@@ -526,7 +526,7 @@
       <button onclick="returnToHub()" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-lg hover:bg-slate-700 transition" title="Terug naar Hub">🏠</button>
       <div>
         <h1 id="app-title-header" class="font-cyber text-lg md:text-xl font-black tracking-wider text-cyan-400">CODEBOT ARENA</h1>
-        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v4.3 • Pop-up Wapenkamer</p>
+        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v4.4 • Spatie-Underscore Update</p>
       </div>
     </div>
 
@@ -691,7 +691,7 @@
           <div id="word-display-box" class="font-cyber text-lg md:text-2xl tracking-[0.2em] text-cyan-300 font-bold break-words max-w-full">
             KLAAR VOOR INVOER
           </div>
-          <div id="audio-status-indicator" class="text-[11px] text-slate-500 mt-1.5">Bespaarde credits en overgebleven HP verhogen direct je Eindscore!</div>
+          <div id="audio-status-indicator" class="text-[11px] text-slate-500 mt-1.5">Elk puntje (•) is een teken, elke underscore (_) is een spatie!</div>
         </div>
 
         <!-- Input Form -->
@@ -746,7 +746,7 @@
             <button type="button" onclick="fetchWordsJson()" class="px-3 py-1 rounded-lg bg-cyan-500/20 border border-cyan-400 text-cyan-300 font-bold text-xs hover:bg-cyan-500/30 active:scale-95 transition">🔄 Herlaad JSON</button>
           </div>
           
-          <!-- NIEUW: WOORDEN.JSON BRON & URL MONITOR -->
+          <!-- WOORDEN.JSON BRON & URL MONITOR -->
           <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-3 flex flex-col gap-1.5 text-xs font-mono">
             <div class="flex items-center justify-between gap-2">
               <span class="text-slate-400 font-sans font-bold">Bron Status:</span>
@@ -1203,7 +1203,7 @@
     const THEMES = {
       arena: {
         title: "CODEBOT ARENA",
-        subtitle: "Spelling Compiler v4.3 • Pop-up Wapenkamer",
+        subtitle: "Spelling Compiler v4.4 • Spatie-Underscore Update",
         currency: "Data-Bits",
         currencySymbol: "💎",
         repairName: "Nano-Repair Kit",
@@ -1237,7 +1237,7 @@
       },
       lab: {
         title: "BIO-CHEM LAB",
-        subtitle: "Wetenschappelijk Synthese Lab v4.3",
+        subtitle: "Wetenschappelijk Synthese Lab v4.4",
         currency: "Lab Credits",
         currencySymbol: "⚗️",
         repairName: "Bio-Medisch Serum",
@@ -2160,14 +2160,17 @@
 
       if (isBossRush) {
         const totalSentences = state.sentencesQueue.length;
+        const wordCount = item.trim().split(/\s+/).length;
         document.getElementById('word-progress-badge').textContent = `Zin ${state.currentIndex + 1} / ${totalSentences}`;
         document.getElementById('boss-progress-badge').textContent = `Zin ${state.currentIndex + 1} / ${totalSentences}`;
-        document.getElementById('word-length-hint').textContent = state.gameTheme === 'lab' ? '👑 Bio-Reactor' : '👑 Boss Rush';
+        document.getElementById('word-length-hint').textContent = state.gameTheme === 'lab' ? `👑 Bio-Reactor (${wordCount} woorden)` : `👑 Boss Rush (${wordCount} woorden)`;
         activateBossArenaUI(true);
       } else {
         const totalWords = state.wordsQueue.length;
+        // Tel alleen daadwerkelijke tekens (exclusief spaties)
+        const charCountWithoutSpaces = item.replace(/\s+/g, '').length;
         document.getElementById('word-progress-badge').textContent = `Opdracht ${state.currentIndex + 1} / ${totalWords}`;
-        document.getElementById('word-length-hint').textContent = `Lengte: ${item.length} letters`;
+        document.getElementById('word-length-hint').textContent = `Lengte: ${charCountWithoutSpaces} letters`;
         activateBossArenaUI(false);
       }
 
@@ -2302,25 +2305,31 @@
       }
     }
 
+    // NIEUW IN v4.4: Spaties worden als underscore (_) getoond in zowel Fase 1 als Fase 2!
     function applyMaskedDisplay(box, item, isBossRush) {
       box.className = isBossRush
-        ? "font-cyber text-sm md:text-lg tracking-widest text-cyan-300 font-bold"
-        : "font-cyber text-xl md:text-2xl tracking-[0.25em] text-cyan-300 font-bold";
+        ? "font-cyber text-sm md:text-lg tracking-wider text-cyan-300 font-bold leading-relaxed"
+        : "font-cyber text-xl md:text-2xl tracking-[0.2em] text-cyan-300 font-bold leading-relaxed";
 
       if (state.gameMode === 'vowels') {
         box.textContent = maskVowels(item);
-      } else if (isBossRush) {
-        box.textContent = item.split(/\s+/).map(w => "•".repeat(w.length)).join('   ');
       } else {
-        box.textContent = "• ".repeat(item.length).trim();
+        // Elk woord bestaat uit puntjes (•) verbonden met non-breaking spaces (\u00A0),
+        // en elke spatie tussen woorden wordt getoond als een duidelijke underscore ( _ ).
+        box.textContent = item
+          .trim()
+          .split(/\s+/)
+          .map(word => word.split('').map(() => '•').join('\u00A0'))
+          .join(' _ ');
       }
     }
 
     function maskVowels(text) {
-      return text.split('').map(ch => {
-        if (ch === ' ') return '   ';
-        return /[aeiouyäëïöü]/i.test(ch) ? '_' : ch.toUpperCase();
-      }).join(' ');
+      return text
+        .trim()
+        .split(/\s+/)
+        .map(word => word.split('').map(ch => /[aeiouyäëïöü]/i.test(ch) ? '•' : ch.toUpperCase()).join('\u00A0'))
+        .join(' _ ');
     }
 
     function handleCompileSubmit(e) {
@@ -2394,9 +2403,10 @@
           if (state.fastCount >= 3) unlockBadge('speed_3');
         }
 
+        const cleanLen = item.replace(/\s+/g, '').length;
         let conditionMet = false;
         if (state.ifRule === 'streak2' && state.streak >= 2) conditionMet = true;
-        if (state.ifRule === 'len7' && item.length >= 7) conditionMet = true;
+        if (state.ifRule === 'len7' && cleanLen >= 7) conditionMet = true;
         if (state.ifRule === 'bossrush' && isBossRush) conditionMet = true;
         if (state.ifRule === 'fast' && elapsedSec <= 6) conditionMet = true;
 
@@ -2558,7 +2568,7 @@
 
         uChars.forEach((ch, i) => {
           const span = document.createElement('span');
-          span.textContent = ch.toUpperCase();
+          span.textContent = ch === ' ' ? '_' : ch.toUpperCase();
           if (tChars[i] === ch) {
             span.className = "w-7 h-8 flex items-center justify-center rounded bg-emerald-500/20 border border-emerald-500 text-emerald-300 font-bold text-sm";
           } else if (tChars.includes(ch)) {
@@ -2571,7 +2581,7 @@
 
         tChars.forEach((ch) => {
           const span = document.createElement('span');
-          span.textContent = ch.toUpperCase();
+          span.textContent = ch === ' ' ? '_' : ch.toUpperCase();
           span.className = "w-7 h-8 flex items-center justify-center rounded bg-cyan-500/20 border border-cyan-500 text-cyan-300 font-bold text-sm";
           targetContainer.appendChild(span);
         });

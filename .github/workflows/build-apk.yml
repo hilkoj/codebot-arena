@@ -40,11 +40,11 @@ jobs:
 
           # 1. Bepaal het automatische versienummer op basis van het GitHub Build nummer
           BUILD_NUM=${{ github.run_number }}
-          VERSION_NAME="4.7.$BUILD_NUM"
+          VERSION_NAME="4.8.$BUILD_NUM"
           echo "✅ Automatisch versienummer ingesteld op: v$VERSION_NAME (Build code: $BUILD_NUM)"
 
           # 2. Injecteer het versienummer direct in de Hub van www/index.html
-          sed -i "s|v4\.7|v$VERSION_NAME|g" www/index.html
+          sed -i "s|v4\.8|v$VERSION_NAME|g" www/index.html
 
           # 3. Injecteer automatisch de juiste woorden.json URL in www/index.html
           if [ -n "${{ vars.WOORDEN_JSON_URL }}" ]; then
@@ -54,7 +54,12 @@ jobs:
           fi
           echo "✅ Woordenlijst URL automatisch ingesteld op: $TARGET_URL"
           sed -i "s|const GITHUB_PAGES_JSON_URL = .*|const GITHUB_PAGES_JSON_URL = '$TARGET_URL';|" www/index.html
-
+          
+          # 4. Injecteer automatisch de Firebase Realtime Database URL voor online highscores
+          if [ -n "${{ vars.FIREBASE_DB_URL }}" ]; then
+            sed -i "s|const FIREBASE_DB_URL = .*|const FIREBASE_DB_URL = '${{ vars.FIREBASE_DB_URL }}';|" www/index.html
+            echo "✅ Firebase Highscore URL gekoppeld!"
+          fi
           # Maak package.json aan inclusief de asset-configuratie
           cat << 'EOF' > package.json
           {

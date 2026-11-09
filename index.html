@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="CodeBot Gaming Hub" />
-  <title>CodeBot Gaming Hub: Spelling & Wetenschap</title>
+  <title>CodeBot Gaming Hub: 4 Werelden Edition</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Orbitron:wght@600;800;900&display=swap" rel="stylesheet">
   <style>
@@ -15,6 +15,7 @@
       background-color: #060913;
       color: #e2e8f0;
       overflow-x: hidden;
+      transition: background-color 0.5s ease;
     }
     .font-cyber { font-family: 'Orbitron', sans-serif; }
     
@@ -51,9 +52,25 @@
       transition: all 0.6s ease;
     }
 
+    /* Thema Achtergronden & Rasters */
+    .lab-theme { background-color: #031114 !important; }
     .lab-theme .bg-grid-overlay {
       background-size: 36px 36px;
       background-image: radial-gradient(rgba(16, 185, 129, 0.16) 1.5px, transparent 1.5px);
+    }
+
+    .space-theme { background-color: #040414 !important; }
+    .space-theme .bg-grid-overlay {
+      background-size: 60px 60px;
+      background-image: 
+        linear-gradient(to right, rgba(99, 102, 241, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(99, 102, 241, 0.08) 1px, transparent 1px);
+    }
+
+    .kawaii-theme { background-color: #180821 !important; }
+    .kawaii-theme .bg-grid-overlay {
+      background-size: 40px 40px;
+      background-image: radial-gradient(rgba(244, 114, 182, 0.18) 2px, transparent 2px);
     }
 
     .cyber-panel {
@@ -64,8 +81,23 @@
       -webkit-backdrop-filter: blur(12px);
       transition: all 0.3s ease;
     }
+    .kawaii-theme .cyber-panel {
+      background: rgba(38, 14, 48, 0.80);
+      border-color: rgba(244, 114, 182, 0.3);
+      box-shadow: 0 0 25px rgba(244, 114, 182, 0.15);
+    }
+    .space-theme .cyber-panel {
+      background: rgba(10, 12, 34, 0.82);
+      border-color: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 0 25px rgba(99, 102, 241, 0.15);
+    }
+
     .cyber-border-cyan { border-color: #06b6d4; box-shadow: 0 0 15px rgba(6, 182, 212, 0.3); }
     .cyber-border-purple { border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.3); }
+    .lab-border { border-color: #10b981 !important; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+    .space-border { border-color: #6366f1 !important; box-shadow: 0 0 18px rgba(99, 102, 241, 0.35); }
+    .kawaii-border { border-color: #f472b6 !important; box-shadow: 0 0 18px rgba(244, 114, 182, 0.4); }
+
     .cyber-border-boss { 
       border-color: #f59e0b !important; 
       box-shadow: 0 0 35px rgba(245, 158, 11, 0.45), inset 0 0 25px rgba(225, 29, 72, 0.3) !important; 
@@ -74,8 +106,6 @@
       border-color: #f43f5e !important;
       box-shadow: 0 0 40px rgba(244, 63, 94, 0.5), inset 0 0 25px rgba(159, 18, 57, 0.35) !important;
     }
-    .lab-theme { background-color: #031114 !important; }
-    .lab-border { border-color: #10b981 !important; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
     
     @keyframes float {
       0%, 100% { transform: translateY(0px); }
@@ -249,33 +279,57 @@
   <!-- LIVE BADGE UNLOCK POPUP (TOAST) -->
   <div id="badge-toast-container" class="fixed top-4 left-0 right-0 z-[70] flex flex-col items-center pointer-events-none px-4"></div>
 
-  <!-- ================= GAME HUB LOBBY (START SCREEN) ================= -->
-  <div id="hub-lobby" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-start p-4 overflow-y-auto">
-    <div class="max-w-3xl w-full flex flex-col items-center gap-5 text-center py-6 relative z-10 my-auto">
-      <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center text-3xl md:text-4xl shadow-[0_0_25px_rgba(6,182,212,0.4)] animate-float shrink-0">🚀</div>
-      <div>
-        <h1 class="font-cyber text-2xl md:text-4xl font-black text-cyan-400 tracking-wider">CODEBOT GAMING HUB</h1>
-        <p class="text-xs md:text-sm text-slate-300 mt-1.5">Verdien badges, bewaar je HP en spaar credits voor een mega-eindscore!</p>
+  <!-- ================= GAME HUB LOBBY (START SCREEN MET 4 THEMA'S) ================= -->
+  <div id="hub-lobby" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-start p-4 overflow-y-auto">
+    <div class="max-w-4xl w-full flex flex-col items-center gap-4 text-center py-4 relative z-10 my-auto">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center text-2xl md:text-3xl shadow-[0_0_25px_rgba(6,182,212,0.4)] animate-float shrink-0">🎮</div>
+        <div class="text-left">
+          <h1 class="font-cyber text-xl md:text-3xl font-black text-cyan-400 tracking-wider">SPELLING GAMING HUB</h1>
+          <p class="text-[11px] md:text-xs text-slate-300">Kies jouw wereld! Spaar credits, ontgrendel upgrades en verzamel alle badges.</p>
+        </div>
       </div>
 
-      <!-- Game Mode Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-        <button onclick="startGameMode('arena')" class="cyber-panel cyber-border-cyan rounded-2xl p-5 flex flex-col items-center gap-3 text-left hover:scale-[1.02] active:scale-95 transition group">
-          <span class="text-5xl group-hover:scale-110 transition">🤖⚔️</span>
-          <div class="w-full text-center">
-            <h3 class="font-cyber text-base font-bold text-cyan-300">CodeBot Arena</h3>
-            <p class="text-[11px] text-slate-400 mt-1">Vecht tegen Glitch-Bots met 8 unieke cyber-wapens.</p>
+      <!-- 4 Game Mode Cards (2x2 Grid) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full">
+        <!-- 1. CodeBot Arena -->
+        <button onclick="startGameMode('arena')" class="cyber-panel cyber-border-cyan rounded-2xl p-4 flex flex-col items-center justify-between gap-2 text-center hover:scale-[1.03] active:scale-95 transition group">
+          <span class="text-4xl group-hover:scale-110 transition">🤖⚔️</span>
+          <div>
+            <h3 class="font-cyber text-sm font-bold text-cyan-300">CodeBot Arena</h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">Versla Glitch-Bots met cyber-lasers.</p>
           </div>
-          <span class="mt-1 px-4 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-cyber font-bold text-xs w-full text-center">START NIEUW SPEL</span>
+          <span class="mt-1 px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-cyber font-black text-[11px] w-full">SPEEL ARENA</span>
         </button>
 
-        <button onclick="startGameMode('lab')" class="cyber-panel lab-border rounded-2xl p-5 flex flex-col items-center gap-3 text-left hover:scale-[1.02] active:scale-95 transition group">
-          <span class="text-5xl group-hover:scale-110 transition">🧪🔬</span>
-          <div class="w-full text-center">
-            <h3 class="font-cyber text-base font-bold text-emerald-400">Bio-Chem Lab</h3>
-            <p class="text-[11px] text-slate-400 mt-1">Synthetiseer formules met 8 experimentele lab-wapens.</p>
+        <!-- 2. Bio-Chem Lab -->
+        <button onclick="startGameMode('lab')" class="cyber-panel lab-border rounded-2xl p-4 flex flex-col items-center justify-between gap-2 text-center hover:scale-[1.03] active:scale-95 transition group">
+          <span class="text-4xl group-hover:scale-110 transition">🧪🔬</span>
+          <div>
+            <h3 class="font-cyber text-sm font-bold text-emerald-400">Bio-Chem Lab</h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">Brouw formules en bestrijd mutanten.</p>
           </div>
-          <span class="mt-1 px-4 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-cyber font-bold text-xs w-full text-center">START NIEUW SPEL</span>
+          <span class="mt-1 px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-cyber font-black text-[11px] w-full">SPEEL LAB</span>
+        </button>
+
+        <!-- 3. Star-Blaster Galaxy (Space Shooter) -->
+        <button onclick="startGameMode('space')" class="cyber-panel space-border rounded-2xl p-4 flex flex-col items-center justify-between gap-2 text-center hover:scale-[1.03] active:scale-95 transition group">
+          <span class="text-4xl group-hover:scale-110 transition">🚀🌌</span>
+          <div>
+            <h3 class="font-cyber text-sm font-bold text-indigo-400">Star-Blaster</h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">Space-shooter tegen aliens & meteoren!</p>
+          </div>
+          <span class="mt-1 px-3 py-1.5 rounded-lg bg-indigo-500 text-white font-cyber font-black text-[11px] w-full">SPEEL SPACE</span>
+        </button>
+
+        <!-- 4. Kawaii Droomwereld -->
+        <button onclick="startGameMode('kawaii')" class="cyber-panel kawaii-border rounded-2xl p-4 flex flex-col items-center justify-between gap-2 text-center hover:scale-[1.03] active:scale-95 transition group">
+          <span class="text-4xl group-hover:scale-110 transition">🦄🌸</span>
+          <div>
+            <h3 class="font-cyber text-sm font-bold text-pink-400">Kawaii Wereld</h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">Tover met schattige knuffels & glitters!</p>
+          </div>
+          <span class="mt-1 px-3 py-1.5 rounded-lg bg-pink-400 text-slate-950 font-cyber font-black text-[11px] w-full">SPEEL KAWAII</span>
         </button>
       </div>
 
@@ -292,17 +346,24 @@
             </div>
           </div>
           <div class="text-[10px] text-slate-500 mt-3 text-left">
-            💡 Eindscore = Ronde-punten + Overgebleven Credits + (HP × 2)
+            💡 Eindscore = Ronde-punten + Bespaarde Credits + (HP × 2)
           </div>
         </div>
 
-        <!-- Trofeeënkast / Badges Paneel -->
+        <!-- Trofeeënkast / Badges Paneel met Thema-Wisselaar -->
         <div class="cyber-panel rounded-2xl p-4 border border-purple-500/30">
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="font-cyber text-xs md:text-sm font-bold text-purple-400 text-left flex items-center gap-2">
-              <span>🎖️</span> TROFEEËNKAST (BADGES)
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h3 class="font-cyber text-xs md:text-sm font-bold text-purple-400 text-left flex items-center gap-1.5">
+              <span>🎖️</span> BADGES
+              <span id="hub-badge-counter" class="text-[10px] font-cyber font-bold text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-500/40">0 / 8</span>
             </h3>
-            <span id="hub-badge-counter" class="text-[11px] font-cyber font-bold text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-500/40">0 / 8</span>
+            <!-- Thema-knopjes voor de Trofeeënkast -->
+            <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-lg border border-slate-800">
+              <button type="button" onclick="setHubBadgeTheme('arena')" id="hub-bt-arena" class="px-2 py-0.5 rounded text-xs transition" title="Arena Badges">🤖</button>
+              <button type="button" onclick="setHubBadgeTheme('lab')" id="hub-bt-lab" class="px-2 py-0.5 rounded text-xs transition" title="Lab Badges">🧪</button>
+              <button type="button" onclick="setHubBadgeTheme('space')" id="hub-bt-space" class="px-2 py-0.5 rounded text-xs transition" title="Space Badges">🚀</button>
+              <button type="button" onclick="setHubBadgeTheme('kawaii')" id="hub-bt-kawaii" class="px-2 py-0.5 rounded text-xs transition" title="Kawaii Badges">🦄</button>
+            </div>
           </div>
           <div id="hub-badges-grid" class="grid grid-cols-2 gap-2 text-left">
             <!-- Dynamically populated -->
@@ -320,15 +381,15 @@
 
   <!-- ================= UPGRADES, LOGICA & BADGES POP-UP MODAL ================= -->
   <div id="upgrades-modal" onclick="handleModalBackdropClick(event)" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 md:p-6 overflow-y-auto">
-    <div class="cyber-panel cyber-border-cyan rounded-3xl p-4 md:p-6 max-w-5xl w-full flex flex-col gap-4 my-auto animate-modal-pop max-h-[92vh] overflow-y-auto">
+    <div id="upgrades-modal-panel" class="cyber-panel cyber-border-cyan rounded-3xl p-4 md:p-6 max-w-5xl w-full flex flex-col gap-4 my-auto animate-modal-pop max-h-[92vh] overflow-y-auto">
       
       <!-- Modal Top Header -->
       <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
         <div class="flex items-center gap-3">
-          <span class="text-3xl">⚡</span>
+          <span class="text-3xl" id="shop-header-icon">⚡</span>
           <div>
             <h2 id="shop-title" class="font-cyber text-base md:text-xl font-black text-cyan-400">🔧 Wapenkamer & Upgrades</h2>
-            <p id="shop-desc" class="text-xs text-slate-400">Kies direct je wapen of pas je script aan zonder het gevecht te verlaten!</p>
+            <p id="shop-desc" class="text-xs text-slate-400">Kies direct je upgrade of pas je bonus-regel aan zonder het spel te verlaten!</p>
           </div>
         </div>
         <div class="flex items-center gap-3">
@@ -344,7 +405,7 @@
         
         <!-- Links: Wapenkamer & Repair Kit (2 kolommen breed op grote schermen) -->
         <div class="flex flex-col gap-3 lg:col-span-2">
-          <!-- EENMALIGE REPAIR KIT / SERUM CONSUMABLE BANNER -->
+          <!-- EENMALIGE REPAIR KIT / SERUM / BOBA CONSUMABLE BANNER -->
           <div id="repair-kit-card" class="p-3 rounded-xl bg-emerald-950/40 border-2 border-emerald-500/50 flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-3">
               <span id="repair-kit-icon" class="text-3xl">🛠️</span>
@@ -372,12 +433,12 @@
           </div>
         </div>
 
-        <!-- Rechts: Robot Logica & Missie Badges (1 kolom) -->
+        <!-- Rechts: Logica & Missie Badges (1 kolom) -->
         <div class="flex flex-col gap-4">
           <!-- Logic Builder -->
           <div class="bg-slate-900/90 border border-purple-500/40 rounded-2xl p-4 flex flex-col gap-3">
             <div>
-              <h3 id="builder-title" class="font-cyber text-xs md:text-sm font-bold text-purple-400">🧠 Robot Logica Programmeren</h3>
+              <h3 id="builder-title" class="font-cyber text-xs md:text-sm font-bold text-purple-400">🧠 Bonus-Regel Instellen</h3>
               <p id="builder-desc" class="text-[11px] text-slate-400">Stel jouw <code class="text-purple-300">ALS -> DAN</code> bonus-regel in:</p>
             </div>
 
@@ -387,15 +448,15 @@
                 <select id="select-if" onchange="updateLogicRule()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-purple-400">
                   <option value="streak2">Streak >= 2 achter elkaar goed</option>
                   <option value="len7">Lengte >= 7 letters</option>
-                  <option value="bossrush">We zitten in de Boss Rush Finale</option>
-                  <option value="fast">Snel gecompileerd (Binnen 6 sec)</option>
+                  <option value="bossrush">We zitten in de Eindbaas Finale</option>
+                  <option value="fast">Supersnel antwoord (Binnen 6 sec)</option>
                 </select>
               </div>
 
               <div>
                 <label class="text-[11px] font-bold text-emerald-400 block mb-1">DAN (THEN) Actie:</label>
                 <select id="select-then" onchange="updateLogicRule()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-purple-400">
-                  <option value="double_dmg">Schade Bonus (+50%)</option>
+                  <option value="double_dmg">Extra Kracht Bonus (+50%)</option>
                   <option value="mine_bits">Extra Credits Bonus (+15)</option>
                   <option value="shield">Activeer Schild + Herstel 25 HP</option>
                 </select>
@@ -410,7 +471,7 @@
           <!-- In-Game Badges Overzicht -->
           <div class="bg-slate-900/90 rounded-2xl p-4 flex flex-col gap-2.5 border border-amber-500/30">
             <h3 class="font-cyber text-xs md:text-sm font-bold text-amber-400 flex items-center justify-between">
-              <span>🎖️ Missie Badges</span>
+              <span>🎖️ Thema Badges</span>
               <span id="codelab-badge-count" class="text-[11px] text-slate-400">0 / 8</span>
             </h3>
             <div id="codelab-badges-list" class="grid grid-cols-1 gap-1.5 max-h-[175px] overflow-y-auto pr-1"></div>
@@ -526,7 +587,7 @@
       <button onclick="returnToHub()" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-lg hover:bg-slate-700 transition" title="Terug naar Hub">🏠</button>
       <div>
         <h1 id="app-title-header" class="font-cyber text-lg md:text-xl font-black tracking-wider text-cyan-400">CODEBOT ARENA</h1>
-        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v4.4 • Spatie-Underscore Update</p>
+        <p id="app-subtitle-header" class="text-xs text-slate-400">Spelling Compiler v4.5 • 4 Werelden</p>
       </div>
     </div>
 
@@ -555,7 +616,7 @@
 
     <!-- Navigation Buttons -->
     <div class="flex items-center gap-2">
-      <button onclick="switchTab('arena')" id="tab-arena" class="px-3 py-2 rounded-lg text-xs md:text-sm font-bold bg-cyan-500 text-slate-950 transition">⚔️ Arena</button>
+      <button onclick="switchTab('arena')" id="tab-arena" class="px-3 py-2 rounded-lg text-xs md:text-sm font-bold bg-cyan-500 text-slate-950 transition">⚔️ Speel</button>
       <button onclick="openUpgradesModal()" id="btn-top-upgrades" class="px-3 py-2 rounded-lg text-xs md:text-sm font-bold bg-purple-600/30 border border-purple-400/50 text-purple-200 hover:bg-purple-600/50 transition relative">
         🔧 Upgrades
         <span id="upgrade-affordable-dot" class="hidden absolute -top-1 -right-1 w-3 h-3 rounded-full bg-amber-400 animate-ping"></span>
@@ -567,7 +628,7 @@
   <!-- MAIN CONTENT AREA -->
   <main id="main-container" class="max-w-5xl w-full mx-auto flex-grow flex flex-col gap-4 relative z-10">
 
-    <!-- ================= TAB 1: ARENA / LAB GAMEPLAY ================= -->
+    <!-- ================= TAB 1: ARENA / LAB / SPACE / KAWAII GAMEPLAY ================= -->
     <section id="view-arena" class="flex flex-col gap-4">
       
       <!-- BOSS / EXPERIMENT ALERT BANNER -->
@@ -576,13 +637,13 @@
           <span class="text-2xl" id="boss-banner-emoji">👑</span>
           <div>
             <span id="boss-banner-title" class="font-cyber text-xs md:text-sm font-black text-amber-300 tracking-wider block">🚨 GROTE FINALE: BOSS RUSH MODE! 🚨</span>
-            <span id="boss-banner-desc" class="text-[11px] text-amber-100">Synthetiseer deze zinnen (min. 3 woorden) om de missie te voltooien!</span>
+            <span id="boss-banner-desc" class="text-[11px] text-amber-100">Typ deze volledige zinnen om de eindbaas te verslaan!</span>
           </div>
         </div>
         <span id="boss-progress-badge" class="px-2.5 py-1 rounded-full bg-amber-400 text-slate-950 font-cyber font-black text-xs">Zin 1 / 1</span>
       </div>
 
-      <!-- Battle / Lab Stage -->
+      <!-- Battle Stage -->
       <div id="battle-stage-panel" class="cyber-panel rounded-2xl p-6 relative overflow-hidden min-h-[250px] flex flex-col justify-between border border-slate-800">
         <!-- Subtiele interne stage gloed -->
         <div id="stage-glow-backdrop" class="absolute inset-0 opacity-20 pointer-events-none" style="background: radial-gradient(circle at 50% 50%, #06b6d4 0%, transparent 70%);"></div>
@@ -591,7 +652,7 @@
         <div id="combat-text-container" class="absolute inset-0 pointer-events-none z-30 overflow-hidden"></div>
 
         <div class="relative z-10 grid grid-cols-2 gap-4 items-center my-auto">
-          <!-- Player / Laborant -->
+          <!-- Player -->
           <div class="flex flex-col items-center sm:items-start">
             <div class="flex items-center gap-2 mb-1 flex-wrap">
               <span id="player-bot-name" class="font-cyber text-xs md:text-sm font-bold text-cyan-400">Nova-Bit v1</span>
@@ -609,7 +670,7 @@
                 id="quick-repair-btn" 
                 onclick="buyRepairKit()" 
                 class="hidden px-2 py-0.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-cyber font-black text-[10px] shadow-lg shadow-emerald-500/30 active:scale-95 transition whitespace-nowrap"
-                title="Koop en gebruik direct een Repair Kit (+50 HP)"
+                title="Koop en gebruik direct (+50 HP)"
               >
                 🛠️ +50 HP (💎 30)
               </button>
@@ -617,14 +678,14 @@
 
             <!-- Wapen Indicator + Directe Pop-up Knop -->
             <div class="flex items-center gap-2 mb-2 flex-wrap">
-              <span id="player-weapon-badge" class="text-[10px] text-slate-400 font-bold">🔫 Wapen: Puls-Laser (1x)</span>
+              <span id="player-weapon-badge" class="text-[10px] text-slate-300 font-bold">🔫 Wapen: Puls-Laser (1x)</span>
               <button 
                 type="button" 
                 id="stage-upgrade-btn"
                 onclick="openUpgradesModal()" 
                 class="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 font-cyber font-bold text-[10px] transition flex items-center gap-1"
               >
-                <span>⚡ Wapenkamer</span>
+                <span>🔧 Upgrades</span>
               </button>
             </div>
 
@@ -633,7 +694,7 @@
             </div>
           </div>
 
-          <!-- Enemy / Bio-Experiment -->
+          <!-- Enemy -->
           <div class="flex flex-col items-center sm:items-end">
             <div class="flex items-center gap-2 mb-1">
               <span id="boss-crown-badge" class="hidden px-2 py-0.5 text-[10px] bg-amber-500 text-slate-950 font-cyber font-black rounded">👑 BOSS</span>
@@ -652,17 +713,17 @@
         <!-- Laser / Beam Container -->
         <div id="laser-container" class="my-2 h-8 flex items-center justify-center relative z-20"></div>
 
-        <!-- Script / Reagent Banner (Klikbaar om aan te passen in pop-up) -->
-        <div onclick="openUpgradesModal()" class="cursor-pointer hover:border-purple-400 transition relative z-10 bg-slate-900/90 border border-purple-500/40 rounded-xl px-3 py-2 flex flex-wrap items-center justify-between gap-2 text-xs" title="Klik om jouw Robot-Logica aan te passen">
+        <!-- Script / Spreuk Banner (Klikbaar om aan te passen in pop-up) -->
+        <div onclick="openUpgradesModal()" class="cursor-pointer hover:border-purple-400 transition relative z-10 bg-slate-900/90 border border-purple-500/40 rounded-xl px-3 py-2 flex flex-wrap items-center justify-between gap-2 text-xs" title="Klik om jouw bonus-regel aan te passen">
           <div>
             <span id="script-label-text" class="text-purple-400 font-bold">ACTIEF SCRIPT:</span>
-            <span id="active-script-display" class="text-slate-300 ml-1">ALS [Streak >= 2] DAN [Schade Bonus]</span>
+            <span id="active-script-display" class="text-slate-300 ml-1">ALS [Streak >= 2] DAN [+50% Kracht]</span>
           </div>
           <span id="script-trigger-status" class="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400">Wacht op conditie...</span>
         </div>
       </div>
 
-      <!-- Compiler / Lab Console -->
+      <!-- Compiler / Lab / Space / Kawaii Console -->
       <div id="compiler-console-panel" class="cyber-panel cyber-border-cyan rounded-2xl p-5 md:p-6 flex flex-col gap-4">
         
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -691,7 +752,7 @@
           <div id="word-display-box" class="font-cyber text-lg md:text-2xl tracking-[0.2em] text-cyan-300 font-bold break-words max-w-full">
             KLAAR VOOR INVOER
           </div>
-          <div id="audio-status-indicator" class="text-[11px] text-slate-500 mt-1.5">Elk puntje (•) is een teken, elke underscore (_) is een spatie!</div>
+          <div id="audio-status-indicator" class="text-[11px] text-slate-400 mt-1.5">Elk puntje (•) is een teken, elke underscore (_) is een spatie!</div>
         </div>
 
         <!-- Input Form -->
@@ -715,7 +776,7 @@
         <div id="debugger-panel" class="hidden bg-rose-950/40 border-2 border-rose-500/60 rounded-xl p-4 flex flex-col gap-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <span id="debugger-title" class="font-cyber text-xs md:text-sm font-bold text-rose-400 flex items-center gap-2">
-              🐞 BUG GEDETECTEERD — PAS OP JE HP!
+              🐞 OEOPS! FOUTJE GEDETECTEERD — PAS OP JE HP!
             </span>
             <span class="text-xs text-rose-300">Corrigeer hierboven voor een Noodschild (0 Credits)</span>
           </div>
@@ -858,7 +919,7 @@
     const GITHUB_PAGES_JSON_URL = 'https://JOUW_GITHUB_NAAM.github.io/codebot-arena/woorden.json';
 
     // ==========================================
-    // 0. DYNAMISCHE ACHTERGROND & GEVECHTS-FX ENGINE
+    // 0. DYNAMISCHE ACHTERGROND & GEVECHTS-FX ENGINE (4 THEMA'S)
     // ==========================================
     const bgCanvas = document.getElementById('bg-canvas');
     const bgCtx = bgCanvas.getContext('2d');
@@ -880,25 +941,69 @@
 
     function initBgParticles() {
       bgParticles = [];
-      const count = window.innerWidth < 768 ? 28 : 55;
+      const count = window.innerWidth < 768 ? 32 : 60;
       for (let i = 0; i < count; i++) {
         bgParticles.push(createBgParticle(true));
       }
     }
 
-    function createBgParticle(randomY = false) {
-      const isLab = state && state.gameTheme === 'lab';
-      return {
-        x: Math.random() * bgCanvas.width,
-        y: randomY ? Math.random() * bgCanvas.height : (isLab ? bgCanvas.height + 20 : -20),
-        size: isLab ? (Math.random() * 14 + 4) : (Math.random() * 2.5 + 1.5),
-        speedY: isLab ? -(Math.random() * 1.1 + 0.3) : (Math.random() * 1.3 + 0.4),
-        speedX: (Math.random() - 0.5) * 0.5,
-        alpha: Math.random() * 0.45 + 0.15,
-        wobble: Math.random() * Math.PI * 2,
-        wobbleSpeed: Math.random() * 0.03 + 0.01,
-        hue: isLab ? (Math.random() > 0.35 ? 160 : 130) : (Math.random() > 0.4 ? 190 : 280)
-      };
+    function createBgParticle(randomPos = false) {
+      const theme = state ? state.gameTheme : 'arena';
+      if (theme === 'space') {
+        // Space Shooter: horizontale warp-sterren van rechts naar links
+        return {
+          x: randomPos ? Math.random() * bgCanvas.width : bgCanvas.width + 20,
+          y: Math.random() * bgCanvas.height,
+          size: Math.random() * 2.5 + 1,
+          speedX: -(Math.random() * 3.2 + 0.6),
+          speedY: (Math.random() - 0.5) * 0.2,
+          alpha: Math.random() * 0.65 + 0.2,
+          wobble: Math.random() * Math.PI * 2,
+          wobbleSpeed: 0.02,
+          hue: Math.random() > 0.5 ? 225 : (Math.random() > 0.5 ? 265 : 195)
+        };
+      } else if (theme === 'kawaii') {
+        // Kawaii: zacht opstijgende pastel-bubbels en glitters
+        const kawaiiHues = [330, 300, 45, 175];
+        return {
+          x: Math.random() * bgCanvas.width,
+          y: randomPos ? Math.random() * bgCanvas.height : bgCanvas.height + 20,
+          size: Math.random() * 8 + 4,
+          speedY: -(Math.random() * 0.9 + 0.3),
+          speedX: (Math.random() - 0.5) * 0.6,
+          alpha: Math.random() * 0.45 + 0.2,
+          wobble: Math.random() * Math.PI * 2,
+          wobbleSpeed: Math.random() * 0.04 + 0.015,
+          hue: kawaiiHues[Math.floor(Math.random() * kawaiiHues.length)],
+          isStar: Math.random() > 0.45
+        };
+      } else if (theme === 'lab') {
+        // Bio-Lab: groene chemische bubbels
+        return {
+          x: Math.random() * bgCanvas.width,
+          y: randomPos ? Math.random() * bgCanvas.height : bgCanvas.height + 20,
+          size: Math.random() * 14 + 4,
+          speedY: -(Math.random() * 1.1 + 0.3),
+          speedX: (Math.random() - 0.5) * 0.5,
+          alpha: Math.random() * 0.45 + 0.15,
+          wobble: Math.random() * Math.PI * 2,
+          wobbleSpeed: Math.random() * 0.03 + 0.01,
+          hue: Math.random() > 0.35 ? 160 : 130
+        };
+      } else {
+        // CodeBot Arena: vallende cyber-matrix datastromen
+        return {
+          x: Math.random() * bgCanvas.width,
+          y: randomPos ? Math.random() * bgCanvas.height : -20,
+          size: Math.random() * 2.5 + 1.5,
+          speedY: Math.random() * 1.3 + 0.4,
+          speedX: (Math.random() - 0.5) * 0.5,
+          alpha: Math.random() * 0.45 + 0.15,
+          wobble: Math.random() * Math.PI * 2,
+          wobbleSpeed: Math.random() * 0.03 + 0.01,
+          hue: Math.random() > 0.4 ? 190 : 280
+        };
+      }
     }
 
     function triggerHitExplosion(targetEl, weaponStyle = 'pulse', isMega = false, isError = false) {
@@ -908,15 +1013,15 @@
       const centerY = rect.top + rect.height / 2;
 
       const styleConfig = {
-        pulse:  { hues: [190, 210], count: 28, speed: 7, size: 4, shape: 'circle', rings: 1 },
-        twin:   { hues: [195, 240, 160], count: 40, size: 4.5, speed: 9, shape: 'square', rings: 2 },
-        plasma: { hues: [15, 32, 48], count: 48, speed: 10, size: 6.5, shape: 'circle', rings: 1 },
-        shock:  { hues: [52, 190, 60], count: 45, speed: 13, size: 3.5, shape: 'spark', rings: 2 },
+        pulse:  { hues: state.gameTheme === 'kawaii' ? [330, 300, 48] : [190, 210], count: 28, speed: 7, size: 4, shape: state.gameTheme === 'kawaii' ? 'diamond' : 'circle', rings: 1 },
+        twin:   { hues: state.gameTheme === 'kawaii' ? [335, 350, 290] : [195, 240, 160], count: 40, size: 4.5, speed: 9, shape: 'square', rings: 2 },
+        plasma: { hues: state.gameTheme === 'kawaii' ? [320, 45, 280] : [15, 32, 48], count: 48, speed: 10, size: 6.5, shape: 'circle', rings: 1 },
+        shock:  { hues: [52, 190, 310], count: 45, speed: 13, size: 3.5, shape: 'spark', rings: 2 },
         cryo:   { hues: [185, 195, 210], count: 42, speed: 6.5, size: 5.5, shape: 'diamond', rings: 1 },
         vortex: { hues: [275, 315, 255], count: 55, speed: 9.5, size: 5.5, shape: 'circle', rings: 2 },
-        crush:  { hues: [42, 52, 15], count: 65, speed: 14, size: 6.5, shape: 'square', rings: 2 },
+        crush:  { hues: [42, 52, 330], count: 65, speed: 14, size: 6.5, shape: 'square', rings: 2 },
         nova:   { hues: [0, 45, 130, 195, 280, 325], count: 85, speed: 16, size: 7.5, shape: 'diamond', rings: 3 },
-        heal:   { hues: [145, 165, 120], count: 42, speed: 7.5, size: 5, shape: 'diamond', rings: 2 }
+        heal:   { hues: state.gameTheme === 'kawaii' ? [330, 350, 50] : [145, 165, 120], count: 42, speed: 7.5, size: 5, shape: 'diamond', rings: 2 }
       };
 
       const cfg = styleConfig[weaponStyle] || styleConfig.pulse;
@@ -986,11 +1091,11 @@
     function animateCanvases() {
       bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
 
-      const isLab = state && state.gameTheme === 'lab';
+      const theme = state ? state.gameTheme : 'arena';
       const isBoss = state && state.currentPhase === 'bossrush';
 
       const grad = bgCtx.createRadialGradient(
-        bgCanvas.width * 0.5, isLab ? bgCanvas.height * 0.95 : bgCanvas.height * 0.25, 10,
+        bgCanvas.width * 0.5, theme === 'lab' ? bgCanvas.height * 0.95 : bgCanvas.height * 0.3, 10,
         bgCanvas.width * 0.5, bgCanvas.height * 0.5, Math.max(bgCanvas.width, bgCanvas.height) * 0.75
       );
 
@@ -998,9 +1103,17 @@
         grad.addColorStop(0, 'rgba(225, 29, 72, 0.16)');
         grad.addColorStop(0.5, 'rgba(245, 158, 11, 0.06)');
         grad.addColorStop(1, 'transparent');
-      } else if (isLab) {
+      } else if (theme === 'lab') {
         grad.addColorStop(0, 'rgba(16, 185, 129, 0.16)');
         grad.addColorStop(0.5, 'rgba(6, 95, 70, 0.05)');
+        grad.addColorStop(1, 'transparent');
+      } else if (theme === 'space') {
+        grad.addColorStop(0, 'rgba(99, 102, 241, 0.18)');
+        grad.addColorStop(0.5, 'rgba(49, 46, 129, 0.08)');
+        grad.addColorStop(1, 'transparent');
+      } else if (theme === 'kawaii') {
+        grad.addColorStop(0, 'rgba(244, 114, 182, 0.20)');
+        grad.addColorStop(0.5, 'rgba(192, 132, 252, 0.08)');
         grad.addColorStop(1, 'transparent');
       } else {
         grad.addColorStop(0, 'rgba(6, 182, 212, 0.14)');
@@ -1016,16 +1129,20 @@
 
         p.y += p.speedY * speedBoost;
         p.wobble += p.wobbleSpeed;
-        p.x += Math.sin(p.wobble) * 0.4 + p.speedX;
+        p.x += (theme === 'space' ? p.speedX * speedBoost : Math.sin(p.wobble) * 0.4 + p.speedX);
 
-        if (isLab && p.y < -30) bgParticles[i] = createBgParticle(false);
-        if (!isLab && p.y > bgCanvas.height + 30) bgParticles[i] = createBgParticle(false);
-        if (p.x < -30) p.x = bgCanvas.width + 20;
-        if (p.x > bgCanvas.width + 30) p.x = -20;
+        if ((theme === 'lab' || theme === 'kawaii') && p.y < -30) bgParticles[i] = createBgParticle(false);
+        if (theme === 'arena' && p.y > bgCanvas.height + 30) bgParticles[i] = createBgParticle(false);
+        if (theme === 'space' && p.x < -40) bgParticles[i] = createBgParticle(false);
+
+        if (theme !== 'space') {
+          if (p.x < -30) p.x = bgCanvas.width + 20;
+          if (p.x > bgCanvas.width + 30) p.x = -20;
+        }
 
         const activeHue = isBoss ? (i % 2 === 0 ? 15 : 350) : p.hue;
 
-        if (isLab) {
+        if (theme === 'lab') {
           bgCtx.beginPath();
           bgCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           bgCtx.strokeStyle = `hsla(${activeHue}, 90%, 60%, ${p.alpha})`;
@@ -1033,27 +1150,31 @@
           bgCtx.stroke();
           bgCtx.fillStyle = `hsla(${activeHue}, 90%, 50%, ${p.alpha * 0.22})`;
           bgCtx.fill();
+        } else if (theme === 'space') {
+          // Warp-speed sterrenstrepen
+          const streakLen = Math.abs(p.speedX) * (isBoss ? 10 : 5);
+          bgCtx.fillStyle = `hsla(${activeHue}, 100%, 80%, ${p.alpha})`;
+          bgCtx.fillRect(p.x, p.y, streakLen, p.size);
+        } else if (theme === 'kawaii') {
+          bgCtx.save();
+          bgCtx.translate(p.x, p.y);
+          if (p.isStar) {
+            bgCtx.rotate(p.wobble);
+            bgCtx.fillStyle = `hsla(${activeHue}, 95%, 75%, ${p.alpha})`;
+            bgCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          } else {
+            bgCtx.beginPath();
+            bgCtx.arc(0, 0, p.size, 0, Math.PI * 2);
+            bgCtx.fillStyle = `hsla(${activeHue}, 95%, 75%, ${p.alpha * 0.45})`;
+            bgCtx.fill();
+            bgCtx.strokeStyle = `hsla(${activeHue}, 100%, 85%, ${p.alpha})`;
+            bgCtx.lineWidth = 1.5;
+            bgCtx.stroke();
+          }
+          bgCtx.restore();
         } else {
           bgCtx.fillStyle = `hsla(${activeHue}, 95%, 65%, ${p.alpha})`;
           bgCtx.fillRect(p.x, p.y, p.size, p.size * 5);
-        }
-
-        for (let j = i + 1; j < bgParticles.length; j++) {
-          const p2 = bgParticles[j];
-          const dx = p.x - p2.x;
-          const dy = p.y - p2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const maxDist = isLab ? 105 : 130;
-
-          if (dist < maxDist) {
-            bgCtx.beginPath();
-            bgCtx.moveTo(p.x, p.y);
-            bgCtx.lineTo(p2.x, p2.y);
-            const lineAlpha = (1 - dist / maxDist) * 0.14;
-            bgCtx.strokeStyle = `hsla(${activeHue}, 90%, 60%, ${lineAlpha})`;
-            bgCtx.lineWidth = 1;
-            bgCtx.stroke();
-          }
         }
       }
 
@@ -1119,7 +1240,7 @@
     }
 
     // ==========================================
-    // 1. STATE, BADGES & 8 UPGRADE TIERS PER THEMA
+    // 1. STATE, 4 THEMA'S, UPGRADES & THEMA-BADGES
     // ==========================================
     const REPAIR_COST = 30;
     const REPAIR_AMOUNT = 50;
@@ -1128,17 +1249,6 @@
     const COST_SPEAK = 2;
     const COST_SPELL = 4;
     const COST_SCAN = 8;
-
-    const BADGES = [
-      { id: 'first_hit', icon: '🎯', title: 'Eerste Treffer', desc: 'Eerste opdracht direct foutloos!', bonus: 15 },
-      { id: 'streak_5', icon: '🔥', title: 'Scherpschutter', desc: '5 opdrachten op rij in 1x goed!', bonus: 30 },
-      { id: 'streak_10', icon: '⚡', title: 'Onverslaanbaar', desc: '10 opdrachten op rij in 1x goed!', bonus: 60 },
-      { id: 'speed_3', icon: '🚀', title: 'Flits-Compiler', desc: '3x binnen 4 seconden foutloos!', bonus: 35 },
-      { id: 'heavy_weapon', icon: '🔧', title: 'Wapen-Expert', desc: 'Ontgrendel een Tier 4+ upgrade!', bonus: 40 },
-      { id: 'no_hints', icon: '🧠', title: 'Op Eigen Kracht', desc: 'Win een ronde zonder betaalde hints!', bonus: 75 },
-      { id: 'flawless', icon: '🛡️', title: 'IJzeren Pantser', desc: 'Win een ronde met 0 fouten!', bonus: 100 },
-      { id: 'boss_slayer', icon: '👑', title: 'Boss Slayer', desc: 'Versla de Eindbaas in de Finale!', bonus: 50 }
-    ];
 
     const DEFAULT_LISTS = {
       "Blok 3 - Week 4": [
@@ -1168,6 +1278,7 @@
 
     let state = {
       gameTheme: 'arena',
+      hubBadgePreviewTheme: 'arena',
       lists: JSON.parse(JSON.stringify(DEFAULT_LISTS)),
       activeListName: "Blok 3 - Week 4",
       wordsQueue: [],
@@ -1203,7 +1314,7 @@
     const THEMES = {
       arena: {
         title: "CODEBOT ARENA",
-        subtitle: "Spelling Compiler v4.4 • Spatie-Underscore Update",
+        subtitle: "Spelling Compiler v4.5 • Cyber Arena",
         currency: "Data-Bits",
         currencySymbol: "💎",
         repairName: "Nano-Repair Kit",
@@ -1213,7 +1324,7 @@
         compileBtn: "⚡ COMPILEER",
         megaBtn: "☄️ VUUR OMEGA-KANON",
         shopTitle: "🔧 Robot Wapenkamer & Upgrades",
-        shopDesc: "Koop sterkere bots voor hogere multipliers, of spaar je credits voor de eindscore!",
+        shopDesc: "Koop sterkere bots voor hogere multipliers, of spaar je Data-Bits voor de eindscore!",
         builderTitle: "🧠 Robot Logica Programmeren",
         builderDesc: "Stel jouw ALS -> DAN code-regel in:",
         bossName: "MEGA-OVERLORD TITAN",
@@ -1233,11 +1344,22 @@
           { name: 'Syntax-Creeper', icon: '🕷️' },
           { name: 'Trojan-Golem', icon: '👹' },
           { name: 'Null-Pointer Drone', icon: '👁️‍🗨️' }
+        ],
+        badges: [
+          { id: 'first_hit', icon: '🎯', title: 'Eerste Compile', desc: 'Eerste woord direct foutloos!', bonus: 15 },
+          { id: 'streak_5', icon: '🔥', title: 'Code-Streak', desc: '5 opdrachten op rij in 1x goed!', bonus: 30 },
+          { id: 'streak_10', icon: '⚡', title: 'Master Hacker', desc: '10 opdrachten op rij in 1x goed!', bonus: 60 },
+          { id: 'speed_3', icon: '🚀', title: 'Flits-Compiler', desc: '3x binnen 4 seconden foutloos!', bonus: 35 },
+          { id: 'heavy_weapon', icon: '🔧', title: 'Mecha-Ingenieur', desc: 'Ontgrendel een Tier 4+ Cyber-Bot!', bonus: 40 },
+          { id: 'no_hints', icon: '🧠', title: 'Geen Cheats', desc: 'Win een ronde zonder betaalde hints!', bonus: 75 },
+          { id: 'flawless', icon: '🛡️', title: 'Firewall Pantser', desc: 'Win een ronde met 0 fouten!', bonus: 100 },
+          { id: 'boss_slayer', icon: '👑', title: 'Overlord Verslagen', desc: 'Versla de Eindbaas in de Finale!', bonus: 50 }
         ]
       },
+
       lab: {
         title: "BIO-CHEM LAB",
-        subtitle: "Wetenschappelijk Synthese Lab v4.4",
+        subtitle: "Wetenschappelijk Synthese Lab v4.5",
         currency: "Lab Credits",
         currencySymbol: "⚗️",
         repairName: "Bio-Medisch Serum",
@@ -1267,9 +1389,119 @@
           { name: 'Spore-Monster', icon: '🍄' },
           { name: 'Gif-Octopus', icon: '🐙' },
           { name: 'DNA-Parasiet', icon: '🦂' }
+        ],
+        badges: [
+          { id: 'first_hit', icon: '🧪', title: 'Eerste Synthese', desc: 'Eerste formule meteen goed!', bonus: 15 },
+          { id: 'streak_5', icon: '🔬', title: 'Lab-Specialist', desc: '5 formules op rij foutloos!', bonus: 30 },
+          { id: 'streak_10', icon: '🧬', title: 'Nobelprijs-Winnaar', desc: '10 formules op rij in 1x goed!', bonus: 60 },
+          { id: 'speed_3', icon: '⚡', title: 'Katalysator', desc: '3x binnen 4 seconden gemengd!', bonus: 35 },
+          { id: 'heavy_weapon', icon: '⚛️', title: 'Hoogleraar', desc: 'Ontgrendel een Tier 4+ Lab-instrument!', bonus: 40 },
+          { id: 'no_hints', icon: '🥽', title: 'Uit Het Hoofd', desc: 'Win zonder lab-hints te kopen!', bonus: 75 },
+          { id: 'flawless', icon: '🧼', title: 'Steriel Lab', desc: 'Win een ronde zonder besmetting (0 fouten)!', bonus: 100 },
+          { id: 'boss_slayer', icon: '☢️', title: 'Reactor-Temmer', desc: 'Neutraliseer de Bio-Reactor!', bonus: 50 }
+        ]
+      },
+
+      space: {
+        title: "STAR-BLASTER GALAXY",
+        subtitle: "Galactische Boordcomputer v4.5 • Space Shooter",
+        currency: "Sterrenstof",
+        currencySymbol: "🌟",
+        repairName: "Nano-Schild Batterij",
+        repairIcon: "🔋",
+        repairDesc: "Nood-energiecel: herstelt direct +50 Romp-HP van je ruimteschip (+100 Eindscore)!",
+        scriptLabel: "AUTOPILOT MODULE:",
+        compileBtn: "🚀 LANCEER TORPEDO",
+        megaBtn: "☄️ VUUR HYPER-NOVA",
+        shopTitle: "🛸 Ruimte-Hangar & Vloot (8 Tiers)",
+        shopDesc: "Upgrade je ruimteschip met zwaardere foton-kanonnen of spaar Sterrenstof!",
+        builderTitle: "🛰️ Doelcomputer & Autopilot",
+        builderDesc: "Programmeer jouw ALS -> DAN gevechts-manoeuvre:",
+        bossName: "KEIZER ZORGON MOEDERSCHIP",
+        bossAvatar: "🛸",
+        bots: [
+          { id: 't1', name: 'Star-Scout v1', icon: '🚀', cost: 0, weaponName: 'Foton-Blaster', weaponType: 'pulse', hitClass: 'hit-recoil', desc: 'Snelle verkenner met laser (1x Kracht, 1x Sterrenstof)', multDmg: 1, multBits: 1 },
+          { id: 't2', name: 'X-Viper Fighter', icon: '🛩️', cost: 20, weaponName: 'Twin-Ion Kanon', weaponType: 'twin', hitClass: 'hit-twin', desc: 'Dubbele vleugel-lasers (1.25x Kracht, 1.2x Sterrenstof)', multDmg: 1.25, multBits: 1.2 },
+          { id: 't3', name: 'Solar-Phoenix', icon: '☄️', cost: 45, weaponName: 'Zonnevlam-Torpedo', weaponType: 'plasma', hitClass: 'hit-burn', desc: 'Schiet gloeiende zonnevlammen (1.5x Kracht, 1.35x Sterrenstof)', multDmg: 1.5, multBits: 1.35 },
+          { id: 't4', name: 'Nebula-Cruiser', icon: '⚡', cost: 75, weaponName: 'EMP-Sterrenboog', weaponType: 'shock', hitClass: 'hit-shock', desc: 'Legt vijandelijke schilden plat (1.75x Kracht, 1.5x Sterrenstof)', multDmg: 1.75, multBits: 1.5 },
+          { id: 't5', name: 'Comet-Hunter', icon: '🧊', cost: 110, weaponName: 'Komeet-Vriesstraal', weaponType: 'cryo', hitClass: 'hit-freeze', desc: 'Bevriest aliens in ruimte-ijs (2x Kracht, 1.75x Sterrenstof)', multDmg: 2.0, multBits: 1.75 },
+          { id: 't6', name: 'Black-Hole Stealth', icon: '🕳️', cost: 150, weaponName: 'Zwart-Gat Vortex', weaponType: 'vortex', hitClass: 'hit-vortex', desc: 'Zuigt ruimte-piraten in een kolk (2.3x Kracht, 2x Sterrenstof)', multDmg: 2.3, multBits: 2.0 },
+          { id: 't7', name: 'Dreadnought Titan', icon: '🛰️', cost: 200, weaponName: 'Orbitale Railgun', weaponType: 'crush', hitClass: 'hit-crush', desc: 'Verpulvert asteroïden in één schot (2.7x Kracht, 2.5x Sterrenstof)', multDmg: 2.7, multBits: 2.5 },
+          { id: 't8', name: 'Galactic-Mothership', icon: '🌌', cost: 260, weaponName: 'Big-Bang Kanon', weaponType: 'nova', hitClass: 'hit-nova', desc: 'Ultieme Melkweg-Supernova (3.5x Kracht, 3x Sterrenstof)', multDmg: 3.5, multBits: 3.0 }
+        ],
+        enemies: [
+          { name: 'Astro-Meteoor', icon: '🪨' },
+          { name: 'Alien-Verkenner', icon: '👽' },
+          { name: 'Ruimte-Piraat', icon: '👾' },
+          { name: 'Kosmos-Kraken', icon: '🦑' }
+        ],
+        badges: [
+          { id: 'first_hit', icon: '☄️', title: 'Eerste Inslag', desc: 'Eerste ruimte-doelwit direct geraakt!', bonus: 15 },
+          { id: 'streak_5', icon: '🚀', title: 'Warp-Snelheid', desc: '5 voltreffers op rij zonder missen!', bonus: 30 },
+          { id: 'streak_10', icon: '🌌', title: 'Sterren-Admiraal', desc: '10 voltreffers op rij in de ruimte!', bonus: 60 },
+          { id: 'speed_3', icon: '⚡', title: 'Lichtsnelheid-Piloot', desc: '3x binnen 4 seconden gelanceerd!', bonus: 35 },
+          { id: 'heavy_weapon', icon: '🛸', title: 'Vloot-Commandant', desc: 'Koop een Tier 4+ Ruimteschip in de Hangar!', bonus: 40 },
+          { id: 'no_hints', icon: '🧭', title: 'Blinde Navigatie', desc: 'Win zonder radar-hints te gebruiken!', bonus: 75 },
+          { id: 'flawless', icon: '🛡️', title: 'Ongekrasde Romp', desc: 'Win zonder één meteoriet-inslag (0 fouten)!', bonus: 100 },
+          { id: 'boss_slayer', icon: '👑', title: 'Melkweg-Redder', desc: 'Versla het Moederschip van Keizer Zorgon!', bonus: 50 }
+        ]
+      },
+
+      kawaii: {
+        title: "KAWAII DROOMWERELD",
+        subtitle: "Magische Spelling Studio v4.5 • Kawaii Edition",
+        currency: "Sterretjes",
+        currencySymbol: "⭐",
+        repairName: "Aardbeien Boba-Thee",
+        repairIcon: "🧋",
+        repairDesc: "Superlekker! Geeft direct +50 Hartjes-HP terug (+100 Eindscore bonus)!",
+        scriptLabel: "GELUKS-SPREUK:",
+        compileBtn: "💖 TOVER SPREUK",
+        megaBtn: "🌈 REGENBOOG FINALE!",
+        shopTitle: "🎀 Knuffel-Boetiek & Toverstafjes (8 Tiers)",
+        shopDesc: "Verzamel de schattigste knuffel-vriendjes of spaar je Sterretjes voor een topscore!",
+        builderTitle: "✨ Magische Geluks-Spreuk",
+        builderDesc: "Kies jouw eigen ALS -> DAN glitter-bonus:",
+        bossName: "KONING DONDERWOLK",
+        bossAvatar: "⛈️",
+        bots: [
+          { id: 't1', name: 'Mochi-Katje', icon: '🐱', cost: 0, weaponName: 'Glitter-Stafje', weaponType: 'pulse', hitClass: 'hit-recoil', desc: 'Schiet roze sterretjes (1x Kracht, 1x Sterretjes)', multDmg: 1, multBits: 1 },
+          { id: 't2', name: 'Boba-Konijntje', icon: '🐰', cost: 20, weaponName: 'Hartjes-Boog', weaponType: 'twin', hitClass: 'hit-twin', desc: 'Dubbele vrolijke hartjes-straal (1.25x Kracht, 1.2x Sterretjes)', multDmg: 1.25, multBits: 1.2 },
+          { id: 't3', name: 'Kandij-Vosje', icon: '🦊', cost: 45, weaponName: 'Suikerspin-Wolk', weaponType: 'plasma', hitClass: 'hit-burn', desc: 'Superzoete roze vuurwerk-straal (1.5x Kracht, 1.35x Sterretjes)', multDmg: 1.5, multBits: 1.35 },
+          { id: 't4', name: 'Pika-Hamstertje', icon: '🐹', cost: 75, weaponName: 'Knetter-Sterren', weaponType: 'shock', hitClass: 'hit-shock', desc: 'Vrolijke knettersnoep-bliksem! (1.75x Kracht, 1.5x Sterretjes)', multDmg: 1.75, multBits: 1.5 },
+          { id: 't5', name: 'IJsbeer-Plushie', icon: '🐻‍❄️', cost: 110, weaponName: 'Sneeuwvlok-Staf', weaponType: 'cryo', hitClass: 'hit-freeze', desc: 'Tovert glinsterende ijskristallen (2x Kracht, 1.75x Sterretjes)', multDmg: 2.0, multBits: 1.75 },
+          { id: 't6', name: 'Galaxie-Axolotl', icon: '🦎', cost: 150, weaponName: 'Droomwolk-Kolk', weaponType: 'vortex', hitClass: 'hit-vortex', desc: 'Magische paarse sterren-draaikolk (2.3x Kracht, 2x Sterretjes)', multDmg: 2.3, multBits: 2.0 },
+          { id: 't7', name: 'Gouden Shiba-Pup', icon: '🐶', cost: 200, weaponName: 'Kroon-Glitterstraal', weaponType: 'crush', hitClass: 'hit-crush', desc: 'Koninklijke gouden glitter-golf (2.7x Kracht, 2.5x Sterretjes)', multDmg: 2.7, multBits: 2.5 },
+          { id: 't8', name: 'Regenboog-Eenhoorn', icon: '🦄', cost: 260, weaponName: 'Ultieme Regenboog-Magie', weaponType: 'nova', hitClass: 'hit-nova', desc: 'Mega Regenboog-Hartjes Explosie! (3.5x Kracht, 3x Sterretjes)', multDmg: 3.5, multBits: 3.0 }
+        ],
+        enemies: [
+          { name: 'Mopper-Wolkje', icon: '🌧️' },
+          { name: 'Knoei-Spookje', icon: '👻' },
+          { name: 'Zure-Citroen', icon: '🍋' },
+          { name: 'Slaperige-Slak', icon: '🐌' }
+        ],
+        badges: [
+          { id: 'first_hit', icon: '🌸', title: 'Eerste Bloesem', desc: 'Eerste woord meteen helemaal goed!', bonus: 15 },
+          { id: 'streak_5', icon: '🍓', title: 'Suikerspin-Streak', desc: '5 woorden op rij zonder foutjes!', bonus: 30 },
+          { id: 'streak_10', icon: '💖', title: 'Glitter-Koningin', desc: '10 woorden op rij in 1x goed!', bonus: 60 },
+          { id: 'speed_3', icon: '✨', title: 'Vallende Ster', desc: '3x supersnel binnen 4 seconden!', bonus: 35 },
+          { id: 'heavy_weapon', icon: '🎀', title: 'Plushie-Verzamelaar', desc: 'Adopteer een Tier 4+ Knuffel-vriendje!', bonus: 40 },
+          { id: 'no_hints', icon: '🧁', title: 'Slimme Cupcake', desc: 'Win een ronde zonder spiek-hints!', bonus: 75 },
+          { id: 'flawless', icon: '💎', title: 'Foutloze Prinses', desc: 'Hele ronde met 100% Hartjes-HP gewonnen!', bonus: 100 },
+          { id: 'boss_slayer', icon: '🦄', title: 'Eenhoorn Kampioen', desc: 'Vrolijk Koning Donderwolk helemaal op!', bonus: 50 }
         ]
       }
     };
+
+    function getActiveThemeBadges(themeKey) {
+      const t = THEMES[themeKey || state.gameTheme] || THEMES.arena;
+      return t.badges;
+    }
+
+    function setHubBadgeTheme(themeKey) {
+      state.hubBadgePreviewTheme = themeKey;
+      renderBadgesUI();
+    }
 
     // ==========================================
     // POP-UP WAPENKAMER (MODAL) FUNCTIES
@@ -1312,7 +1544,8 @@
 
     function unlockBadge(badgeId) {
       if (state.sessionBadges.includes(badgeId)) return;
-      const badge = BADGES.find(b => b.id === badgeId);
+      const themeBadges = getActiveThemeBadges(state.gameTheme);
+      const badge = themeBadges.find(b => b.id === badgeId);
       if (!badge) return;
 
       state.sessionBadges.push(badgeId);
@@ -1350,12 +1583,23 @@
     }
 
     function renderBadgesUI() {
+      // 1. Hub Trofeeënkast (met 4 thema-knopjes)
       const hubGrid = document.getElementById('hub-badges-grid');
       const hubCounter = document.getElementById('hub-badge-counter');
-      if (hubCounter) hubCounter.textContent = `${state.allTimeBadges.length} / ${BADGES.length}`;
+      const hubBadgesList = getActiveThemeBadges(state.hubBadgePreviewTheme);
+      if (hubCounter) hubCounter.textContent = `${state.allTimeBadges.length} / ${hubBadgesList.length}`;
+
+      ['arena', 'lab', 'space', 'kawaii'].forEach(tk => {
+        const btn = document.getElementById(`hub-bt-${tk}`);
+        if (btn) {
+          btn.className = (state.hubBadgePreviewTheme === tk)
+            ? "px-2 py-0.5 rounded text-xs bg-purple-500 text-slate-950 font-bold transition shadow"
+            : "px-2 py-0.5 rounded text-xs opacity-60 hover:opacity-100 transition";
+        }
+      });
 
       if (hubGrid) {
-        hubGrid.innerHTML = BADGES.map(b => {
+        hubGrid.innerHTML = hubBadgesList.map(b => {
           const unlocked = state.allTimeBadges.includes(b.id);
           return `
             <div class="p-2 rounded-xl border flex items-center gap-2.5 ${unlocked ? 'bg-purple-950/40 border-purple-500/50 text-white' : 'bg-slate-900/40 border-slate-800/80 opacity-45'}">
@@ -1369,12 +1613,14 @@
         }).join('');
       }
 
+      // 2. Pop-up Modal In-Game Badges
       const codelabList = document.getElementById('codelab-badges-list');
       const codelabCount = document.getElementById('codelab-badge-count');
-      if (codelabCount) codelabCount.textContent = `${state.sessionBadges.length} / ${BADGES.length} deze ronde`;
+      const activeBadges = getActiveThemeBadges(state.gameTheme);
+      if (codelabCount) codelabCount.textContent = `${state.sessionBadges.length} / ${activeBadges.length} deze ronde`;
 
       if (codelabList) {
-        codelabList.innerHTML = BADGES.map(b => {
+        codelabList.innerHTML = activeBadges.map(b => {
           const unlockedNow = state.sessionBadges.includes(b.id);
           return `
             <div class="p-2 rounded-lg border flex items-center justify-between gap-2 ${unlockedNow ? 'bg-amber-500/15 border-amber-400/50' : 'bg-slate-950/70 border-slate-800 opacity-60'}">
@@ -1450,6 +1696,7 @@
 
     function startGameMode(theme) {
       state.gameTheme = theme;
+      state.hubBadgePreviewTheme = theme;
       resetSessionProgress();
       document.getElementById('hub-lobby').classList.add('hidden');
       document.getElementById('gameover-modal').classList.add('hidden');
@@ -1474,6 +1721,8 @@
       const t = THEMES[state.gameTheme];
       const root = document.getElementById('body-root');
       const stageGlow = document.getElementById('stage-glow-backdrop');
+      const consolePanel = document.getElementById('compiler-console-panel');
+      const modalPanel = document.getElementById('upgrades-modal-panel');
 
       document.getElementById('app-title-header').textContent = t.title;
       document.getElementById('app-subtitle-header').textContent = t.subtitle;
@@ -1483,7 +1732,8 @@
       const currentBotObj = t.bots.find(b => b.id === state.selectedBot) || t.bots[0];
       document.getElementById('player-bot-name').textContent = currentBotObj.name;
       document.getElementById('player-bot-avatar').textContent = currentBotObj.icon;
-      document.getElementById('player-weapon-badge').textContent = `🔫 Wapen: ${currentBotObj.weaponName} (${currentBotObj.multDmg}x)`;
+      const wLabel = state.gameTheme === 'kawaii' ? '✨ Stafje' : '🔫 Wapen';
+      document.getElementById('player-weapon-badge').textContent = `${wLabel}: ${currentBotObj.weaponName} (${currentBotObj.multDmg}x)`;
       
       const currentEnemy = t.enemies[(state.level - 1) % t.enemies.length];
       document.getElementById('enemy-bot-name').textContent = `${currentEnemy.name} #${state.level}`;
@@ -1504,11 +1754,29 @@
       document.getElementById('btn-speak').innerHTML = `🔊 Spreek Uit (${t.currencySymbol} ${COST_SPEAK})`;
       document.getElementById('btn-spell').innerHTML = `🐢 Spel (${t.currencySymbol} ${COST_SPELL})`;
 
+      // Reset en pas thema-specifieke kleuren toe
+      root.classList.remove('lab-theme', 'space-theme', 'kawaii-theme');
+      consolePanel.classList.remove('cyber-border-cyan', 'lab-border', 'space-border', 'kawaii-border');
+      modalPanel.classList.remove('cyber-border-cyan', 'lab-border', 'space-border', 'kawaii-border');
+
       if (state.gameTheme === 'lab') { 
         root.classList.add('lab-theme'); 
+        consolePanel.classList.add('lab-border');
+        modalPanel.classList.add('lab-border');
         if (stageGlow) stageGlow.style.background = 'radial-gradient(circle at 50% 50%, #10b981 0%, transparent 70%)';
+      } else if (state.gameTheme === 'space') {
+        root.classList.add('space-theme');
+        consolePanel.classList.add('space-border');
+        modalPanel.classList.add('space-border');
+        if (stageGlow) stageGlow.style.background = 'radial-gradient(circle at 50% 50%, #6366f1 0%, transparent 70%)';
+      } else if (state.gameTheme === 'kawaii') {
+        root.classList.add('kawaii-theme');
+        consolePanel.classList.add('kawaii-border');
+        modalPanel.classList.add('kawaii-border');
+        if (stageGlow) stageGlow.style.background = 'radial-gradient(circle at 50% 50%, #f472b6 0%, transparent 70%)';
       } else { 
-        root.classList.remove('lab-theme'); 
+        consolePanel.classList.add('cyber-border-cyan');
+        modalPanel.classList.add('cyber-border-cyan');
         if (stageGlow) stageGlow.style.background = 'radial-gradient(circle at 50% 50%, #06b6d4 0%, transparent 70%)';
       }
       
@@ -1921,7 +2189,11 @@
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
 
-      if (weaponType === 'plasma') {
+      if (state.gameTheme === 'kawaii' && weaponType === 'pulse') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(660, now);
+        osc.frequency.exponentialRampToValueAtTime(1180, now + 0.22);
+      } else if (weaponType === 'plasma') {
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(320, now);
         osc.frequency.exponentialRampToValueAtTime(75, now + 0.35);
@@ -2163,11 +2435,10 @@
         const wordCount = item.trim().split(/\s+/).length;
         document.getElementById('word-progress-badge').textContent = `Zin ${state.currentIndex + 1} / ${totalSentences}`;
         document.getElementById('boss-progress-badge').textContent = `Zin ${state.currentIndex + 1} / ${totalSentences}`;
-        document.getElementById('word-length-hint').textContent = state.gameTheme === 'lab' ? `👑 Bio-Reactor (${wordCount} woorden)` : `👑 Boss Rush (${wordCount} woorden)`;
+        document.getElementById('word-length-hint').textContent = `👑 Finale (${wordCount} woorden)`;
         activateBossArenaUI(true);
       } else {
         const totalWords = state.wordsQueue.length;
-        // Tel alleen daadwerkelijke tekens (exclusief spaties)
         const charCountWithoutSpaces = item.replace(/\s+/g, '').length;
         document.getElementById('word-progress-badge').textContent = `Opdracht ${state.currentIndex + 1} / ${totalWords}`;
         document.getElementById('word-length-hint').textContent = `Lengte: ${charCountWithoutSpaces} letters`;
@@ -2190,6 +2461,7 @@
 
       const hpBonus = state.playerHp * HP_SCORE_MULTIPLIER;
       const totalScore = calculateCombinedScore();
+      const activeBadges = getActiveThemeBadges(state.gameTheme);
 
       document.getElementById('victory-base-score').textContent = state.sessionScore;
       document.getElementById('victory-credits-bonus').textContent = `+${state.bits}`;
@@ -2203,14 +2475,20 @@
           badgesListEl.innerHTML = `<span class="text-xs text-slate-500 italic">Geen nieuwe badges in deze ronde.</span>`;
         } else {
           badgesListEl.innerHTML = state.sessionBadges.map(id => {
-            const b = BADGES.find(x => x.id === id);
+            const b = activeBadges.find(x => x.id === id);
             return b ? `<span class="px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-400 text-amber-300 font-cyber font-bold text-xs flex items-center gap-1">${b.icon} ${b.title} (+${b.bonus})</span>` : '';
           }).join('');
         }
       }
 
-      document.getElementById('victory-title').textContent = state.gameTheme === 'lab' ? "LAB EXPERIMENT GESLAAGD!" : "EINDBAAS VERSLAGEN!";
-      document.getElementById('victory-desc').textContent = state.gameTheme === 'lab' ? "Fantastisch! Alle formules zijn gesynthetiseerd." : "Geweldig! Alle opdrachten zijn gecompileerd!";
+      const victoryTitles = {
+        arena: "EINDBAAS VERSLAGEN!",
+        lab: "LAB EXPERIMENT GESLAAGD!",
+        space: "MELKWEG BEVRIJD!",
+        kawaii: "REGENBOOG FEESTJE!"
+      };
+      document.getElementById('victory-title').textContent = victoryTitles[state.gameTheme] || "MISSIE VOLTOOID!";
+      document.getElementById('victory-desc').textContent = "Fantastisch gedaan! Alle woorden en zinnen zijn voltooid!";
       document.getElementById('upgrades-modal').classList.add('hidden');
       document.getElementById('victory-modal').classList.remove('hidden');
       updateHUD();
@@ -2224,8 +2502,14 @@
       document.getElementById('gameover-credits-bonus').textContent = `+${state.bits}`;
       document.getElementById('gameover-total-score').textContent = totalScore;
 
-      document.getElementById('gameover-title').textContent = state.gameTheme === 'lab' ? "LAB BESMETTING: AF!" : "ROBOT UITGESCHAKELD: AF!";
-      document.getElementById('gameover-desc').textContent = "Je HP is opgeraakt (0 HP-bonus), maar je behaalde ronde-punten en overgebleven credits tellen wel mee!";
+      const overTitles = {
+        arena: "ROBOT UITGESCHAKELD!",
+        lab: "LAB BESMETTING: AF!",
+        space: "RUIMTESCHIP NEERGESTORT!",
+        kawaii: "OOPS! HARTJES OP!"
+      };
+      document.getElementById('gameover-title').textContent = overTitles[state.gameTheme] || "GAME OVER!";
+      document.getElementById('gameover-desc').textContent = "Je HP is opgeraakt (0 HP-bonus), maar je behaalde ronde-punten en bespaarde credits tellen wel mee!";
       document.getElementById('upgrades-modal').classList.add('hidden');
       document.getElementById('gameover-modal').classList.remove('hidden');
       updateHUD();
@@ -2276,7 +2560,13 @@
         enemyAvatar.className = "text-6xl md:text-7xl animate-float filter drop-shadow-[0_0_16px_rgba(244,63,94,0.7)] select-none";
 
         compileBtn.innerHTML = t.compileBtn;
-        compileBtn.className = "px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-cyan-500/25 active:scale-95 transition whitespace-nowrap";
+        if (state.gameTheme === 'kawaii') {
+          compileBtn.className = "px-6 py-3.5 rounded-xl bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-300 hover:to-purple-400 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-pink-500/25 active:scale-95 transition whitespace-nowrap";
+        } else if (state.gameTheme === 'space') {
+          compileBtn.className = "px-6 py-3.5 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-400 hover:from-indigo-400 hover:to-cyan-300 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-indigo-500/25 active:scale-95 transition whitespace-nowrap";
+        } else {
+          compileBtn.className = "px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-cyan-500/25 active:scale-95 transition whitespace-nowrap";
+        }
       }
     }
 
@@ -2305,17 +2595,16 @@
       }
     }
 
-    // NIEUW IN v4.4: Spaties worden als underscore (_) getoond in zowel Fase 1 als Fase 2!
+    // Spaties worden als underscore (_) getoond in zowel Fase 1 als Fase 2!
     function applyMaskedDisplay(box, item, isBossRush) {
+      const textColor = state.gameTheme === 'kawaii' ? 'text-pink-300' : 'text-cyan-300';
       box.className = isBossRush
-        ? "font-cyber text-sm md:text-lg tracking-wider text-cyan-300 font-bold leading-relaxed"
-        : "font-cyber text-xl md:text-2xl tracking-[0.2em] text-cyan-300 font-bold leading-relaxed";
+        ? `font-cyber text-sm md:text-lg tracking-wider ${textColor} font-bold leading-relaxed`
+        : `font-cyber text-xl md:text-2xl tracking-[0.2em] ${textColor} font-bold leading-relaxed`;
 
       if (state.gameMode === 'vowels') {
         box.textContent = maskVowels(item);
       } else {
-        // Elk woord bestaat uit puntjes (•) verbonden met non-breaking spaces (\u00A0),
-        // en elke spatie tussen woorden wordt getoond als een duidelijke underscore ( _ ).
         box.textContent = item
           .trim()
           .split(/\s+/)
@@ -2384,7 +2673,7 @@
         state.shieldActive = true;
         damage = Math.round(damage * 0.5);
         creditsEarned = 0;
-        setAudioStatus("🛠️ Bug gepatcht! Noodschild actief (+0 Credits).");
+        setAudioStatus("🛠️ Gecorrigeerd! Noodschild actief (+0 Credits).");
       } else if (isRetryItem) {
         state.penalizedItems[item] = false;
         creditsEarned = 0;
@@ -2413,7 +2702,7 @@
         const statusBadge = document.getElementById('script-trigger-status');
         if (conditionMet) {
           protocolTriggered = true;
-          statusBadge.textContent = "🔥 PROTOCOL GEACTIVEERD!";
+          statusBadge.textContent = "🔥 BONUS GEACTIVEERD!";
           statusBadge.className = "text-[11px] px-2 py-0.5 rounded bg-emerald-500/30 border border-emerald-400 text-emerald-300 font-bold";
           if (state.thenRule === 'double_dmg') damage = Math.round(damage * 1.5);
           if (state.thenRule === 'mine_bits') creditsEarned += 15;
@@ -2422,7 +2711,7 @@
             state.playerHp = Math.min(100, state.playerHp + 25);
           }
         } else {
-          statusBadge.textContent = "Voorwaarde niet bereikt";
+          statusBadge.textContent = "Wacht op conditie...";
           statusBadge.className = "text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400";
         }
       }
@@ -2444,7 +2733,7 @@
         }
 
         if (protocolTriggered) {
-          spawnFloatingText(`⚡ PROTOCOL BONUS!`, enemyWrap, "text-purple-300", -26);
+          spawnFloatingText(`✨ BONUS ACTIEF!`, enemyWrap, "text-purple-300", -26);
         }
       }, 140);
 
@@ -2535,7 +2824,7 @@
       const isBossRush = (state.currentPhase === 'bossrush');
 
       if (isBossRush) {
-        document.getElementById('debugger-title').textContent = `🐞 ZIN-BUG (-25 HP!) — NOG ${state.playerHp} HP OVER`;
+        document.getElementById('debugger-title').textContent = `🐞 ZIN-FOUTJE (-25 HP!) — NOG ${state.playerHp} HP OVER`;
         const targetWords = target.trim().split(/\s+/);
         const userWords = typed.trim().split(/\s+/);
 
@@ -2562,7 +2851,7 @@
           targetContainer.appendChild(span);
         });
       } else {
-        document.getElementById('debugger-title').textContent = `🐞 BUG GEDETECTEERD (-25 HP!) — NOG ${state.playerHp} HP OVER`;
+        document.getElementById('debugger-title').textContent = `🐞 FOUTJE GEDETECTEERD (-25 HP!) — NOG ${state.playerHp} HP OVER`;
         const tChars = target.toLowerCase().split('');
         const uChars = typed.toLowerCase().split('');
 
@@ -2622,9 +2911,10 @@
         mainContainer.classList.add('shake-effect');
         setTimeout(() => mainContainer.classList.remove('shake-effect'), 450);
       } else {
-        const beamColors = state.gameTheme === 'lab'
-          ? 'from-emerald-400 via-teal-200 to-lime-400 shadow-[0_0_20px_#10b981]'
-          : 'from-cyan-300 via-purple-400 to-rose-500 shadow-[0_0_20px_#06b6d4]';
+        let beamColors = 'from-cyan-300 via-purple-400 to-rose-500 shadow-[0_0_20px_#06b6d4]';
+        if (state.gameTheme === 'lab') beamColors = 'from-emerald-400 via-teal-200 to-lime-400 shadow-[0_0_20px_#10b981]';
+        if (state.gameTheme === 'space') beamColors = 'from-indigo-400 via-sky-300 to-violet-500 shadow-[0_0_20px_#6366f1]';
+        if (state.gameTheme === 'kawaii') beamColors = 'from-pink-300 via-amber-200 to-fuchsia-400 shadow-[0_0_20px_#f472b6]';
         container.innerHTML = `<div class="laser-beam bg-gradient-to-r ${beamColors}"></div>`;
       }
 
@@ -2633,12 +2923,13 @@
 
     function updateHUD() {
       const t = THEMES[state.gameTheme];
+      const activeBadges = getActiveThemeBadges(state.gameTheme);
       document.getElementById('hud-bits').textContent = `${t.currencySymbol} ${state.bits}`;
       document.getElementById('hud-session-score').textContent = calculateCombinedScore();
       document.getElementById('hud-streak').textContent = `⚡ ${state.streak}`;
       
       const badgeHud = document.getElementById('hud-badges-count');
-      if (badgeHud) badgeHud.textContent = `🎖️ ${state.sessionBadges.length}/${BADGES.length}`;
+      if (badgeHud) badgeHud.textContent = `🎖️ ${state.sessionBadges.length}/${activeBadges.length}`;
       
       const shopBalance = document.getElementById('shop-balance-badge');
       if (shopBalance) shopBalance.textContent = `${t.currencySymbol} ${state.bits} beschikbaar`;
@@ -2652,7 +2943,9 @@
       }
       hpBar.className = state.playerHp <= 25
         ? "bg-gradient-to-r from-rose-600 to-orange-500 h-full rounded-full transition-all duration-300"
-        : "bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full transition-all duration-300";
+        : (state.gameTheme === 'kawaii'
+            ? "bg-gradient-to-r from-pink-400 to-purple-400 h-full rounded-full transition-all duration-300"
+            : "bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full transition-all duration-300");
 
       const quickRepairBtn = document.getElementById('quick-repair-btn');
       const shopRepairBtn = document.getElementById('shop-repair-btn');
@@ -2703,7 +2996,8 @@
           stageUpgradeBtn.innerHTML = `<span>⬆️ Upgrade Beschikbaar!</span>`;
         } else {
           stageUpgradeBtn.className = "px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 font-cyber font-bold text-[10px] transition flex items-center gap-1";
-          stageUpgradeBtn.innerHTML = `<span>🔧 Wapenkamer</span>`;
+          const btnTitle = state.gameTheme === 'kawaii' ? '🎀 Boetiek' : (state.gameTheme === 'space' ? '🛸 Hangar' : '🔧 Wapenkamer');
+          stageUpgradeBtn.innerHTML = `<span>${btnTitle}</span>`;
         }
       }
     }
@@ -2711,16 +3005,16 @@
     function updateLogicRule() {
       state.ifRule = document.getElementById('select-if').value;
       state.thenRule = document.getElementById('select-then').value;
-      document.getElementById('code-preview-block').innerHTML = `if (synthese.correct && ${state.ifRule}) {<br>&nbsp;&nbsp;protocol.execute("${state.thenRule}");<br>}`;
+      document.getElementById('code-preview-block').innerHTML = `if (antwoord.goed && ${state.ifRule}) {<br>&nbsp;&nbsp;bonus.activeer("${state.thenRule}");<br>}`;
 
       const ifLabels = {
         streak2: 'Streak >= 2',
         len7: 'Lengte >= 7',
-        bossrush: 'Boss Rush',
+        bossrush: 'Eindbaas Finale',
         fast: 'Binnen 6 sec'
       };
       const thenLabels = {
-        double_dmg: '+50% Schade',
+        double_dmg: '+50% Kracht',
         mine_bits: '+15 Credits',
         shield: 'Schild + 25 HP'
       };
@@ -2788,11 +3082,12 @@
       state.selectedBot = id;
       const t = THEMES[state.gameTheme];
       const currentBotObj = t.bots.find(b => b.id === state.selectedBot) || t.bots[0];
+      const wLabel = state.gameTheme === 'kawaii' ? '✨ Stafje' : '🔫 Wapen';
       
       if(document.getElementById('player-bot-name')) {
         document.getElementById('player-bot-name').textContent = currentBotObj.name;
         document.getElementById('player-bot-avatar').textContent = currentBotObj.icon;
-        document.getElementById('player-weapon-badge').textContent = `🔫 Wapen: ${currentBotObj.weaponName} (${currentBotObj.multDmg}x)`;
+        document.getElementById('player-weapon-badge').textContent = `${wLabel}: ${currentBotObj.weaponName} (${currentBotObj.multDmg}x)`;
       }
       
       updateHUD();

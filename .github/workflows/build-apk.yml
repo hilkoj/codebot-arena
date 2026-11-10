@@ -158,3 +158,26 @@ jobs:
         with:
           name: CodeBot-Arena-Android-APK
           path: android/app/build/outputs/apk/release/app-release.apk
+
+      - name: 9. Webbestanden klaarzetten voor GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: 10. Upload artefact voor GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'www'
+
+    # Extra job om de webversie live te zetten op GitHub Pages
+  deploy-web:
+    needs: build-android
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy naar GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

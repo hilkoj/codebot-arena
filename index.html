@@ -2171,7 +2171,12 @@
           if (response.ok) {
             const jsonData = await response.json();
             if (jsonData && typeof jsonData === 'object' && Object.keys(jsonData).length > 0) {
-              state.lists = jsonData;
+              let localLists = {};
+                try {
+                  const saved = localStorage.getItem('codebot_all_lists');
+                  if (saved) localLists = JSON.parse(saved);
+                } catch (e) {}
+                state.lists = { ...localLists, ...jsonData };
               
               // Gebruik de laatst gekozen lijst als die bestaat in de JSON, anders de eerste lijst
               if (savedActive && state.lists[savedActive]) {

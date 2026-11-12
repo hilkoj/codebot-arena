@@ -1690,6 +1690,7 @@
         if (!document.getElementById('admin-modal').classList.contains('hidden')) {
           closeAdminModal();
         }
+        if (!document.getElementById('privacy-modal').classList.contains('hidden')) closePrivacyModal();
       }
     });
 
@@ -3362,6 +3363,13 @@
 
       debugPanel.classList.remove('hidden');
       
+      // Maak het invoerveld leeg zodat de speler opnieuw moet beginnen met typen
+      const inputEl = document.getElementById('word-input');
+      inputEl.value = '';
+      
+      speakText(target, 0.8);
+      inputEl.focus();
+      
       speakText(target, 0.8);
       document.getElementById('word-input').focus();
     }
@@ -3603,6 +3611,17 @@
       updateLogicRule();
       loadState();
       renderHighscores();
+
+      // Verberg het debug-paneel (verwachte invoer) direct zodra de speler begint met typen
+      const wordInput = document.getElementById('word-input');
+      if (wordInput) {
+        wordInput.addEventListener('input', () => {
+          const debugPanel = document.getElementById('debugger-panel');
+          if (debugPanel && !debugPanel.classList.contains('hidden')) {
+            debugPanel.classList.add('hidden');
+          }
+        });
+      }
     });
   </script>
 </body>

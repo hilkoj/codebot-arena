@@ -292,7 +292,7 @@
               <h1 class="font-cyber text-lg md:text-2xl font-black text-cyan-400 tracking-wider">SPELLING GAMING HUB</h1>
               <span class="px-2 py-0.5 rounded-md bg-slate-800 border border-slate-700 text-[10px] font-cyber font-bold text-slate-400">v4.8</span>
             </div>
-            <p class="text-[11px] text-slate-300">Kies je woordenlijst, strijd tegen je klasgenoten en verzamel alle badges!</p>
+            <p class="text-[11px] text-slate-300">Kies je woordenlijst, strijd tegen je klasgenoten en verzamel alle 32 badges!</p>
           </div>
         </div>
 
@@ -397,7 +397,7 @@
           <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
             <h3 class="font-cyber text-xs md:text-sm font-bold text-purple-400 text-left flex items-center gap-1.5">
               <span>🎖️</span> BADGES
-              <span id="hub-badge-counter" class="text-[10px] font-cyber font-bold text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-500/40">0 / 8</span>
+              <span id="hub-badge-counter" class="text-[10px] font-cyber font-bold text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-500/40">0 / 8 (Totaal: 0/32)</span>
             </h3>
             <!-- Thema-knopjes voor de Trofeeënkast -->
             <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-lg border border-slate-800">
@@ -515,7 +515,7 @@
         <!-- Rechts: Online Klassement (Firebase) & Audio Settings -->
         <div class="bg-slate-900/70 rounded-2xl p-4 flex flex-col gap-3.5 border border-amber-500/30">
           
-          <!-- NIEUW: FIREBASE ONLINE HIGHSCORES CONFIGURATIE -->
+          <!-- FIREBASE ONLINE HIGHSCORES CONFIGURATIE -->
           <div class="bg-slate-950/90 p-3.5 rounded-xl border border-emerald-500/40 flex flex-col gap-2">
             <div class="flex items-center justify-between">
               <span class="font-cyber text-xs font-bold text-emerald-400">🌐 Online Klassement (Firebase URL)</span>
@@ -1314,7 +1314,7 @@
     }
 
     // ==========================================
-    // 1. STATE, 4 THEMA'S, UPGRADES & THEMA-BADGES
+    // 1. STATE, 4 THEMA'S, UPGRADES & 32 UNIEKE THEMA-BADGES
     // ==========================================
     const REPAIR_COST = 30;
     const REPAIR_AMOUNT = 50;
@@ -1422,14 +1422,14 @@
           { name: 'Null-Pointer Drone', icon: '👁️‍🗨️' }
         ],
         badges: [
-          { id: 'first_hit', icon: '🎯', title: 'Eerste Compile', desc: 'Eerste woord direct foutloos!', bonus: 15 },
-          { id: 'streak_5', icon: '🔥', title: 'Code-Streak', desc: '5 opdrachten op rij in 1x goed!', bonus: 30 },
-          { id: 'streak_10', icon: '⚡', title: 'Master Hacker', desc: '10 opdrachten op rij in 1x goed!', bonus: 60 },
-          { id: 'speed_3', icon: '🚀', title: 'Flits-Compiler', desc: '3x binnen 4 seconden foutloos!', bonus: 35 },
-          { id: 'heavy_weapon', icon: '🔧', title: 'Mecha-Ingenieur', desc: 'Ontgrendel een Tier 4+ Cyber-Bot!', bonus: 40 },
-          { id: 'no_hints', icon: '🧠', title: 'Geen Cheats', desc: 'Win een ronde zonder betaalde hints!', bonus: 75 },
-          { id: 'flawless', icon: '🛡️', title: 'Firewall Pantser', desc: 'Win een ronde met 0 fouten!', bonus: 100 },
-          { id: 'boss_slayer', icon: '👑', title: 'Overlord Verslagen', desc: 'Versla de Eindbaas in de Finale!', bonus: 50 }
+          { id: 'arena_first_hit', icon: '🎯', title: 'Eerste Compile', desc: 'Eerste woord direct foutloos!', bonus: 15 },
+          { id: 'arena_streak_5', icon: '🔥', title: 'Code-Streak', desc: '5 opdrachten op rij in 1x goed!', bonus: 30 },
+          { id: 'arena_streak_10', icon: '⚡', title: 'Master Hacker', desc: '10 opdrachten op rij in 1x goed!', bonus: 60 },
+          { id: 'arena_speed_3', icon: '🚀', title: 'Flits-Compiler', desc: '3x binnen 4 seconden foutloos!', bonus: 35 },
+          { id: 'arena_heavy_weapon', icon: '🔧', title: 'Mecha-Ingenieur', desc: 'Ontgrendel een Tier 4+ Cyber-Bot!', bonus: 40 },
+          { id: 'arena_no_hints', icon: '🧠', title: 'Geen Cheats', desc: 'Win een ronde zonder betaalde hints!', bonus: 75 },
+          { id: 'arena_flawless', icon: '🛡️', title: 'Firewall Pantser', desc: 'Win een ronde met 0 fouten!', bonus: 100 },
+          { id: 'arena_boss_slayer', icon: '👑', title: 'Overlord Verslagen', desc: 'Versla de Eindbaas in de Finale!', bonus: 50 }
         ]
       },
 
@@ -1467,14 +1467,14 @@
           { name: 'DNA-Parasiet', icon: '🦂' }
         ],
         badges: [
-          { id: 'first_hit', icon: '🧪', title: 'Eerste Synthese', desc: 'Eerste formule meteen goed!', bonus: 15 },
-          { id: 'streak_5', icon: '🔬', title: 'Lab-Specialist', desc: '5 formules op rij foutloos!', bonus: 30 },
-          { id: 'streak_10', icon: '🧬', title: 'Nobelprijs-Winnaar', desc: '10 formules op rij in 1x goed!', bonus: 60 },
-          { id: 'speed_3', icon: '⚡', title: 'Katalysator', desc: '3x binnen 4 seconden gemengd!', bonus: 35 },
-          { id: 'heavy_weapon', icon: '⚛️', title: 'Hoogleraar', desc: 'Ontgrendel een Tier 4+ Lab-instrument!', bonus: 40 },
-          { id: 'no_hints', icon: '🥽', title: 'Uit Het Hoofd', desc: 'Win zonder lab-hints te kopen!', bonus: 75 },
-          { id: 'flawless', icon: '🧼', title: 'Steriel Lab', desc: 'Win een ronde zonder besmetting (0 fouten)!', bonus: 100 },
-          { id: 'boss_slayer', icon: '☢️', title: 'Reactor-Temmer', desc: 'Neutraliseer de Bio-Reactor!', bonus: 50 }
+          { id: 'lab_first_hit', icon: '🧪', title: 'Eerste Synthese', desc: 'Eerste formule meteen goed!', bonus: 15 },
+          { id: 'lab_streak_5', icon: '🔬', title: 'Lab-Specialist', desc: '5 formules op rij foutloos!', bonus: 30 },
+          { id: 'lab_streak_10', icon: '🧬', title: 'Nobelprijs-Winnaar', desc: '10 formules op rij in 1x goed!', bonus: 60 },
+          { id: 'lab_speed_3', icon: '⚡', title: 'Katalysator', desc: '3x binnen 4 seconden gemengd!', bonus: 35 },
+          { id: 'lab_heavy_weapon', icon: '⚛️', title: 'Hoogleraar', desc: 'Ontgrendel een Tier 4+ Lab-instrument!', bonus: 40 },
+          { id: 'lab_no_hints', icon: '🥽', title: 'Uit Het Hoofd', desc: 'Win zonder lab-hints te kopen!', bonus: 75 },
+          { id: 'lab_flawless', icon: '🧼', title: 'Steriel Lab', desc: 'Win een ronde zonder besmetting (0 fouten)!', bonus: 100 },
+          { id: 'lab_boss_slayer', icon: '☢️', title: 'Reactor-Temmer', desc: 'Neutraliseer de Bio-Reactor!', bonus: 50 }
         ]
       },
 
@@ -1512,14 +1512,14 @@
           { name: 'Kosmos-Kraken', icon: '🦑' }
         ],
         badges: [
-          { id: 'first_hit', icon: '☄️', title: 'Eerste Inslag', desc: 'Eerste ruimte-doelwit direct geraakt!', bonus: 15 },
-          { id: 'streak_5', icon: '🚀', title: 'Warp-Snelheid', desc: '5 voltreffers op rij zonder missen!', bonus: 30 },
-          { id: 'streak_10', icon: '🌌', title: 'Sterren-Admiraal', desc: '10 voltreffers op rij in de ruimte!', bonus: 60 },
-          { id: 'speed_3', icon: '⚡', title: 'Lichtsnelheid-Piloot', desc: '3x binnen 4 seconden gelanceerd!', bonus: 35 },
-          { id: 'heavy_weapon', icon: '🛸', title: 'Vloot-Commandant', desc: 'Koop een Tier 4+ Ruimteschip in de Hangar!', bonus: 40 },
-          { id: 'no_hints', icon: '🧭', title: 'Blinde Navigatie', desc: 'Win zonder radar-hints te gebruiken!', bonus: 75 },
-          { id: 'flawless', icon: '🛡️', title: 'Ongekrasde Romp', desc: 'Win zonder één meteoriet-inslag (0 fouten)!', bonus: 100 },
-          { id: 'boss_slayer', icon: '👑', title: 'Melkweg-Redder', desc: 'Versla het Moederschip van Keizer Zorgon!', bonus: 50 }
+          { id: 'space_first_hit', icon: '☄️', title: 'Eerste Inslag', desc: 'Eerste ruimte-doelwit direct geraakt!', bonus: 15 },
+          { id: 'space_streak_5', icon: '🚀', title: 'Warp-Snelheid', desc: '5 voltreffers op rij zonder missen!', bonus: 30 },
+          { id: 'space_streak_10', icon: '🌌', title: 'Sterren-Admiraal', desc: '10 voltreffers op rij in de ruimte!', bonus: 60 },
+          { id: 'space_speed_3', icon: '⚡', title: 'Lichtsnelheid-Piloot', desc: '3x binnen 4 seconden gelanceerd!', bonus: 35 },
+          { id: 'space_heavy_weapon', icon: '🛸', title: 'Vloot-Commandant', desc: 'Koop een Tier 4+ Ruimteschip in de Hangar!', bonus: 40 },
+          { id: 'space_no_hints', icon: '🧭', title: 'Blinde Navigatie', desc: 'Win zonder radar-hints te gebruiken!', bonus: 75 },
+          { id: 'space_flawless', icon: '🛡️', title: 'Ongekrasde Romp', desc: 'Win zonder één meteoriet-inslag (0 fouten)!', bonus: 100 },
+          { id: 'space_boss_slayer', icon: '👑', title: 'Melkweg-Redder', desc: 'Versla het Moederschip van Keizer Zorgon!', bonus: 50 }
         ]
       },
 
@@ -1557,14 +1557,14 @@
           { name: 'Slaperige-Slak', icon: '🐌' }
         ],
         badges: [
-          { id: 'first_hit', icon: '🌸', title: 'Eerste Bloesem', desc: 'Eerste woord meteen helemaal goed!', bonus: 15 },
-          { id: 'streak_5', icon: '🍓', title: 'Suikerspin-Streak', desc: '5 woorden op rij zonder foutjes!', bonus: 30 },
-          { id: 'streak_10', icon: '💖', title: 'Glitter-Koningin', desc: '10 woorden op rij in 1x goed!', bonus: 60 },
-          { id: 'speed_3', icon: '✨', title: 'Vallende Ster', desc: '3x supersnel binnen 4 seconden!', bonus: 35 },
-          { id: 'heavy_weapon', icon: '🎀', title: 'Plushie-Verzamelaar', desc: 'Adopteer een Tier 4+ Knuffel-vriendje!', bonus: 40 },
-          { id: 'no_hints', icon: '🧁', title: 'Slimme Cupcake', desc: 'Win een ronde zonder spiek-hints!', bonus: 75 },
-          { id: 'flawless', icon: '💎', title: 'Foutloze Prinses', desc: 'Hele ronde met 100% Hartjes-HP gewonnen!', bonus: 100 },
-          { id: 'boss_slayer', icon: '🦄', title: 'Eenhoorn Kampioen', desc: 'Vrolijk Koning Donderwolk helemaal op!', bonus: 50 }
+          { id: 'kawaii_first_hit', icon: '🌸', title: 'Eerste Bloesem', desc: 'Eerste woord meteen helemaal goed!', bonus: 15 },
+          { id: 'kawaii_streak_5', icon: '🍓', title: 'Suikerspin-Streak', desc: '5 woorden op rij zonder foutjes!', bonus: 30 },
+          { id: 'kawaii_streak_10', icon: '💖', title: 'Glitter-Koningin', desc: '10 woorden op rij in 1x goed!', bonus: 60 },
+          { id: 'kawaii_speed_3', icon: '✨', title: 'Vallende Ster', desc: '3x supersnel binnen 4 seconden!', bonus: 35 },
+          { id: 'kawaii_heavy_weapon', icon: '🎀', title: 'Plushie-Verzamelaar', desc: 'Adopteer een Tier 4+ Knuffel-vriendje!', bonus: 40 },
+          { id: 'kawaii_no_hints', icon: '🧁', title: 'Slimme Cupcake', desc: 'Win een ronde zonder spiek-hints!', bonus: 75 },
+          { id: 'kawaii_flawless', icon: '💎', title: 'Foutloze Prinses', desc: 'Hele ronde met 100% Hartjes-HP gewonnen!', bonus: 100 },
+          { id: 'kawaii_boss_slayer', icon: '🦄', title: 'Eenhoorn Kampioen', desc: 'Vrolijk Koning Donderwolk helemaal op!', bonus: 50 }
         ]
       }
     };
@@ -1633,7 +1633,7 @@
     });
 
     // ==========================================
-    // GEÏNTEGREERDE EINDSCORE & BADGE FUNCTIES
+    // GEÏNTEGREERDE EINDSCORE & 32 THEMA-BADGES FUNCTIES
     // ==========================================
     function calculateCombinedScore() {
       const creditsBonus = state.bits;
@@ -1641,17 +1641,22 @@
       return state.sessionScore + creditsBonus + hpBonus;
     }
 
-    function unlockBadge(badgeId) {
-      if (state.sessionBadges.includes(badgeId)) return;
+    function unlockBadge(baseBadgeId) {
+      // Plak automatisch het actieve thema voor het badge-ID (bijv. 'kawaii_first_hit')
+      const fullBadgeId = baseBadgeId.startsWith(`${state.gameTheme}_`)
+        ? baseBadgeId
+        : `${state.gameTheme}_${baseBadgeId}`;
+
+      if (state.sessionBadges.includes(fullBadgeId)) return;
       const themeBadges = getActiveThemeBadges(state.gameTheme);
-      const badge = themeBadges.find(b => b.id === badgeId);
+      const badge = themeBadges.find(b => b.id === fullBadgeId);
       if (!badge) return;
 
-      state.sessionBadges.push(badgeId);
+      state.sessionBadges.push(fullBadgeId);
       state.sessionScore += badge.bonus;
 
-      if (!state.allTimeBadges.includes(badgeId)) {
-        state.allTimeBadges.push(badgeId);
+      if (!state.allTimeBadges.includes(fullBadgeId)) {
+        state.allTimeBadges.push(fullBadgeId);
         try {
           localStorage.setItem('codebot_all_badges', JSON.stringify(state.allTimeBadges));
         } catch (e) {}
@@ -1685,7 +1690,14 @@
       const hubGrid = document.getElementById('hub-badges-grid');
       const hubCounter = document.getElementById('hub-badge-counter');
       const hubBadgesList = getActiveThemeBadges(state.hubBadgePreviewTheme);
-      if (hubCounter) hubCounter.textContent = `${state.allTimeBadges.length} / ${hubBadgesList.length}`;
+      
+      // Tel specifiek hoeveel badges in het geselecteerde voorbeeld-thema zijn behaald
+      const unlockedInPreviewTheme = hubBadgesList.filter(b => state.allTimeBadges.includes(b.id)).length;
+      const totalPossible = Object.values(THEMES).reduce((sum, t) => sum + t.badges.length, 0);
+
+      if (hubCounter) {
+        hubCounter.textContent = `${unlockedInPreviewTheme} / ${hubBadgesList.length} (Totaal: ${state.allTimeBadges.length}/${totalPossible})`;
+      }
 
       ['arena', 'lab', 'space', 'kawaii'].forEach(tk => {
         const btn = document.getElementById(`hub-bt-${tk}`);
@@ -2122,7 +2134,7 @@
     }
 
     // ==========================================
-    // WOORDEN.JSON FETCHER MET LIVE URL MONITOR
+    // WOORDEN.JSON FETCHER MET LAATST GEKOZEN LIJST BEHOUD
     // ==========================================
     function updateJsonMonitorUI(statusType, activeSourceUrl, extraNote = '') {
       const badge = document.getElementById('json-source-badge');
@@ -2151,10 +2163,13 @@
       const badge = document.getElementById('json-source-badge');
       if (badge) badge.textContent = '⏳ Verbinden...';
 
-      // Haal eerst de laatst gekozen woordenlijst op uit het geheugen
+      // Haal eerst de laatst gekozen woordenlijst en eventuele eigen lijsten op uit het geheugen
       let savedActive = null;
+      let localLists = {};
       try {
         savedActive = localStorage.getItem('codebot_active_list_name');
+        const savedAll = localStorage.getItem('codebot_all_lists');
+        if (savedAll) localLists = JSON.parse(savedAll);
       } catch (e) {}
 
       const urlsToTry = [
@@ -2171,14 +2186,10 @@
           if (response.ok) {
             const jsonData = await response.json();
             if (jsonData && typeof jsonData === 'object' && Object.keys(jsonData).length > 0) {
-              let localLists = {};
-                try {
-                  const saved = localStorage.getItem('codebot_all_lists');
-                  if (saved) localLists = JSON.parse(saved);
-                } catch (e) {}
-                state.lists = { ...localLists, ...jsonData };
-              
-              // Gebruik de laatst gekozen lijst als die bestaat in de JSON, anders de eerste lijst
+              // Voeg handmatig aangemaakte lokale lijsten samen met de online woorden.json
+              state.lists = { ...localLists, ...jsonData };
+
+              // Herstel de laatst gekozen lijst als die bestaat, anders pak de eerste lijst
               if (savedActive && state.lists[savedActive]) {
                 state.activeListName = savedActive;
               } else if (!state.lists[state.activeListName]) {
@@ -2202,8 +2213,7 @@
       }
 
       try {
-        const savedLists = localStorage.getItem('codebot_all_lists');
-        if (savedLists) state.lists = JSON.parse(savedLists);
+        if (Object.keys(localLists).length > 0) state.lists = localLists;
         if (savedActive && state.lists[savedActive]) {
           state.activeListName = savedActive;
         } else if (!state.lists[state.activeListName]) {
@@ -2227,8 +2237,18 @@
         if (savedMode) state.gameMode = savedMode;
         const savedStrict = localStorage.getItem('codebot_strict');
         if (savedStrict) state.strictPunctuation = savedStrict === 'true';
+        
+        // Laad behaalde badges en migreer eventuele oude ID's (zonder thema-prefix) eenmalig naar 'arena_'
         const savedBadges = localStorage.getItem('codebot_all_badges');
-        if (savedBadges) state.allTimeBadges = JSON.parse(savedBadges);
+        if (savedBadges) {
+          const parsedBadges = JSON.parse(savedBadges);
+          state.allTimeBadges = [...new Set(parsedBadges.map(id => {
+            if (/^(arena|lab|space|kawaii)_/.test(id)) return id;
+            return `arena_${id}`;
+          }))];
+          localStorage.setItem('codebot_all_badges', JSON.stringify(state.allTimeBadges));
+        }
+
         const savedFbUrl = localStorage.getItem('codebot_firebase_url');
         if (savedFbUrl && !FIREBASE_DB_URL) state.firebaseUrl = savedFbUrl;
       } catch (e) {}

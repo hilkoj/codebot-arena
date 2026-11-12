@@ -413,11 +413,15 @@
         </div>
       </div>
 
-      <!-- Footer met Versie-informatie op de Hub -->
+      <!-- Footer met Versie-informatie & Privacy link op de Hub -->
       <div class="text-[11px] text-slate-500 flex flex-wrap items-center justify-center gap-2 pt-1">
         <span>CodeBot Gaming Hub <strong class="text-slate-400">v4.8</strong> (Online Klassement Edition)</span>
         <span>•</span>
         <span>Woordenlijsten via <code class="text-cyan-400/80">woorden.json</code></span>
+        <span>•</span>
+        <button type="button" onclick="openPrivacyModal()" class="text-cyan-400 hover:text-cyan-300 underline font-bold transition flex items-center gap-1">
+          <span>🔒 Privacy</span>
+        </button>
       </div>
     </div>
   </div>
@@ -570,6 +574,49 @@
         </div>
 
       </div>
+    </div>
+  </div>
+
+  <!-- ================= PRIVACY STATEMENT POP-UP MODAL ================= -->
+  <div id="privacy-modal" onclick="handlePrivacyBackdropClick(event)" class="hidden fixed inset-0 z-[60] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="cyber-panel cyber-border-cyan rounded-3xl p-5 md:p-6 max-w-lg w-full flex flex-col gap-4 my-auto animate-modal-pop text-left">
+      
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl">🔒</span>
+          <h2 class="font-cyber text-base md:text-lg font-black text-cyan-400">Privacyverklaring</h2>
+        </div>
+        <button type="button" onclick="closePrivacyModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs flex items-center justify-center transition">✖</button>
+      </div>
+
+      <div class="text-xs text-slate-300 space-y-3 leading-relaxed">
+        <p>
+          <strong>CodeBot Gaming Hub</strong> is ontwikkeld als educatief spellingspel voor kinderen. Wij gaan uiterst zorgvuldig om met jouw privacy:
+        </p>
+
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-2">
+          <div class="flex items-start gap-2">
+            <span class="text-emerald-400 font-bold">✔</span>
+            <span><strong>Geen persoonsgegevens of tracking:</strong> Deze app verzamelt, bewaart of deelt <u>geen</u> persoonlijke gegevens, locatiegegevens, IP-adressen of gebruiksstatistieken met derden. Er worden geen advertenties getoond en geen volg-cookies gebruikt.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="text-emerald-400 font-bold">✔</span>
+            <span><strong>Lokale opslag op je apparaat:</strong> Behaalde badges, geluidsinstellingen en geselecteerde woordenlijsten worden uitsluitend lokaal op je eigen tablet of in je eigen browser (via <em>LocalStorage</em>) bewaard.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="text-amber-400 font-bold">🏆</span>
+            <span><strong>Uitzondering — Online Highscores:</strong> Alleen wanneer je aan het einde van een spelronde zelf kiest om je score op te slaan op het erebord, worden de door jou ingevulde <em>spelernaam (bijnaam)</em>, de <em>behaalde score</em>, het <em>gekozen thema</em>, de <em>woordenlijst</em> en de <em>datum</em> opgeslagen in onze beveiligde online Firebase-database (gehost binnen de EU). Zo kunnen klasgenoten elkaars hoogste scores zien.</span>
+          </div>
+        </div>
+
+        <p class="text-[11px] text-slate-400 italic">
+          💡 Tip: Gebruik bij het opslaan van een highscore alleen je voornaam of een leuke bijnaam (maximaal 15 tekens).
+        </p>
+      </div>
+
+      <button type="button" onclick="closePrivacyModal()" class="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-cyber font-black text-xs md:text-sm shadow-lg shadow-cyan-500/20 active:scale-95 transition">
+        Begrepen & Sluiten
+      </button>
     </div>
   </div>
 
@@ -1618,6 +1665,20 @@
     function handleAdminBackdropClick(event) {
       if (event.target.id === 'admin-modal') {
         closeAdminModal();
+      }
+    }
+
+    function openPrivacyModal() {
+      document.getElementById('privacy-modal').classList.remove('hidden');
+    }
+
+    function closePrivacyModal() {
+      document.getElementById('privacy-modal').classList.add('hidden');
+    }
+
+    function handlePrivacyBackdropClick(event) {
+      if (event.target.id === 'privacy-modal') {
+        closePrivacyModal();
       }
     }
 

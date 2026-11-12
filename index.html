@@ -2151,6 +2151,12 @@
       const badge = document.getElementById('json-source-badge');
       if (badge) badge.textContent = '⏳ Verbinden...';
 
+      // Haal eerst de laatst gekozen woordenlijst op uit het geheugen
+      let savedActive = null;
+      try {
+        savedActive = localStorage.getItem('codebot_active_list_name');
+      } catch (e) {}
+
       const urlsToTry = [
         `${GITHUB_PAGES_JSON_URL}?t=${Date.now()}`,
         `woorden.json?t=${Date.now()}`
@@ -2166,9 +2172,14 @@
             const jsonData = await response.json();
             if (jsonData && typeof jsonData === 'object' && Object.keys(jsonData).length > 0) {
               state.lists = jsonData;
-              if (!state.lists[state.activeListName]) {
+              
+              // Gebruik de laatst gekozen lijst als die bestaat in de JSON, anders de eerste lijst
+              if (savedActive && state.lists[savedActive]) {
+                state.activeListName = savedActive;
+              } else if (!state.lists[state.activeListName]) {
                 state.activeListName = Object.keys(state.lists)[0];
               }
+
               saveAllListsToStorage();
               renderListSelector();
               processQueues();
@@ -2188,8 +2199,11 @@
       try {
         const savedLists = localStorage.getItem('codebot_all_lists');
         if (savedLists) state.lists = JSON.parse(savedLists);
-        const savedActive = localStorage.getItem('codebot_active_list_name');
-        if (savedActive && state.lists[savedActive]) state.activeListName = savedActive;
+        if (savedActive && state.lists[savedActive]) {
+          state.activeListName = savedActive;
+        } else if (!state.lists[state.activeListName]) {
+          state.activeListName = Object.keys(state.lists)[0];
+        }
       } catch(e){}
 
       updateJsonMonitorUI('fallback', 'LocalStorage / Standaard Lijst');
@@ -2200,6 +2214,8 @@
 
     function loadState() {
       try {
+        const savedActive = localStorage.getItem('codebot_active_list_name');
+        if (savedActive) state.activeListName = savedActive;
         const savedEngine = localStorage.getItem('codebot_tts_engine');
         if (savedEngine) state.ttsEngine = savedEngine;
         const savedMode = localStorage.getItem('codebot_mode');

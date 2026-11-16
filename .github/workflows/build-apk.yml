@@ -1,4 +1,4 @@
-name: Build CodeBot Android APK
+name: Build CodeBot Android APK & Deploy Web
 
 on:
   push:
@@ -7,6 +7,12 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+# Rechten voor zowel het aanmaken van GitHub Releases (contents: write) als GitHub Pages (pages/id-token)
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-android:
@@ -55,13 +61,19 @@ jobs:
           echo "✅ Woordenlijst URL automatisch ingesteld op: $TARGET_URL"
           sed -i "s|const GITHUB_PAGES_JSON_URL = .*|const GITHUB_PAGES_JSON_URL = '$TARGET_URL';|" www/index.html
 
-          # 4. Injecteer automatisch de Firebase Realtime Database URL voor online highscores
-          if [ -n "${{ vars.FIREBASE_DB_URL }}" ]; then
-            sed -i "s|const FIREBASE_DB_URL = .*|const FIREBASE_DB_URL = '${{ vars.FIREBASE_DB_URL }}';|" www/index.html
-            echo "✅ Firebase Highscore URL gekoppeld: ${{ vars.FIREBASE_DB_URL }}"
+          # 4. Injecteer automatisch de Firebase Realtime Database URL (checkt zowel Variables als Secrets)
+          FB_URL="${{ vars.FIREBASE_DB_URL || secrets.FIREBASE_DB_URL }}"
+          if [ -n "$FB_URL" ]; then
+            sed -i "s|const FIREBASE_DB_URL = .*|const FIREBASE_DB_URL = '$FB_URL';|" www/index.html
+            echo "✅ Firebase Highscore URL succesvol gekoppeld!"
           else
             echo "ℹ️ Geen FIREBASE_DB_URL variabele gevonden; app gebruikt lokale highscores."
           fi
+
+          # Maak een schone kopie van de web-bestanden VOORDAT capacitor.js wordt toegevoegd
+          # (Zo ziet de webbrowser dat het geen native APK is en toont hij netjes de Download-knop)
+          mkdir -p web_dist
+          cp -r www/* web_dist/
 
           # Maak package.json aan inclusief de asset-configuratie
           cat << 'EOF' > package.json
@@ -128,7 +140,7 @@ jobs:
           chmod +x gradlew
           gradle assembleRelease --no-daemon
 
-      - name: 7. APK Digitaal Ondertekenen
+      - name: 7. APK Digitaal Ondertekenen & Klaarzetten voor Web/Releases
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
@@ -148,36 +160,51 @@ jobs:
             --ks-key-alias "$KEY_ALIAS" \
             --ks-pass "pass:$KEYSTORE_PASSWORD" \
             --key-pass "pass:$KEY_PASSWORD" \
-            --out app-release.apk \
+            --out CodeBot-Arena.apk \
             app-release-aligned.apk
             
           rm keystore.jks
 
-      - name: 8. Zet de ondertekende APK klaar als Download
+          # Kopieer ook als app-release.apk én plaats CodeBot-Arena.apk in web_dist voor GitHub Pages
+          cp CodeBot-Arena.apk app-release.apk
+          cp CodeBot-Arena.apk ../../../../../../web_dist/CodeBot-Arena.apk
+          echo "✅ CodeBot-Arena.apk klaargezet voor Releases en GitHub Pages!"
+
+      - name: 8. Zet de ondertekende APK klaar als Action Artifact
         uses: actions/upload-artifact@v4
         with:
           name: CodeBot-Arena-Android-APK
-          path: android/app/build/outputs/apk/release/app-release.apk
+          path: android/app/build/outputs/apk/release/CodeBot-Arena.apk
 
-      - name: 9. Webbestanden klaarzetten voor GitHub Pages
+      - name: 9. Publiceer APK onder GitHub Releases (Latest)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v4.8.${{ github.run_number }}
+          name: "CodeBot Arena v4.8.${{ github.run_number }}"
+          body: |
+            🎮 **CodeBot Gaming Hub — Automatische Release (v4.8.${{ github.run_number }})**
+            
+            Klik hieronder onder **Assets** op **`CodeBot-Arena.apk`** om het spel direct op een Android-tablet of telefoon te downloaden en installeren.
+          files: |
+            android/app/build/outputs/apk/release/CodeBot-Arena.apk
+          make_latest: true
+
+      - name: 10. Bereid GitHub Pages voor
         uses: actions/configure-pages@v5
 
-      - name: 10. Upload artefact voor GitHub Pages
+      - name: 11. Upload Web-App + APK naar GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'www'
+          path: 'web_dist'
 
-    # Extra job om de webversie live te zetten op GitHub Pages
+  # Tweede job: zet de bijgewerkte webversie (inclusief CodeBot-Arena.apk) direct live op GitHub Pages
   deploy-web:
     needs: build-android
     runs-on: ubuntu-24.04
-    permissions:
-      pages: write
-      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy naar GitHub Pages
+      - name: 12. Deploy naar GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

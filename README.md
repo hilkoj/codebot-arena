@@ -32,7 +32,7 @@ Een educatieve en interactieve spelling-gaminghub voor het web (GitHub Pages) en
 ## 📲 Installatie & Download
 
 ### Voor Android-tablets en telefoons:
-1. Open de online webversie via [GitHub Pages](https://JOUW_GITHUB_NAAM.github.io/codebot-arena/).
+1. Open de online webversie via [GitHub Pages](https://hilkoj.github.io/codebot-arena/).
 2. Tik op de knop **"📲 Download Android App"** om de kant-en-klare APK direct te installeren.
 3. Of download de nieuwste `.apk` direct via de [GitHub Releases](../../releases/latest) pagina van deze repository.
 
@@ -44,5 +44,5 @@ Om het project lokaal te draaien of aan te passen:
 
 1. Kloon de repository:
    ```bash
-   git clone [https://github.com/JOUW_GITHUB_NAAM/codebot-arena.git](https://github.com/JOUW_GITHUB_NAAM/codebot-arena.git)
+   git clone [https://github.com/hilkoj/codebot-arena.git](https://github.com/hilkoj/codebot-arena.git)
    cd codebot-arena

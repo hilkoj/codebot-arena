@@ -296,15 +296,28 @@
           </div>
         </div>
 
-        <!-- Lijsten & Instellingen Knop op de Hub -->
-        <button 
-          type="button" 
-          onclick="openAdminModal()" 
-          class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-cyan-500/50 text-cyan-300 font-cyber font-bold text-xs md:text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/10 active:scale-95 transition"
-        >
-          <span>⚙️ Lijsten & Instellingen</span>
-        </button>
-      </div>
+      <!-- Actieknoppen rechtsboven op de Hub -->
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Download APK Knop (Standaard verborgen; alleen zichtbaar in webbrowser) -->
+          <a 
+            id="btn-download-apk" 
+            href="CodeBot-Arena.apk" 
+            download="CodeBot-Arena.apk"
+            class="hidden px-4 py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/60 text-emerald-300 font-cyber font-bold text-xs md:text-sm flex items-center gap-2 shadow-lg shadow-emerald-500/10 active:scale-95 transition"
+            title="Download en installeer de Android App (.apk)"
+          >
+            <span>📲 Download Android App</span>
+          </a>
+
+          <!-- Lijsten & Instellingen Knop op de Hub -->
+          <button 
+            type="button" 
+            onclick="openAdminModal()" 
+            class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-cyan-500/50 text-cyan-300 font-cyber font-bold text-xs md:text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/10 active:scale-95 transition"
+          >
+            <span>⚙️ Lijsten & Instellingen</span>
+          </button>
+        </div>
 
       <!-- Actieve Woordenlijst Snel-Balk -->
       <div class="w-full bg-slate-900/80 border border-slate-800 rounded-xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">

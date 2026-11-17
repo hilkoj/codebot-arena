@@ -19,7 +19,6 @@
     }
     .font-cyber { font-family: 'Orbitron', sans-serif; }
     
-    /* Dynamische Achtergrond & FX Lagen */
     #bg-canvas {
       position: fixed;
       inset: 0;
@@ -52,7 +51,6 @@
       transition: all 0.6s ease;
     }
 
-    /* Thema Achtergronden & Rasters */
     .lab-theme { background-color: #031114 !important; }
     .lab-theme .bg-grid-overlay {
       background-size: 36px 36px;
@@ -119,7 +117,6 @@
     }
     .animate-boss { animation: boss-pulse 2s ease-in-out infinite; }
 
-    /* Gevechts-animaties */
     @keyframes player-attack-lunge {
       0% { transform: translateX(0) scale(1); }
       30% { transform: translateX(26px) scale(1.18) rotate(6deg); filter: brightness(1.6) drop-shadow(0 0 20px #06b6d4); }
@@ -271,19 +268,17 @@
 </head>
 <body id="body-root" class="min-h-screen flex flex-col justify-between p-3 md:p-6 select-none relative">
 
-  <!-- DYNAMISCHE ACHTERGROND CANVAS, RASTER & ACTIE-FX CANVAS -->
   <canvas id="bg-canvas"></canvas>
   <div class="bg-grid-overlay"></div>
   <canvas id="fx-canvas"></canvas>
 
-  <!-- LIVE BADGE UNLOCK POPUP (TOAST) -->
   <div id="badge-toast-container" class="fixed top-4 left-0 right-0 z-[70] flex flex-col items-center pointer-events-none px-4"></div>
 
-  <!-- ================= GAME HUB LOBBY (START SCREEN MET 4 THEMA'S & ONLINE SCOREBORD) ================= -->
+  <!-- ================= GAME HUB LOBBY ================= -->
   <div id="hub-lobby" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-start p-4 overflow-y-auto">
     <div class="max-w-4xl w-full flex flex-col items-center gap-4 text-center py-4 relative z-10 my-auto">
       
-      <!-- Hub Top Bar: Titel, Versie & Lijsten-Knop -->
+      <!-- Hub Top Bar: Titel, Versie & Actieknoppen -->
       <div class="w-full flex flex-wrap items-center justify-between gap-3 cyber-panel rounded-2xl p-4 border-b-2 border-cyan-500/40">
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center text-2xl shadow-[0_0_20px_rgba(6,182,212,0.4)] animate-float shrink-0">🎮</div>
@@ -296,7 +291,7 @@
           </div>
         </div>
 
-      <!-- Actieknoppen rechtsboven op de Hub -->
+        <!-- Actieknoppen rechtsboven op de Hub -->
         <div class="flex flex-wrap items-center gap-2">
           <!-- Download APK Knop (Standaard verborgen; alleen zichtbaar in webbrowser) -->
           <a 
@@ -309,7 +304,7 @@
             <span>📲 Download Android App</span>
           </a>
 
-          <!-- Lijsten & Instellingen Knop op de Hub -->
+          <!-- Lijsten & Instellingen Knop -->
           <button 
             type="button" 
             onclick="openAdminModal()" 
@@ -318,6 +313,7 @@
             <span>⚙️ Lijsten & Instellingen</span>
           </button>
         </div>
+      </div>
 
       <!-- Actieve Woordenlijst Snel-Balk -->
       <div class="w-full bg-slate-900/80 border border-slate-800 rounded-xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
@@ -332,7 +328,6 @@
 
       <!-- 4 Game Mode Cards (2x2 Grid) -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full">
-        <!-- 1. CodeBot Arena -->
         <button onclick="startGameMode('arena')" class="cyber-panel cyber-border-cyan rounded-2xl p-4 flex flex-col items-center justify-between gap-2 text-center hover:scale-[1.03] active:scale-95 transition group">
           <span class="text-4xl group-hover:scale-110 transition">🤖⚔️</span>
           <div>
@@ -342,7 +337,6 @@
           <span class="mt-1 px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-cyber font-black text-[11px] w-full">SPEEL ARENA</span>
         </button>
 
-        <!-- 2. Bio-Chem Lab -->
         <button onclick="startGameMode('lab')" class="cyber-panel lab-border rounded-2xl p-4 flex flex-col items-center justify-between gap-2 text-center hover:scale-[1.03] active:scale-95 transition group">
           <span class="text-4xl group-hover:scale-110 transition">🧪🔬</span>
           <div>
@@ -352,7 +346,6 @@
           <span class="mt-1 px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-cyber font-black text-[11px] w-full">SPEEL LAB</span>
         </button>
 
-        <!-- 3. Star-Blaster Galaxy (Space Shooter) -->
         <button onclick="startGameMode('space')" class="cyber-panel space-border rounded-2xl p-4 flex flex-col items-center justify-between gap-2 text-center hover:scale-[1.03] active:scale-95 transition group">
           <span class="text-4xl group-hover:scale-110 transition">🚀🌌</span>
           <div>
@@ -362,7 +355,6 @@
           <span class="mt-1 px-3 py-1.5 rounded-lg bg-indigo-500 text-white font-cyber font-black text-[11px] w-full">SPEEL SPACE</span>
         </button>
 
-        <!-- 4. Kawaii Droomwereld -->
         <button onclick="startGameMode('kawaii')" class="cyber-panel kawaii-border rounded-2xl p-4 flex flex-col items-center justify-between gap-2 text-center hover:scale-[1.03] active:scale-95 transition group">
           <span class="text-4xl group-hover:scale-110 transition">🦄🌸</span>
           <div>
@@ -376,7 +368,6 @@
       <!-- Highscores & Badges Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
         
-        <!-- Highscores Paneel (Online + Filter per Lijst) -->
         <div class="cyber-panel rounded-2xl p-4 border border-amber-500/30 flex flex-col justify-between">
           <div>
             <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
@@ -387,7 +378,6 @@
                 <span id="hs-mode-badge" class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-800 text-slate-400 border border-slate-700">📱 Lokaal</span>
               </div>
 
-              <!-- Filter: Deze Lijst vs Alle Lijsten + Refresh -->
               <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-lg border border-slate-800">
                 <button type="button" onclick="setHighscoreFilter('current')" id="hs-filter-current" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-slate-950 transition">📋 Deze Lijst</button>
                 <button type="button" onclick="setHighscoreFilter('all')" id="hs-filter-all" class="px-2 py-0.5 rounded text-[10px] font-bold text-slate-400 hover:text-white transition">🌍 Alle</button>
@@ -395,9 +385,7 @@
               </div>
             </div>
 
-            <div id="highscores-list" class="flex flex-col gap-1.5 max-h-[225px] overflow-y-auto pr-1">
-              <!-- Dynamically populated -->
-            </div>
+            <div id="highscores-list" class="flex flex-col gap-1.5 max-h-[225px] overflow-y-auto pr-1"></div>
           </div>
           <div class="text-[10px] text-slate-500 mt-3 text-left flex justify-between items-center">
             <span>💡 1 hoogste score (PR) per naam per lijst</span>
@@ -405,14 +393,12 @@
           </div>
         </div>
 
-        <!-- Trofeeënkast / Badges Paneel met Thema-Wisselaar -->
         <div class="cyber-panel rounded-2xl p-4 border border-purple-500/30">
           <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
             <h3 class="font-cyber text-xs md:text-sm font-bold text-purple-400 text-left flex items-center gap-1.5">
               <span>🎖️</span> BADGES
               <span id="hub-badge-counter" class="text-[10px] font-cyber font-bold text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-500/40">0 / 8 (Totaal: 0/32)</span>
             </h3>
-            <!-- Thema-knopjes voor de Trofeeënkast -->
             <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-lg border border-slate-800">
               <button type="button" onclick="setHubBadgeTheme('arena')" id="hub-bt-arena" class="px-2 py-0.5 rounded text-xs transition" title="Arena Badges">🤖</button>
               <button type="button" onclick="setHubBadgeTheme('lab')" id="hub-bt-lab" class="px-2 py-0.5 rounded text-xs transition" title="Lab Badges">🧪</button>
@@ -420,15 +406,13 @@
               <button type="button" onclick="setHubBadgeTheme('kawaii')" id="hub-bt-kawaii" class="px-2 py-0.5 rounded text-xs transition" title="Kawaii Badges">🦄</button>
             </div>
           </div>
-          <div id="hub-badges-grid" class="grid grid-cols-2 gap-2 text-left">
-            <!-- Dynamically populated -->
-          </div>
+          <div id="hub-badges-grid" class="grid grid-cols-2 gap-2 text-left"></div>
         </div>
       </div>
 
-      <!-- Footer met Versie-informatie & Privacy link op de Hub -->
+      <!-- Footer met Versie & Privacy Link -->
       <div class="text-[11px] text-slate-500 flex flex-wrap items-center justify-center gap-2 pt-1">
-        <span>CodeBot Gaming Hub <strong class="text-slate-400">v4.8</strong> (Online Klassement Edition)</span>
+        <span>CodeBot Gaming Hub <strong class="text-slate-400">v4.8</strong></span>
         <span>•</span>
         <span>Woordenlijsten via <code class="text-cyan-400/80">woorden.json</code></span>
         <span>•</span>
@@ -439,11 +423,10 @@
     </div>
   </div>
 
-  <!-- ================= LIJSTEN & INSTELLINGEN POP-UP MODAL (VANUIT DE HUB) ================= -->
+  <!-- ================= LIJSTEN & INSTELLINGEN MODAL ================= -->
   <div id="admin-modal" onclick="handleAdminBackdropClick(event)" class="hidden fixed inset-0 z-[55] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 md:p-6 overflow-y-auto">
     <div class="cyber-panel cyber-border-cyan rounded-3xl p-4 md:p-6 max-w-5xl w-full flex flex-col gap-4 my-auto animate-modal-pop max-h-[92vh] overflow-y-auto">
       
-      <!-- Modal Header -->
       <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
         <div class="flex items-center gap-3">
           <span class="text-2xl">⚙️</span>
@@ -458,15 +441,12 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <!-- Links: Multi-List Manager + URL Diagnose -->
         <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 flex flex-col gap-3">
           <div class="flex items-center justify-between">
             <h3 class="font-cyber text-sm md:text-base font-bold text-cyan-400">📚 Woordenlijsten Beheren</h3>
             <button type="button" onclick="fetchWordsJson()" class="px-3 py-1 rounded-lg bg-cyan-500/20 border border-cyan-400 text-cyan-300 font-bold text-xs hover:bg-cyan-500/30 active:scale-95 transition">🔄 Herlaad JSON</button>
           </div>
           
-          <!-- WOORDEN.JSON BRON & URL MONITOR -->
           <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-3 flex flex-col gap-1.5 text-xs font-mono">
             <div class="flex items-center justify-between gap-2">
               <span class="text-slate-400 font-sans font-bold">Bron Status:</span>
@@ -484,12 +464,8 @@
           
           <div class="flex flex-col gap-2 bg-slate-950/90 p-3 rounded-xl border border-slate-800">
             <div class="flex gap-2">
-              <select id="saved-lists-select" onchange="loadSelectedList()" class="flex-grow bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white outline-none">
-                <!-- Dynamically populated -->
-              </select>
-              <button type="button" onclick="createNewListPrompt()" class="px-3 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition whitespace-nowrap">
-                ➕ Nieuw
-              </button>
+              <select id="saved-lists-select" onchange="loadSelectedList()" class="flex-grow bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white outline-none"></select>
+              <button type="button" onclick="createNewListPrompt()" class="px-3 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs transition whitespace-nowrap">➕ Nieuw</button>
             </div>
             <div class="flex gap-2 justify-end">
               <button type="button" onclick="renameCurrentList()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px]">Hernoem</button>
@@ -497,12 +473,7 @@
             </div>
           </div>
 
-          <textarea 
-            id="admin-words-input" 
-            rows="5"
-            class="w-full bg-slate-950/90 border border-slate-700 focus:border-cyan-400 rounded-xl p-3 text-sm text-white font-mono outline-none"
-            placeholder="bibliotheek..."
-          ></textarea>
+          <textarea id="admin-words-input" rows="5" class="w-full bg-slate-950/90 border border-slate-700 focus:border-cyan-400 rounded-xl p-3 text-sm text-white font-mono outline-none" placeholder="bibliotheek..."></textarea>
 
           <div class="flex flex-wrap items-center justify-between gap-2">
             <span class="text-xs text-slate-400">Spelmodus:</span>
@@ -519,36 +490,22 @@
           </label>
 
           <div class="flex gap-2 mt-1">
-            <button type="button" onclick="saveActiveWordList()" class="flex-grow py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs md:text-sm transition">
-              💾 Opslaan & Activeren
-            </button>
-            <button type="button" onclick="resetDefaultLists()" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition">
-              Reset
-            </button>
+            <button type="button" onclick="saveActiveWordList()" class="flex-grow py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs md:text-sm transition">💾 Opslaan & Activeren</button>
+            <button type="button" onclick="resetDefaultLists()" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs transition">Reset</button>
           </div>
           <div id="admin-save-msg" class="text-xs text-emerald-400 hidden">✅ Lijst opgeslagen en geactiveerd!</div>
         </div>
 
-        <!-- Rechts: Online Klassement (Firebase) & Audio Settings -->
         <div class="bg-slate-900/70 rounded-2xl p-4 flex flex-col gap-3.5 border border-amber-500/30">
-          
-          <!-- FIREBASE ONLINE HIGHSCORES CONFIGURATIE -->
           <div class="bg-slate-950/90 p-3.5 rounded-xl border border-emerald-500/40 flex flex-col gap-2">
             <div class="flex items-center justify-between">
               <span class="font-cyber text-xs font-bold text-emerald-400">🌐 Online Klassement (Firebase URL)</span>
               <span id="firebase-status-badge" class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-bold">Niet ingesteld</span>
             </div>
-            <p class="text-[11px] text-slate-400">Wordt automatisch gevuld via GitHub Actions (<code class="text-emerald-300">FIREBASE_DB_URL</code>) of plak hem hieronder:</p>
+            <p class="text-[11px] text-slate-400">Wordt automatisch gevuld via GitHub Actions of plak hieronder:</p>
             <div class="flex gap-2">
-              <input 
-                type="text" 
-                id="admin-firebase-url-input" 
-                placeholder="https://jouw-project-default-rtdb.europe-west1.firebasedatabase.app" 
-                class="flex-grow bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono outline-none focus:border-emerald-400"
-              />
-              <button type="button" onclick="saveCustomFirebaseUrl()" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition whitespace-nowrap">
-                Opslaan
-              </button>
+              <input type="text" id="admin-firebase-url-input" placeholder="https://..." class="flex-grow bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono outline-none focus:border-emerald-400" />
+              <button type="button" onclick="saveCustomFirebaseUrl()" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition whitespace-nowrap">Opslaan</button>
             </div>
           </div>
 
@@ -559,13 +516,12 @@
           <div class="bg-slate-950/90 p-3 rounded-xl border border-slate-800 flex flex-col gap-2">
             <label class="text-xs font-bold text-cyan-300">Spraak-Engine:</label>
             <select id="tts-engine-select" onchange="changeTTSEngine()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white outline-none">
-              <option value="auto">⚡ Automatisch (Ingebouwde Tablet/Browser Stem)</option>
-              <option value="native">💻 Alleen Ingebouwde Browser Stem</option>
+              <option value="auto">⚡ Automatisch</option>
+              <option value="native">💻 Alleen Browser Stem</option>
             </select>
-
             <label class="text-xs font-bold text-slate-400 mt-1">Browser-stem:</label>
             <select id="tts-voice-select" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-300 outline-none">
-              <option value="">Zoeken naar NL-stemmen...</option>
+              <option value="">Zoeken...</option>
             </select>
           </div>
 
@@ -585,12 +541,11 @@
             <div id="admin-mistake-log" class="text-xs text-slate-400 italic">Nog geen foutjes gemaakt.</div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 
-  <!-- ================= PRIVACY STATEMENT POP-UP MODAL ================= -->
+  <!-- ================= PRIVACY STATEMENT MODAL ================= -->
   <div id="privacy-modal" onclick="handlePrivacyBackdropClick(event)" class="hidden fixed inset-0 z-[60] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
     <div class="cyber-panel cyber-border-cyan rounded-3xl p-5 md:p-6 max-w-lg w-full flex flex-col gap-4 my-auto animate-modal-pop text-left">
       
@@ -603,41 +558,32 @@
       </div>
 
       <div class="text-xs text-slate-300 space-y-3 leading-relaxed">
-        <p>
-          <strong>CodeBot Gaming Hub</strong> is ontwikkeld als educatief spellingspel voor kinderen. Wij gaan uiterst zorgvuldig om met jouw privacy:
-        </p>
-
+        <p><strong>CodeBot Gaming Hub</strong> is ontwikkeld als educatief spellingspel voor kinderen. Wij gaan uiterst zorgvuldig om met jouw privacy:</p>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-2">
           <div class="flex items-start gap-2">
             <span class="text-emerald-400 font-bold">✔</span>
-            <span><strong>Geen persoonsgegevens of tracking:</strong> Deze app verzamelt, bewaart of deelt <u>geen</u> persoonlijke gegevens, locatiegegevens, IP-adressen of gebruiksstatistieken met derden. Er worden geen advertenties getoond en geen volg-cookies gebruikt.</span>
+            <span><strong>Geen persoonsgegevens of tracking:</strong> Deze app verzamelt, bewaart of deelt <u>geen</u> persoonlijke gegevens of locatiegegevens met derden. Er zijn geen advertenties of volg-cookies.</span>
           </div>
           <div class="flex items-start gap-2">
             <span class="text-emerald-400 font-bold">✔</span>
-            <span><strong>Lokale opslag op je apparaat:</strong> Behaalde badges, geluidsinstellingen en geselecteerde woordenlijsten worden uitsluitend lokaal op je eigen tablet of in je eigen browser (via <em>LocalStorage</em>) bewaard.</span>
+            <span><strong>Lokale opslag:</strong> Badges, instellingen en woordenlijsten worden uitsluitend lokaal op je apparaat (via <em>LocalStorage</em>) bewaard.</span>
           </div>
           <div class="flex items-start gap-2">
             <span class="text-amber-400 font-bold">🏆</span>
-            <span><strong>Uitzondering — Online Highscores:</strong> Alleen wanneer je aan het einde van een spelronde zelf kiest om je score op te slaan op het erebord, worden de door jou ingevulde <em>spelernaam (bijnaam)</em>, de <em>behaalde score</em>, het <em>gekozen thema</em>, de <em>woordenlijst</em> en de <em>datum</em> opgeslagen in onze beveiligde online Firebase-database (gehost binnen de EU). Zo kunnen klasgenoten elkaars hoogste scores zien.</span>
+            <span><strong>Uitzondering — Online Highscores:</strong> Alleen wanneer je kiest om je score op te slaan op het erebord, worden je spelernaam, score, thema, woordenlijst en datum opgeslagen in onze beveiligde online Firebase-database (EU) zodat klasgenoten de top 10 kunnen zien.</span>
           </div>
         </div>
-
-        <p class="text-[11px] text-slate-400 italic">
-          💡 Tip: Gebruik bij het opslaan van een highscore alleen je voornaam of een leuke bijnaam (maximaal 15 tekens).
-        </p>
+        <p class="text-[11px] text-slate-400 italic">💡 Tip: Gebruik bij het opslaan van een highscore alleen je voornaam of een leuke bijnaam (max 15 tekens).</p>
       </div>
 
-      <button type="button" onclick="closePrivacyModal()" class="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-cyber font-black text-xs md:text-sm shadow-lg shadow-cyan-500/20 active:scale-95 transition">
-        Begrepen & Sluiten
-      </button>
+      <button type="button" onclick="closePrivacyModal()" class="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-cyber font-black text-xs md:text-sm shadow-lg shadow-cyan-500/20 active:scale-95 transition">Begrepen & Sluiten</button>
     </div>
   </div>
 
-  <!-- ================= UPGRADES, LOGICA & BADGES POP-UP MODAL (IN-GAME) ================= -->
+  <!-- ================= UPGRADES MODAL ================= -->
   <div id="upgrades-modal" onclick="handleModalBackdropClick(event)" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 md:p-6 overflow-y-auto">
     <div id="upgrades-modal-panel" class="cyber-panel cyber-border-cyan rounded-3xl p-4 md:p-6 max-w-5xl w-full flex flex-col gap-4 my-auto animate-modal-pop max-h-[92vh] overflow-y-auto">
       
-      <!-- Modal Top Header -->
       <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
         <div class="flex items-center gap-3">
           <span class="text-3xl" id="shop-header-icon">⚡</span>
@@ -648,81 +594,59 @@
         </div>
         <div class="flex items-center gap-3">
           <span class="px-3.5 py-1.5 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-300 font-cyber font-bold text-xs md:text-sm" id="shop-balance-badge">💎 0 beschikbaar</span>
-          <button type="button" onclick="closeUpgradesModal()" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-cyber font-black text-xs md:text-sm shadow-lg shadow-cyan-500/20 active:scale-95 transition">
-            ✖ Verder Spelen
-          </button>
+          <button type="button" onclick="closeUpgradesModal()" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-cyber font-black text-xs md:text-sm shadow-lg shadow-cyan-500/20 active:scale-95 transition">✖ Verder Spelen</button>
         </div>
       </div>
 
-      <!-- Modal Content Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        
-        <!-- Links: Wapenkamer & Repair Kit (2 kolommen breed op grote schermen) -->
         <div class="flex flex-col gap-3 lg:col-span-2">
-          <!-- EENMALIGE REPAIR KIT / SERUM / BOBA CONSUMABLE BANNER -->
           <div id="repair-kit-card" class="p-3 rounded-xl bg-emerald-950/40 border-2 border-emerald-500/50 flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center gap-3">
               <span id="repair-kit-icon" class="text-3xl">🛠️</span>
               <div>
                 <div class="flex items-center gap-2 flex-wrap">
                   <span id="repair-kit-title" class="font-cyber text-xs md:text-sm font-bold text-emerald-300">Nano-Repair Kit</span>
-                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">1x Gebruik • +50 HP (+100 Eindscore)</span>
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">1x Gebruik • +50 HP</span>
                 </div>
-                <p id="repair-kit-desc" class="text-[11px] text-slate-300 mt-0.5">Herstelt direct 50 HP. Beschermt je eindscore-bonus!</p>
+                <p id="repair-kit-desc" class="text-[11px] text-slate-300 mt-0.5">Herstelt direct 50 HP.</p>
               </div>
             </div>
-            <button 
-              type="button" 
-              id="shop-repair-btn" 
-              onclick="buyRepairKit()" 
-              class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-cyber font-black text-xs transition whitespace-nowrap"
-            >
-              Koop & Gebruik (💎 30)
-            </button>
+            <button type="button" id="shop-repair-btn" onclick="buyRepairKit()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-cyber font-black text-xs transition whitespace-nowrap">Koop & Gebruik (💎 30)</button>
           </div>
 
-          <!-- 8 Wapen Tiers Lijst -->
-          <div id="garage-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[380px] overflow-y-auto pr-1">
-            <!-- Dynamically populated -->
-          </div>
+          <div id="garage-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[380px] overflow-y-auto pr-1"></div>
         </div>
 
-        <!-- Rechts: Logica & Missie Badges (1 kolom) -->
         <div class="flex flex-col gap-4">
-          <!-- Logic Builder -->
           <div class="bg-slate-900/90 border border-purple-500/40 rounded-2xl p-4 flex flex-col gap-3">
             <div>
               <h3 id="builder-title" class="font-cyber text-xs md:text-sm font-bold text-purple-400">🧠 Bonus-Regel Instellen</h3>
               <p id="builder-desc" class="text-[11px] text-slate-400">Stel jouw <code class="text-purple-300">ALS -> DAN</code> bonus-regel in:</p>
             </div>
-
             <div class="flex flex-col gap-2.5">
               <div>
                 <label class="text-[11px] font-bold text-cyan-400 block mb-1">ALS (IF) Conditie:</label>
-                <select id="select-if" onchange="updateLogicRule()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-purple-400">
+                <select id="select-if" onchange="updateLogicRule()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none">
                   <option value="streak2">Streak >= 2 achter elkaar goed</option>
                   <option value="len7">Lengte >= 7 letters</option>
                   <option value="bossrush">We zitten in de Eindbaas Finale</option>
                   <option value="fast">Supersnel antwoord (Binnen 6 sec)</option>
                 </select>
               </div>
-
               <div>
                 <label class="text-[11px] font-bold text-emerald-400 block mb-1">DAN (THEN) Actie:</label>
-                <select id="select-then" onchange="updateLogicRule()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none focus:border-purple-400">
+                <select id="select-then" onchange="updateLogicRule()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white outline-none">
                   <option value="double_dmg">Extra Kracht Bonus (+50%)</option>
                   <option value="mine_bits">Extra Credits Bonus (+15)</option>
                   <option value="shield">Activeer Schild + Herstel 25 HP</option>
                 </select>
               </div>
             </div>
-
             <div class="bg-purple-950/30 border border-purple-500/30 rounded-xl p-2.5 text-[11px] font-mono text-purple-200">
               <div id="code-preview-block" class="text-emerald-300"></div>
             </div>
           </div>
 
-          <!-- In-Game Badges Overzicht -->
           <div class="bg-slate-900/90 rounded-2xl p-4 flex flex-col gap-2.5 border border-amber-500/30">
             <h3 class="font-cyber text-xs md:text-sm font-bold text-amber-400 flex items-center justify-between">
               <span>🎖️ Thema Badges</span>
@@ -731,7 +655,6 @@
             <div id="codelab-badges-list" class="grid grid-cols-1 gap-1.5 max-h-[175px] overflow-y-auto pr-1"></div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -745,18 +668,17 @@
         <p class="text-xs text-slate-300 mt-1" id="victory-desc">Alle opdrachten zijn voltooid!</p>
       </div>
 
-      <!-- Gecombineerde Eindscore Specificatie -->
       <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-col gap-2 text-xs">
         <div class="flex justify-between items-center text-slate-300">
           <span>🎯 Foutloze Ronde- & Badge-punten:</span>
           <span id="victory-base-score" class="font-cyber font-bold text-white">0</span>
         </div>
         <div class="flex justify-between items-center text-amber-300">
-          <span>💎 Bespaarde Credits Bonus (+1 pnt per credit):</span>
+          <span>💎 Bespaarde Credits Bonus:</span>
           <span id="victory-credits-bonus" class="font-cyber font-bold">+0</span>
         </div>
         <div class="flex justify-between items-center text-cyan-300">
-          <span id="victory-hp-label">❤️ Overgebleven HP Bonus (100% × 2):</span>
+          <span id="victory-hp-label">❤️ Overgebleven HP Bonus:</span>
           <span id="victory-hp-bonus" class="font-cyber font-bold">+200</span>
         </div>
         <div class="h-[1px] bg-slate-700 my-1"></div>
@@ -766,13 +688,11 @@
         </div>
       </div>
 
-      <!-- Behaalde Badges in deze ronde -->
       <div class="bg-slate-950/80 border border-purple-500/30 rounded-xl p-3">
         <span class="text-[10px] uppercase font-bold text-purple-300 block mb-2">Behaalde Badges deze ronde:</span>
         <div id="victory-badges-list" class="flex flex-wrap justify-center gap-1.5"></div>
       </div>
 
-      <!-- Highscore Invoer -->
       <div class="bg-slate-900/50 border border-amber-500/50 rounded-xl p-3.5 flex flex-col gap-2.5">
         <label class="text-xs font-bold text-amber-300 text-left">Plaats je Eindscore op het online erebord!</label>
         <div class="flex gap-2">
@@ -785,16 +705,15 @@
     </div>
   </div>
 
-  <!-- GAME OVER OVERLAY MODAL (0 HP) -->
+  <!-- GAME OVER MODAL -->
   <div id="gameover-modal" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
     <div class="cyber-panel cyber-border-danger rounded-3xl p-6 md:p-7 max-w-lg w-full text-center flex flex-col gap-4 my-8">
       <div class="text-5xl md:text-6xl animate-float">💥💀</div>
       <div>
         <h2 class="font-cyber text-2xl md:text-3xl font-black text-rose-500 tracking-wider" id="gameover-title">SYSTEEM UITGESCHAKELD!</h2>
-        <p class="text-xs text-slate-300 mt-1" id="gameover-desc">Je HP is tot 0 gedaald. Geen zorgen, je behaalde punten en credits tellen nog steeds!</p>
+        <p class="text-xs text-slate-300 mt-1" id="gameover-desc">Je HP is tot 0 gedaald.</p>
       </div>
 
-      <!-- Gecombineerde Eindscore Specificatie bij Game Over -->
       <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-col gap-2 text-xs">
         <div class="flex justify-between items-center text-slate-300">
           <span>🎯 Foutloze Ronde- & Badge-punten:</span>
@@ -805,7 +724,7 @@
           <span id="gameover-credits-bonus" class="font-cyber font-bold">+0</span>
         </div>
         <div class="flex justify-between items-center text-rose-400">
-          <span>❤️ Overgebleven HP Bonus (0 HP):</span>
+          <span>❤️ Overgebleven HP Bonus:</span>
           <span class="font-cyber font-bold">+0</span>
         </div>
         <div class="h-[1px] bg-slate-700 my-1"></div>
@@ -815,7 +734,6 @@
         </div>
       </div>
 
-      <!-- Highscore Invoer bij Game Over -->
       <div class="bg-slate-900/50 border border-rose-500/40 rounded-xl p-3.5 flex flex-col gap-2.5">
         <label class="text-xs font-bold text-rose-300 text-left">Wil je jouw eindscore bewaren?</label>
         <div class="flex gap-2">
@@ -825,17 +743,13 @@
       </div>
 
       <div class="flex gap-3">
-        <button type="button" onclick="returnToHub()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-cyber font-bold text-xs transition">
-          🏠 Naar Hub
-        </button>
-        <button type="button" onclick="restartGameSession()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-slate-950 font-cyber font-black text-xs transition">
-          🔄 Nieuw Spel (Reset)
-        </button>
+        <button type="button" onclick="returnToHub()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-cyber font-bold text-xs transition">🏠 Naar Hub</button>
+        <button type="button" onclick="restartGameSession()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-400 hover:to-amber-400 text-slate-950 font-cyber font-black text-xs transition">🔄 Nieuw Spel</button>
       </div>
     </div>
   </div>
 
-  <!-- TOP NAVIGATION & HUD (TIJDENS HET SPELEN) -->
+  <!-- TOP NAVIGATION & HUD -->
   <header class="max-w-5xl w-full mx-auto cyber-panel rounded-2xl p-4 mb-4 flex flex-wrap items-center justify-between gap-4 border-b-2 border-cyan-500/40 relative z-10">
     <div class="flex items-center gap-3">
       <button onclick="returnToHub()" class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-lg hover:bg-slate-700 transition" title="Terug naar Hub">🏠</button>
@@ -845,14 +759,13 @@
       </div>
     </div>
 
-    <!-- Stats HUD -->
     <div class="flex items-center gap-4 md:gap-5 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800">
       <div class="text-center">
         <span id="currency-label" class="text-[10px] uppercase text-slate-400 block">Data-Bits</span>
         <span id="hud-bits" class="font-cyber font-bold text-amber-400 text-base md:text-lg">💎 0</span>
       </div>
       <div class="h-6 w-[1px] bg-slate-700"></div>
-      <div class="text-center" title="Ronde-punten + Credits + HP-bonus">
+      <div class="text-center">
         <span class="text-[10px] uppercase text-slate-400 block">Eindscore</span>
         <span id="hud-session-score" class="font-cyber font-bold text-emerald-400 text-base md:text-lg">200</span>
       </div>
@@ -868,7 +781,6 @@
       </div>
     </div>
 
-    <!-- In-Game Action Button: Alleen Upgrades -->
     <div class="flex items-center gap-2">
       <button onclick="openUpgradesModal()" id="btn-top-upgrades" class="px-4 py-2.5 rounded-xl text-xs md:text-sm font-cyber font-bold bg-purple-600/30 border border-purple-400/50 text-purple-200 hover:bg-purple-600/50 transition relative">
         <span id="btn-top-upgrades-label">🔧 Upgrades</span>
@@ -879,11 +791,8 @@
 
   <!-- MAIN CONTENT AREA -->
   <main id="main-container" class="max-w-5xl w-full mx-auto flex-grow flex flex-col gap-4 relative z-10">
-
-    <!-- ================= ARENA / LAB / SPACE / KAWAII GAMEPLAY ================= -->
     <section id="view-arena" class="flex flex-col gap-4">
       
-      <!-- BOSS / EXPERIMENT ALERT BANNER -->
       <div id="boss-alert-banner" class="hidden bg-gradient-to-r from-amber-600/30 via-rose-600/40 to-amber-600/30 border-2 border-amber-400 rounded-2xl px-4 py-2.5 flex items-center justify-between animate-pulse">
         <div class="flex items-center gap-2">
           <span class="text-2xl" id="boss-banner-emoji">👑</span>
@@ -895,16 +804,11 @@
         <span id="boss-progress-badge" class="px-2.5 py-1 rounded-full bg-amber-400 text-slate-950 font-cyber font-black text-xs">Zin 1 / 1</span>
       </div>
 
-      <!-- Battle Stage -->
       <div id="battle-stage-panel" class="cyber-panel rounded-2xl p-6 relative overflow-hidden min-h-[250px] flex flex-col justify-between border border-slate-800">
-        <!-- Subtiele interne stage gloed -->
         <div id="stage-glow-backdrop" class="absolute inset-0 opacity-20 pointer-events-none" style="background: radial-gradient(circle at 50% 50%, #06b6d4 0%, transparent 70%);"></div>
-
-        <!-- Zwevende Combat Text Container -->
         <div id="combat-text-container" class="absolute inset-0 pointer-events-none z-30 overflow-hidden"></div>
 
         <div class="relative z-10 grid grid-cols-2 gap-4 items-center my-auto">
-          <!-- Player -->
           <div class="flex flex-col items-center sm:items-start">
             <div class="flex items-center gap-2 mb-1 flex-wrap">
               <span id="player-bot-name" class="font-cyber text-xs md:text-sm font-bold text-cyan-400">Nova-Bit v1</span>
@@ -912,33 +816,16 @@
               <span id="shield-badge" class="hidden px-2 py-0.5 text-[10px] bg-blue-500/30 border border-blue-400 text-blue-300 rounded-full">🛡️ Schild Actief</span>
             </div>
             
-            <!-- HP Bar + Snelle Nood-Repair Knop -->
             <div class="flex items-center gap-2 w-full max-w-[260px] mb-2">
               <div class="flex-grow bg-slate-800 h-3.5 rounded-full overflow-hidden border border-slate-700 p-0.5">
                 <div id="player-hp-bar" class="bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full transition-all duration-300" style="width: 100%"></div>
               </div>
-              <button 
-                type="button" 
-                id="quick-repair-btn" 
-                onclick="buyRepairKit()" 
-                class="hidden px-2 py-0.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-cyber font-black text-[10px] shadow-lg shadow-emerald-500/30 active:scale-95 transition whitespace-nowrap"
-                title="Koop en gebruik direct (+50 HP)"
-              >
-                🛠️ +50 HP (💎 30)
-              </button>
+              <button type="button" id="quick-repair-btn" onclick="buyRepairKit()" class="hidden px-2 py-0.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-cyber font-black text-[10px] shadow-lg shadow-emerald-500/30 active:scale-95 transition whitespace-nowrap">🛠️ +50 HP</button>
             </div>
 
-            <!-- Wapen Indicator + Directe Pop-up Knop -->
             <div class="flex items-center gap-2 mb-2 flex-wrap">
               <span id="player-weapon-badge" class="text-[10px] text-slate-300 font-bold">🔫 Wapen: Puls-Laser (1x)</span>
-              <button 
-                type="button" 
-                id="stage-upgrade-btn"
-                onclick="openUpgradesModal()" 
-                class="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 font-cyber font-bold text-[10px] transition flex items-center gap-1"
-              >
-                <span>🔧 Upgrades</span>
-              </button>
+              <button type="button" id="stage-upgrade-btn" onclick="openUpgradesModal()" class="px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 font-cyber font-bold text-[10px] transition flex items-center gap-1"><span>🔧 Upgrades</span></button>
             </div>
 
             <div id="player-bot-wrap" class="relative flex items-center justify-center">
@@ -946,7 +833,6 @@
             </div>
           </div>
 
-          <!-- Enemy -->
           <div class="flex flex-col items-center sm:items-end">
             <div class="flex items-center gap-2 mb-1">
               <span id="boss-crown-badge" class="hidden px-2 py-0.5 text-[10px] bg-amber-500 text-slate-950 font-cyber font-black rounded">👑 BOSS</span>
@@ -962,11 +848,9 @@
           </div>
         </div>
 
-        <!-- Laser / Beam Container -->
         <div id="laser-container" class="my-2 h-8 flex items-center justify-center relative z-20"></div>
 
-        <!-- Script / Spreuk Banner (Klikbaar om aan te passen in pop-up) -->
-        <div onclick="openUpgradesModal()" class="cursor-pointer hover:border-purple-400 transition relative z-10 bg-slate-900/90 border border-purple-500/40 rounded-xl px-3 py-2 flex flex-wrap items-center justify-between gap-2 text-xs" title="Klik om jouw bonus-regel aan te passen">
+        <div onclick="openUpgradesModal()" class="cursor-pointer hover:border-purple-400 transition relative z-10 bg-slate-900/90 border border-purple-500/40 rounded-xl px-3 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
           <div>
             <span id="script-label-text" class="text-purple-400 font-bold">ACTIEF SCRIPT:</span>
             <span id="active-script-display" class="text-slate-300 ml-1">ALS [Streak >= 2] DAN [+50% Kracht]</span>
@@ -975,7 +859,6 @@
         </div>
       </div>
 
-      <!-- Compiler / Lab / Space / Kawaii Console -->
       <div id="compiler-console-panel" class="cyber-panel cyber-border-cyan rounded-2xl p-5 md:p-6 flex flex-col gap-4">
         
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -985,54 +868,28 @@
             <span id="retry-warning-badge" class="hidden px-2.5 py-1 rounded bg-amber-500/20 border border-amber-400 text-amber-300 text-xs font-bold">🔄 Herkansing (0 Credits)</span>
           </div>
 
-          <!-- Paid Audio/Hint Buttons -->
           <div class="flex items-center gap-2 flex-wrap">
-            <button type="button" onclick="speakCurrentWord(0.95)" id="btn-speak" class="px-3 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs md:text-sm flex items-center gap-1.5 shadow-lg shadow-cyan-500/20 active:scale-95 transition whitespace-nowrap">
-              🔊 Spreek Uit (💎 2)
-            </button>
-            <button type="button" onclick="spellCurrentWord()" id="btn-spell" class="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs md:text-sm flex items-center gap-1.5 active:scale-95 transition whitespace-nowrap" title="Spel het woord letter voor letter">
-              🐢 Spel (💎 4)
-            </button>
-            <button type="button" onclick="triggerFlashHint()" id="btn-flash" class="px-3 py-2.5 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/40 font-bold text-xs md:text-sm flex items-center gap-1.5 active:scale-95 transition whitespace-nowrap" title="Scan kort op het scherm">
-              👁️ Scan (💎 8)
-            </button>
+            <button type="button" onclick="speakCurrentWord(0.95)" id="btn-speak" class="px-3 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs md:text-sm flex items-center gap-1.5 shadow-lg shadow-cyan-500/20 active:scale-95 transition whitespace-nowrap">🔊 Spreek Uit (💎 2)</button>
+            <button type="button" onclick="spellCurrentWord()" id="btn-spell" class="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 font-bold text-xs md:text-sm flex items-center gap-1.5 active:scale-95 transition whitespace-nowrap">🐢 Spel (💎 4)</button>
+            <button type="button" onclick="triggerFlashHint()" id="btn-flash" class="px-3 py-2.5 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/40 font-bold text-xs md:text-sm flex items-center gap-1.5 active:scale-95 transition whitespace-nowrap">👁️ Scan (💎 8)</button>
           </div>
         </div>
 
-        <!-- Flash Preview Area -->
         <div class="bg-slate-950/90 border border-slate-800 rounded-xl p-4 text-center min-h-[76px] flex flex-col items-center justify-center relative">
-          <div id="word-display-box" class="font-cyber text-lg md:text-2xl tracking-[0.2em] text-cyan-300 font-bold break-words max-w-full">
-            KLAAR VOOR INVOER
-          </div>
+          <div id="word-display-box" class="font-cyber text-lg md:text-2xl tracking-[0.2em] text-cyan-300 font-bold break-words max-w-full">KLAAR VOOR INVOER</div>
           <div id="audio-status-indicator" class="text-[11px] text-slate-400 mt-1.5">Elk puntje (•) is een teken, elke underscore (_) is een spatie!</div>
         </div>
 
-        <!-- Input Form -->
         <form onsubmit="handleCompileSubmit(event)" class="flex flex-col sm:flex-row gap-3">
-          <input 
-            type="text" 
-            id="word-input" 
-            autocomplete="off" 
-            autocorrect="off" 
-            autocapitalize="off" 
-            spellcheck="false"
-            placeholder="Typ hier de opdracht..."
-            class="flex-grow bg-slate-900/90 border-2 border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-3.5 text-base md:text-xl font-bold text-white tracking-wide outline-none transition"
-          />
-          <button type="submit" id="btn-compile" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-cyan-500/25 active:scale-95 transition whitespace-nowrap">
-            ⚡ COMPILEER
-          </button>
+          <input type="text" id="word-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Typ hier de opdracht..." class="flex-grow bg-slate-900/90 border-2 border-slate-700 focus:border-cyan-400 rounded-xl px-4 py-3.5 text-base md:text-xl font-bold text-white tracking-wide outline-none transition" />
+          <button type="submit" id="btn-compile" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-cyan-500/25 active:scale-95 transition whitespace-nowrap">⚡ COMPILEER</button>
         </form>
 
-        <!-- VISUAL DEBUGGER -->
         <div id="debugger-panel" class="hidden bg-rose-950/40 border-2 border-rose-500/60 rounded-xl p-4 flex flex-col gap-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
-            <span id="debugger-title" class="font-cyber text-xs md:text-sm font-bold text-rose-400 flex items-center gap-2">
-              🐞 OEPS! FOUTJE GEDETECTEERD — PAS OP JE HP!
-            </span>
+            <span id="debugger-title" class="font-cyber text-xs md:text-sm font-bold text-rose-400 flex items-center gap-2">🐞 OEPS! FOUTJE GEDETECTEERD — PAS OP JE HP!</span>
             <span class="text-xs text-rose-300">Corrigeer hierboven voor een Noodschild (0 Credits)</span>
           </div>
-          
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3 bg-slate-950/90 p-3 rounded-lg border border-slate-800">
             <div>
               <span class="text-[10px] uppercase text-slate-400 block mb-1.5">Jouw Invoer:</span>
@@ -1047,19 +904,12 @@
 
       </div>
     </section>
-
   </main>
 
   <script>
-    // =========================================================================
-    // WORDEN AUTOMATISCH INGEVULD DOOR GITHUB ACTIONS (build-apk.yml)
-    // =========================================================================
     const GITHUB_PAGES_JSON_URL = 'https://JOUW_GITHUB_NAAM.github.io/codebot-arena/woorden.json';
     const FIREBASE_DB_URL = '';
 
-    // ==========================================
-    // 0. DYNAMISCHE ACHTERGROND & GEVECHTS-FX ENGINE (4 THEMA'S)
-    // ==========================================
     const bgCanvas = document.getElementById('bg-canvas');
     const bgCtx = bgCanvas.getContext('2d');
     const fxCanvas = document.getElementById('fx-canvas');
@@ -1181,7 +1031,7 @@
           size: Math.random() * cfg.size + 2.5,
           alpha: 1,
           decay: Math.random() * 0.02 + 0.014,
-          gravity: weaponStyle === 'cryo' || weaponStyle === 'heal' ? -0.05 : (weaponStyle === 'vortex' ? 0 : 0.16),
+          gravity: weaponStyle === 'cryo' || weaponStyle === 'heal' ? -0.05 : 0.16,
           hue: hues[Math.floor(Math.random() * hues.length)],
           shape: isError ? 'circle' : cfg.shape
         });
@@ -1373,13 +1223,9 @@
       requestAnimationFrame(animateCanvases);
     }
 
-    // ==========================================
-    // 1. STATE, 4 THEMA'S, UPGRADES & 32 UNIEKE THEMA-BADGES
-    // ==========================================
     const REPAIR_COST = 30;
     const REPAIR_AMOUNT = 50;
     const HP_SCORE_MULTIPLIER = 2;
-
     const COST_SPEAK = 2;
     const COST_SPELL = 4;
     const COST_SCAN = 8;
@@ -1391,29 +1237,14 @@
         "Het hoestdrankje", "De schutting", "Het raketje", "Eeuwig", "De televisie",
         "De ooievaars", "De lachfilm", "De tribune", "Wij fladderen", "Het schroot",
         "Moeilijk", "Terecht", "De ijsbergsla", "Wij verloren", "De matrozen",
-        "Het ivoor", "De beperking", "Het drinkwater", "De feiten",
-        "Rook Siem een vieze lucht op het zoldertje?",
-        "De rivier stroomt door een groot deel van Nederland.",
-        "De bezoekers treuzelen bij de dichte deur.",
-        "Kees en Stan sliepen op een groot matras.",
-        "De meneer wees ons een korte weg naar Rotterdam."
-      ],
-      "Blok 3 - Week 3": [
-        "De klinker", "De agent", "Zij miauwen", "Prachtig", "Vanmiddag", "Het spreeuwtje",
-        "Het kapitaal", "De flauwekul", "Wij huppelen", "Tegelijk", "De hechting", "Het onderarmpje",
-        "Het kleurtje", "Natuurlijk", "Het virus", "De zwaluw", "De frambozen", "Het schrikdraad",
-        "Zij schitteren", "De kanarie", "De ski", "De fauna", "De pech", "Behoorlijk",
-        "Zij begon haar mooie wereldreis in Afrika.",
-        "Tom scheurt het groene etiket van het pak.",
-        "Kamperen zij in een kleine tent op Terschelling.",
-        "Koen mocht een rondje in de oude draaimolen."
+        "Het ivoor", "De beperking", "Het drinkwater", "De feiten"
       ]
     };
 
     let state = {
       gameTheme: 'arena',
       hubBadgePreviewTheme: 'arena',
-      highscoreFilter: 'current', // 'current' (actieve woordenlijst) of 'all'
+      highscoreFilter: 'current',
       firebaseUrl: FIREBASE_DB_URL,
       lists: JSON.parse(JSON.stringify(DEFAULT_LISTS)),
       activeListName: "Blok 3 - Week 4",
@@ -1449,182 +1280,82 @@
 
     const THEMES = {
       arena: {
-        title: "CODEBOT ARENA",
-        subtitle: "Cyber Spelling Compiler",
-        currency: "Data-Bits",
-        currencySymbol: "💎",
-        repairName: "Nano-Repair Kit",
-        repairIcon: "🛠️",
-        repairDesc: "Eenmalige reparatie-kit: herstelt direct +50 HP (+100 Eindscore bonus)!",
-        scriptLabel: "ACTIEF SCRIPT:",
-        compileBtn: "⚡ COMPILEER",
-        megaBtn: "☄️ VUUR OMEGA-KANON",
-        shopTitle: "🔧 Robot Wapenkamer & Upgrades",
-        shopDesc: "Koop sterkere bots voor hogere multipliers, of spaar je Data-Bits voor de eindscore!",
-        builderTitle: "🧠 Robot Logica Programmeren",
-        builderDesc: "Stel jouw ALS -> DAN code-regel in:",
-        bossName: "MEGA-OVERLORD TITAN",
-        bossAvatar: "🐲",
+        title: "CODEBOT ARENA", subtitle: "Cyber Spelling Compiler", currency: "Data-Bits", currencySymbol: "💎",
+        repairName: "Nano-Repair Kit", repairIcon: "🛠️", repairDesc: "Herstelt direct +50 HP (+100 Eindscore)!",
+        scriptLabel: "ACTIEF SCRIPT:", compileBtn: "⚡ COMPILEER", megaBtn: "☄️ VUUR OMEGA-KANON",
+        shopTitle: "🔧 Robot Wapenkamer & Upgrades", shopDesc: "Koop sterkere bots...",
+        builderTitle: "🧠 Robot Logica Programmeren", bossName: "MEGA-OVERLORD TITAN", bossAvatar: "🐲",
         bots: [
-          { id: 't1', name: 'Nova-Bit v1', icon: '🤖', cost: 0, weaponName: 'Puls-Laser', weaponType: 'pulse', hitClass: 'hit-recoil', desc: 'Standaard Cyaan Laser (1x Schade, 1x Bits)', multDmg: 1, multBits: 1 },
-          { id: 't2', name: 'Twin-Striker', icon: '🦿', cost: 20, weaponName: 'Dubbele Laser', weaponType: 'twin', hitClass: 'hit-twin', desc: 'Dubbele Parallel-Straal (1.25x Schade, 1.2x Bits)', multDmg: 1.25, multBits: 1.2 },
-          { id: 't3', name: 'Pyro-Mech X', icon: '🔥', cost: 45, weaponName: 'Plasma-Vlammenwerper', weaponType: 'plasma', hitClass: 'hit-burn', desc: 'Smelt vijanden met vuur (1.5x Schade, 1.35x Bits)', multDmg: 1.5, multBits: 1.35 },
-          { id: 't4', name: 'Tesla-Valkyrie', icon: '⚡', cost: 75, weaponName: 'Bliksem-Boog', weaponType: 'shock', hitClass: 'hit-shock', desc: 'Zet vijand onder hoogspanning (1.75x Schade, 1.5x Bits)', multDmg: 1.75, multBits: 1.5 },
-          { id: 't5', name: 'Cryo-Guardian', icon: '❄️', cost: 110, weaponName: 'Sub-Zero Vriesstraal', weaponType: 'cryo', hitClass: 'hit-freeze', desc: 'Bevriest het doelwit in ijs (2x Schade, 1.75x Bits)', multDmg: 2.0, multBits: 1.75 },
-          { id: 't6', name: 'Void-Spider', icon: '🕸️', cost: 150, weaponName: 'Zwaartekracht-Vortex', weaponType: 'vortex', hitClass: 'hit-vortex', desc: 'Laat vijand imploderen (2.3x Schade, 2x Bits)', multDmg: 2.3, multBits: 2.0 },
-          { id: 't7', name: 'Omega-Dragon', icon: '🐉', cost: 200, weaponName: 'Gouden Railgun', weaponType: 'crush', hitClass: 'hit-crush', desc: 'Verpletterende pantser-schoten (2.7x Schade, 2.5x Bits)', multDmg: 2.7, multBits: 2.5 },
-          { id: 't8', name: 'Astro-God X9', icon: '🛸', cost: 260, weaponName: 'Supernova-Kanon', weaponType: 'nova', hitClass: 'hit-nova', desc: 'Ultieme Regenboog-Vernietiging (3.5x Schade, 3x Bits)', multDmg: 3.5, multBits: 3.0 }
+          { id: 't1', name: 'Nova-Bit v1', icon: '🤖', cost: 0, weaponName: 'Puls-Laser', weaponType: 'pulse', hitClass: 'hit-recoil', desc: 'Standaard Cyaan Laser', multDmg: 1, multBits: 1 },
+          { id: 't2', name: 'Twin-Striker', icon: '🦿', cost: 20, weaponName: 'Dubbele Laser', weaponType: 'twin', hitClass: 'hit-twin', desc: 'Dubbele Parallel-Straal', multDmg: 1.25, multBits: 1.2 }
         ],
-        enemies: [
-          { name: 'Glitch-Spider', icon: '👾' },
-          { name: 'Syntax-Creeper', icon: '🕷️' },
-          { name: 'Trojan-Golem', icon: '👹' },
-          { name: 'Null-Pointer Drone', icon: '👁️‍🗨️' }
-        ],
+        enemies: [{ name: 'Glitch-Spider', icon: '👾' }, { name: 'Syntax-Creeper', icon: '🕷️' }],
         badges: [
           { id: 'arena_first_hit', icon: '🎯', title: 'Eerste Compile', desc: 'Eerste woord direct foutloos!', bonus: 15 },
           { id: 'arena_streak_5', icon: '🔥', title: 'Code-Streak', desc: '5 opdrachten op rij in 1x goed!', bonus: 30 },
           { id: 'arena_streak_10', icon: '⚡', title: 'Master Hacker', desc: '10 opdrachten op rij in 1x goed!', bonus: 60 },
           { id: 'arena_speed_3', icon: '🚀', title: 'Flits-Compiler', desc: '3x binnen 4 seconden foutloos!', bonus: 35 },
-          { id: 'arena_heavy_weapon', icon: '🔧', title: 'Mecha-Ingenieur', desc: 'Ontgrendel een Tier 4+ Cyber-Bot!', bonus: 40 },
-          { id: 'arena_no_hints', icon: '🧠', title: 'Geen Cheats', desc: 'Win een ronde zonder betaalde hints!', bonus: 75 },
-          { id: 'arena_flawless', icon: '🛡️', title: 'Firewall Pantser', desc: 'Win een ronde met 0 fouten!', bonus: 100 },
-          { id: 'arena_boss_slayer', icon: '👑', title: 'Overlord Verslagen', desc: 'Versla de Eindbaas in de Finale!', bonus: 50 }
+          { id: 'arena_heavy_weapon', icon: '🔧', title: 'Mecha-Ingenieur', desc: 'Ontgrendel Tier 4+ Cyber-Bot!', bonus: 40 },
+          { id: 'arena_no_hints', icon: '🧠', title: 'Geen Cheats', desc: 'Win zonder betaalde hints!', bonus: 75 },
+          { id: 'arena_flawless', icon: '🛡️', title: 'Firewall Pantser', desc: 'Win met 0 fouten!', bonus: 100 },
+          { id: 'arena_boss_slayer', icon: '👑', title: 'Overlord Verslagen', desc: 'Versla de Eindbaas!', bonus: 50 }
         ]
       },
-
       lab: {
-        title: "BIO-CHEM LAB",
-        subtitle: "Wetenschappelijk Synthese Lab",
-        currency: "Lab Credits",
-        currencySymbol: "⚗️",
-        repairName: "Bio-Medisch Serum",
-        repairIcon: "💉",
-        repairDesc: "Eenmalig nood-serum: herstelt direct +50 HP (+100 Eindscore bonus)!",
-        scriptLabel: "ACTIEF REAGENS:",
-        compileBtn: "🧪 SYNTHETISEER",
-        megaBtn: "💥 ACTIVEER BIO-CORE",
-        shopTitle: "🧬 Lab Apparatuur & Upgrades",
-        shopDesc: "Koop zwaardere instrumenten voor unieke reacties, of spaar credits voor je eindscore!",
-        builderTitle: "🔬 Experiment Protocol Configureren",
-        builderDesc: "Stel jouw ALS -> DAN reagens-voorwaarden in:",
-        bossName: "GIGA-TOXIC BIO-REACTOR",
-        bossAvatar: "☢️",
-        bots: [
-          { id: 't1', name: 'Start-Microscoop', icon: '🔬', cost: 0, weaponName: 'Reagens-Pipet', weaponType: 'pulse', hitClass: 'hit-recoil', desc: 'Basis druppel-straal (1x Schade, 1x Credits)', multDmg: 1, multBits: 1 },
-          { id: 't2', name: 'Dubbele Burette', icon: '🧪', cost: 20, weaponName: 'Zuur-Injector', weaponType: 'twin', hitClass: 'hit-twin', desc: 'Dubbele zuur-stralen (1.25x Schade, 1.2x Credits)', multDmg: 1.25, multBits: 1.2 },
-          { id: 't3', name: 'Bunsen-Brander Pro', icon: '🔥', cost: 45, weaponName: 'Thermische Straal', weaponType: 'plasma', hitClass: 'hit-burn', desc: 'Verhit mutanten tot plasma (1.5x Schade, 1.35x Credits)', multDmg: 1.5, multBits: 1.35 },
-          { id: 't4', name: 'Elektro-Centrifuge', icon: '⚡', cost: 75, weaponName: 'Volt-Katalysator', weaponType: 'shock', hitClass: 'hit-shock', desc: 'Schokt cellen met stroom (1.75x Schade, 1.5x Credits)', multDmg: 1.75, multBits: 1.5 },
-          { id: 't5', name: 'Stikstof-Tank', icon: '🧊', cost: 110, weaponName: 'Vloeibare Stikstof', weaponType: 'cryo', hitClass: 'hit-freeze', desc: 'Bevriest bacteriën direct (2x Schade, 1.75x Credits)', multDmg: 2.0, multBits: 1.75 },
-          { id: 't6', name: 'Bio-Vortex Mixer', icon: '🌀', cost: 150, weaponName: 'Antimaterie-Kolom', weaponType: 'vortex', hitClass: 'hit-vortex', desc: 'Draait mutanten in een kolk (2.3x Schade, 2x Credits)', multDmg: 2.3, multBits: 2.0 },
-          { id: 't7', name: 'Deeltjes-Versneller', icon: '⚛️', cost: 200, weaponName: 'Protonen-Kanonslag', weaponType: 'crush', hitClass: 'hit-crush', desc: 'Plet moleculen met goud-energie (2.7x Schade, 2.5x Credits)', multDmg: 2.7, multBits: 2.5 },
-          { id: 't8', name: 'Quantum-Sequencer', icon: '🧬', cost: 260, weaponName: 'Helix-Supernova', weaponType: 'nova', hitClass: 'hit-nova', desc: 'Ultieme DNA-Ketensplitsing (3.5x Schade, 3x Credits)', multDmg: 3.5, multBits: 3.0 }
-        ],
-        enemies: [
-          { name: 'Mutant Slime', icon: '🦠' },
-          { name: 'Spore-Monster', icon: '🍄' },
-          { name: 'Gif-Octopus', icon: '🐙' },
-          { name: 'DNA-Parasiet', icon: '🦂' }
-        ],
+        title: "BIO-CHEM LAB", subtitle: "Wetenschappelijk Synthese Lab", currency: "Lab Credits", currencySymbol: "⚗️",
+        repairName: "Bio-Medisch Serum", repairIcon: "💉", repairDesc: "Herstelt direct +50 HP (+100 Eindscore)!",
+        scriptLabel: "ACTIEF REAGENS:", compileBtn: "🧪 SYNTHETISEER", megaBtn: "💥 ACTIVEER BIO-CORE",
+        shopTitle: "🧬 Lab Apparatuur & Upgrades", shopDesc: "Koop zwaardere instrumenten...",
+        builderTitle: "🔬 Experiment Protocol", bossName: "GIGA-TOXIC BIO-REACTOR", bossAvatar: "☢️",
+        bots: [{ id: 't1', name: 'Start-Microscoop', icon: '🔬', cost: 0, weaponName: 'Pipet', weaponType: 'pulse', hitClass: 'hit-recoil', desc: 'Basis straal', multDmg: 1, multBits: 1 }],
+        enemies: [{ name: 'Mutant Slime', icon: '🦠' }],
         badges: [
           { id: 'lab_first_hit', icon: '🧪', title: 'Eerste Synthese', desc: 'Eerste formule meteen goed!', bonus: 15 },
-          { id: 'lab_streak_5', icon: '🔬', title: 'Lab-Specialist', desc: '5 formules op rij foutloos!', bonus: 30 },
-          { id: 'lab_streak_10', icon: '🧬', title: 'Nobelprijs-Winnaar', desc: '10 formules op rij in 1x goed!', bonus: 60 },
-          { id: 'lab_speed_3', icon: '⚡', title: 'Katalysator', desc: '3x binnen 4 seconden gemengd!', bonus: 35 },
-          { id: 'lab_heavy_weapon', icon: '⚛️', title: 'Hoogleraar', desc: 'Ontgrendel een Tier 4+ Lab-instrument!', bonus: 40 },
-          { id: 'lab_no_hints', icon: '🥽', title: 'Uit Het Hoofd', desc: 'Win zonder lab-hints te kopen!', bonus: 75 },
-          { id: 'lab_flawless', icon: '🧼', title: 'Steriel Lab', desc: 'Win een ronde zonder besmetting (0 fouten)!', bonus: 100 },
-          { id: 'lab_boss_slayer', icon: '☢️', title: 'Reactor-Temmer', desc: 'Neutraliseer de Bio-Reactor!', bonus: 50 }
+          { id: 'lab_streak_5', icon: '🔬', title: 'Lab-Specialist', desc: '5 formules foutloos!', bonus: 30 },
+          { id: 'lab_streak_10', icon: '🧬', title: 'Nobelprijs', desc: '10 formules goed!', bonus: 60 },
+          { id: 'lab_speed_3', icon: '⚡', title: 'Katalysator', desc: '3x binnen 4 sec!', bonus: 35 },
+          { id: 'lab_heavy_weapon', icon: '⚛️', title: 'Hoogleraar', desc: 'Tier 4+ instrument!', bonus: 40 },
+          { id: 'lab_no_hints', icon: '🥽', title: 'Uit Het Hoofd', desc: 'Win zonder lab-hints!', bonus: 75 },
+          { id: 'lab_flawless', icon: '🧼', title: 'Steriel Lab', desc: 'Win zonder besmetting!', bonus: 100 },
+          { id: 'lab_boss_slayer', icon: '☢️', title: 'Reactor-Temmer', desc: 'Neutraliseer Bio-Reactor!', bonus: 50 }
         ]
       },
-
       space: {
-        title: "STAR-BLASTER GALAXY",
-        subtitle: "Galactische Boordcomputer",
-        currency: "Sterrenstof",
-        currencySymbol: "🌟",
-        repairName: "Nano-Schild Batterij",
-        repairIcon: "🔋",
-        repairDesc: "Nood-energiecel: herstelt direct +50 Romp-HP van je ruimteschip (+100 Eindscore)!",
-        scriptLabel: "AUTOPILOT MODULE:",
-        compileBtn: "🚀 LANCEER TORPEDO",
-        megaBtn: "☄️ VUUR HYPER-NOVA",
-        shopTitle: "🛸 Ruimte-Hangar & Vloot (8 Tiers)",
-        shopDesc: "Upgrade je ruimteschip met zwaardere foton-kanonnen of spaar Sterrenstof!",
-        builderTitle: "🛰️ Doelcomputer & Autopilot",
-        builderDesc: "Programmeer jouw ALS -> DAN gevechts-manoeuvre:",
-        bossName: "KEIZER ZORGON MOEDERSCHIP",
-        bossAvatar: "🛸",
-        bots: [
-          { id: 't1', name: 'Star-Scout v1', icon: '🚀', cost: 0, weaponName: 'Foton-Blaster', weaponType: 'pulse', hitClass: 'hit-recoil', desc: 'Snelle verkenner met laser (1x Kracht, 1x Sterrenstof)', multDmg: 1, multBits: 1 },
-          { id: 't2', name: 'X-Viper Fighter', icon: '🛩️', cost: 20, weaponName: 'Twin-Ion Kanon', weaponType: 'twin', hitClass: 'hit-twin', desc: 'Dubbele vleugel-lasers (1.25x Kracht, 1.2x Sterrenstof)', multDmg: 1.25, multBits: 1.2 },
-          { id: 't3', name: 'Solar-Phoenix', icon: '☄️', cost: 45, weaponName: 'Zonnevlam-Torpedo', weaponType: 'plasma', hitClass: 'hit-burn', desc: 'Schiet gloeiende zonnevlammen (1.5x Kracht, 1.35x Sterrenstof)', multDmg: 1.5, multBits: 1.35 },
-          { id: 't4', name: 'Nebula-Cruiser', icon: '⚡', cost: 75, weaponName: 'EMP-Sterrenboog', weaponType: 'shock', hitClass: 'hit-shock', desc: 'Legt vijandelijke schilden plat (1.75x Kracht, 1.5x Sterrenstof)', multDmg: 1.75, multBits: 1.5 },
-          { id: 't5', name: 'Comet-Hunter', icon: '🧊', cost: 110, weaponName: 'Komeet-Vriesstraal', weaponType: 'cryo', hitClass: 'hit-freeze', desc: 'Bevriest aliens in ruimte-ijs (2x Kracht, 1.75x Sterrenstof)', multDmg: 2.0, multBits: 1.75 },
-          { id: 't6', name: 'Black-Hole Stealth', icon: '🕳️', cost: 150, weaponName: 'Zwart-Gat Vortex', weaponType: 'vortex', hitClass: 'hit-vortex', desc: 'Zuigt ruimte-piraten in een kolk (2.3x Kracht, 2x Sterrenstof)', multDmg: 2.3, multBits: 2.0 },
-          { id: 't7', name: 'Dreadnought Titan', icon: '🛰️', cost: 200, weaponName: 'Orbitale Railgun', weaponType: 'crush', hitClass: 'hit-crush', desc: 'Verpulvert asteroïden in één schot (2.7x Kracht, 2.5x Sterrenstof)', multDmg: 2.7, multBits: 2.5 },
-          { id: 't8', name: 'Galactic-Mothership', icon: '🌌', cost: 260, weaponName: 'Big-Bang Kanon', weaponType: 'nova', hitClass: 'hit-nova', desc: 'Ultieme Melkweg-Supernova (3.5x Kracht, 3x Sterrenstof)', multDmg: 3.5, multBits: 3.0 }
-        ],
-        enemies: [
-          { name: 'Astro-Meteoor', icon: '🪨' },
-          { name: 'Alien-Verkenner', icon: '👽' },
-          { name: 'Ruimte-Piraat', icon: '👾' },
-          { name: 'Kosmos-Kraken', icon: '🦑' }
-        ],
+        title: "STAR-BLASTER GALAXY", subtitle: "Galactische Boordcomputer", currency: "Sterrenstof", currencySymbol: "🌟",
+        repairName: "Nano-Schild Batterij", repairIcon: "🔋", repairDesc: "Herstelt direct +50 Romp-HP!",
+        scriptLabel: "AUTOPILOT MODULE:", compileBtn: "🚀 LANCEER TORPEDO", megaBtn: "☄️ VUUR HYPER-NOVA",
+        shopTitle: "🛸 Ruimte-Hangar & Vloot", shopDesc: "Upgrade je ruimteschip...",
+        builderTitle: "🛰️ Doelcomputer", bossName: "KEIZER ZORGON", bossAvatar: "🛸",
+        bots: [{ id: 't1', name: 'Star-Scout v1', icon: '🚀', cost: 0, weaponName: 'Foton', weaponType: 'pulse', hitClass: 'hit-recoil', desc: 'Verkenner', multDmg: 1, multBits: 1 }],
+        enemies: [{ name: 'Astro-Meteoor', icon: '🪨' }],
         badges: [
-          { id: 'space_first_hit', icon: '☄️', title: 'Eerste Inslag', desc: 'Eerste ruimte-doelwit direct geraakt!', bonus: 15 },
-          { id: 'space_streak_5', icon: '🚀', title: 'Warp-Snelheid', desc: '5 voltreffers op rij zonder missen!', bonus: 30 },
-          { id: 'space_streak_10', icon: '🌌', title: 'Sterren-Admiraal', desc: '10 voltreffers op rij in de ruimte!', bonus: 60 },
-          { id: 'space_speed_3', icon: '⚡', title: 'Lichtsnelheid-Piloot', desc: '3x binnen 4 seconden gelanceerd!', bonus: 35 },
-          { id: 'space_heavy_weapon', icon: '🛸', title: 'Vloot-Commandant', desc: 'Koop een Tier 4+ Ruimteschip in de Hangar!', bonus: 40 },
-          { id: 'space_no_hints', icon: '🧭', title: 'Blinde Navigatie', desc: 'Win zonder radar-hints te gebruiken!', bonus: 75 },
-          { id: 'space_flawless', icon: '🛡️', title: 'Ongekrasde Romp', desc: 'Win zonder één meteoriet-inslag (0 fouten)!', bonus: 100 },
-          { id: 'space_boss_slayer', icon: '👑', title: 'Melkweg-Redder', desc: 'Versla het Moederschip van Keizer Zorgon!', bonus: 50 }
+          { id: 'space_first_hit', icon: '☄️', title: 'Eerste Inslag', desc: 'Eerste doelwit geraakt!', bonus: 15 },
+          { id: 'space_streak_5', icon: '🚀', title: 'Warp-Snelheid', desc: '5 voltreffers op rij!', bonus: 30 },
+          { id: 'space_streak_10', icon: '🌌', title: 'Admiraal', desc: '10 voltreffers!', bonus: 60 },
+          { id: 'space_speed_3', icon: '⚡', title: 'Lichtsnelheid', desc: '3x binnen 4 sec!', bonus: 35 },
+          { id: 'space_heavy_weapon', icon: '🛸', title: 'Vloot-Commandant', desc: 'Tier 4+ schip!', bonus: 40 },
+          { id: 'space_no_hints', icon: '🧭', title: 'Blinde Navigatie', desc: 'Win zonder radar!', bonus: 75 },
+          { id: 'space_flawless', icon: '🛡️', title: 'Ongekrasde Romp', desc: 'Win zonder inslag!', bonus: 100 },
+          { id: 'space_boss_slayer', icon: '👑', title: 'Melkweg-Redder', desc: 'Versla het Moederschip!', bonus: 50 }
         ]
       },
-
       kawaii: {
-        title: "KAWAII DROOMWERELD",
-        subtitle: "Magische Spelling Studio",
-        currency: "Sterretjes",
-        currencySymbol: "⭐",
-        repairName: "Aardbeien Boba-Thee",
-        repairIcon: "🧋",
-        repairDesc: "Superlekker! Geeft direct +50 Hartjes-HP terug (+100 Eindscore bonus)!",
-        scriptLabel: "GELUKS-SPREUK:",
-        compileBtn: "💖 TOVER SPREUK",
-        megaBtn: "🌈 REGENBOOG FINALE!",
-        shopTitle: "🎀 Knuffel-Boetiek & Toverstafjes (8 Tiers)",
-        shopDesc: "Verzamel de schattigste knuffel-vriendjes of spaar je Sterretjes voor een topscore!",
-        builderTitle: "✨ Magische Geluks-Spreuk",
-        builderDesc: "Kies jouw eigen ALS -> DAN glitter-bonus:",
-        bossName: "KONING DONDERWOLK",
-        bossAvatar: "⛈️",
-        bots: [
-          { id: 't1', name: 'Mochi-Katje', icon: '🐱', cost: 0, weaponName: 'Glitter-Stafje', weaponType: 'pulse', hitClass: 'hit-recoil', desc: 'Schiet roze sterretjes (1x Kracht, 1x Sterretjes)', multDmg: 1, multBits: 1 },
-          { id: 't2', name: 'Boba-Konijntje', icon: '🐰', cost: 20, weaponName: 'Hartjes-Boog', weaponType: 'twin', hitClass: 'hit-twin', desc: 'Dubbele vrolijke hartjes-straal (1.25x Kracht, 1.2x Sterretjes)', multDmg: 1.25, multBits: 1.2 },
-          { id: 't3', name: 'Kandij-Vosje', icon: '🦊', cost: 45, weaponName: 'Suikerspin-Wolk', weaponType: 'plasma', hitClass: 'hit-burn', desc: 'Superzoete roze vuurwerk-straal (1.5x Kracht, 1.35x Sterretjes)', multDmg: 1.5, multBits: 1.35 },
-          { id: 't4', name: 'Pika-Hamstertje', icon: '🐹', cost: 75, weaponName: 'Knetter-Sterren', weaponType: 'shock', hitClass: 'hit-shock', desc: 'Vrolijke knettersnoep-bliksem! (1.75x Kracht, 1.5x Sterretjes)', multDmg: 1.75, multBits: 1.5 },
-          { id: 't5', name: 'IJsbeer-Plushie', icon: '🐻‍❄️', cost: 110, weaponName: 'Sneeuwvlok-Staf', weaponType: 'cryo', hitClass: 'hit-freeze', desc: 'Tovert glinsterende ijskristallen (2x Kracht, 1.75x Sterretjes)', multDmg: 2.0, multBits: 1.75 },
-          { id: 't6', name: 'Galaxie-Axolotl', icon: '🦎', cost: 150, weaponName: 'Droomwolk-Kolk', weaponType: 'vortex', hitClass: 'hit-vortex', desc: 'Magische paarse sterren-draaikolk (2.3x Kracht, 2x Sterretjes)', multDmg: 2.3, multBits: 2.0 },
-          { id: 't7', name: 'Gouden Shiba-Pup', icon: '🐶', cost: 200, weaponName: 'Kroon-Glitterstraal', weaponType: 'crush', hitClass: 'hit-crush', desc: 'Koninklijke gouden glitter-golf (2.7x Kracht, 2.5x Sterretjes)', multDmg: 2.7, multBits: 2.5 },
-          { id: 't8', name: 'Regenboog-Eenhoorn', icon: '🦄', cost: 260, weaponName: 'Ultieme Regenboog-Magie', weaponType: 'nova', hitClass: 'hit-nova', desc: 'Mega Regenboog-Hartjes Explosie! (3.5x Kracht, 3x Sterretjes)', multDmg: 3.5, multBits: 3.0 }
-        ],
-        enemies: [
-          { name: 'Mopper-Wolkje', icon: '🌧️' },
-          { name: 'Knoei-Spookje', icon: '👻' },
-          { name: 'Zure-Citroen', icon: '🍋' },
-          { name: 'Slaperige-Slak', icon: '🐌' }
-        ],
+        title: "KAWAII DROOMWERELD", subtitle: "Magische Spelling Studio", currency: "Sterretjes", currencySymbol: "⭐",
+        repairName: "Aardbeien Boba-Thee", repairIcon: "🧋", repairDesc: "Herstelt direct +50 Hartjes-HP!",
+        scriptLabel: "GELUKS-SPREUK:", compileBtn: "💖 TOVER SPREUK", megaBtn: "🌈 REGENBOOG FINALE!",
+        shopTitle: "🎀 Knuffel-Boetiek & Toverstafjes", shopDesc: "Verzamel knuffels...",
+        builderTitle: "✨ Magische Geluks-Spreuk", bossName: "KONING DONDERWOLK", bossAvatar: "⛈️",
+        bots: [{ id: 't1', name: 'Mochi-Katje', icon: '🐱', cost: 0, weaponName: 'Glitter-Staf', weaponType: 'pulse', hitClass: 'hit-recoil', desc: 'Schiet sterretjes', multDmg: 1, multBits: 1 }],
+        enemies: [{ name: 'Mopper-Wolkje', icon: '🌧️' }],
         badges: [
-          { id: 'kawaii_first_hit', icon: '🌸', title: 'Eerste Bloesem', desc: 'Eerste woord meteen helemaal goed!', bonus: 15 },
-          { id: 'kawaii_streak_5', icon: '🍓', title: 'Suikerspin-Streak', desc: '5 woorden op rij zonder foutjes!', bonus: 30 },
-          { id: 'kawaii_streak_10', icon: '💖', title: 'Glitter-Koningin', desc: '10 woorden op rij in 1x goed!', bonus: 60 },
-          { id: 'kawaii_speed_3', icon: '✨', title: 'Vallende Ster', desc: '3x supersnel binnen 4 seconden!', bonus: 35 },
-          { id: 'kawaii_heavy_weapon', icon: '🎀', title: 'Plushie-Verzamelaar', desc: 'Adopteer een Tier 4+ Knuffel-vriendje!', bonus: 40 },
-          { id: 'kawaii_no_hints', icon: '🧁', title: 'Slimme Cupcake', desc: 'Win een ronde zonder spiek-hints!', bonus: 75 },
-          { id: 'kawaii_flawless', icon: '💎', title: 'Foutloze Prinses', desc: 'Hele ronde met 100% Hartjes-HP gewonnen!', bonus: 100 },
-          { id: 'kawaii_boss_slayer', icon: '🦄', title: 'Eenhoorn Kampioen', desc: 'Vrolijk Koning Donderwolk helemaal op!', bonus: 50 }
+          { id: 'kawaii_first_hit', icon: '🌸', title: 'Eerste Bloesem', desc: 'Eerste woord goed!', bonus: 15 },
+          { id: 'kawaii_streak_5', icon: '🍓', title: 'Suikerspin', desc: '5 woorden op rij!', bonus: 30 },
+          { id: 'kawaii_streak_10', icon: '💖', title: 'Glitter-Koningin', desc: '10 woorden goed!', bonus: 60 },
+          { id: 'kawaii_speed_3', icon: '✨', title: 'Vallende Ster', desc: '3x binnen 4 sec!', bonus: 35 },
+          { id: 'kawaii_heavy_weapon', icon: '🎀', title: 'Plushie-Verzamelaar', desc: 'Tier 4+ knuffel!', bonus: 40 },
+          { id: 'kawaii_no_hints', icon: '🧁', title: 'Slimme Cupcake', desc: 'Win zonder hints!', bonus: 75 },
+          { id: 'kawaii_flawless', icon: '💎', title: 'Foutloze Prinses', desc: '100% Hartjes-HP!', bonus: 100 },
+          { id: 'kawaii_boss_slayer', icon: '🦄', title: 'Eenhoorn Kampioen', desc: 'Vrolijk Donderwolk op!', bonus: 50 }
         ]
       }
     };
@@ -1639,9 +1370,6 @@
       renderBadgesUI();
     }
 
-    // ==========================================
-    // POP-UP MODALS: UPGRADES (IN-GAME) & LIJSTEN (OP DE HUB)
-    // ==========================================
     function openUpgradesModal() {
       renderGarage();
       renderBadgesUI();
@@ -1658,9 +1386,7 @@
     }
 
     function handleModalBackdropClick(event) {
-      if (event.target.id === 'upgrades-modal') {
-        closeUpgradesModal();
-      }
+      if (event.target.id === 'upgrades-modal') closeUpgradesModal();
     }
 
     function openAdminModal() {
@@ -1676,9 +1402,7 @@
     }
 
     function handleAdminBackdropClick(event) {
-      if (event.target.id === 'admin-modal') {
-        closeAdminModal();
-      }
+      if (event.target.id === 'admin-modal') closeAdminModal();
     }
 
     function openPrivacyModal() {
@@ -1690,38 +1414,23 @@
     }
 
     function handlePrivacyBackdropClick(event) {
-      if (event.target.id === 'privacy-modal') {
-        closePrivacyModal();
-      }
+      if (event.target.id === 'privacy-modal') closePrivacyModal();
     }
 
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        if (!document.getElementById('upgrades-modal').classList.contains('hidden')) {
-          closeUpgradesModal();
-        }
-        if (!document.getElementById('admin-modal').classList.contains('hidden')) {
-          closeAdminModal();
-        }
+        if (!document.getElementById('upgrades-modal').classList.contains('hidden')) closeUpgradesModal();
+        if (!document.getElementById('admin-modal').classList.contains('hidden')) closeAdminModal();
         if (!document.getElementById('privacy-modal').classList.contains('hidden')) closePrivacyModal();
       }
     });
 
-    // ==========================================
-    // GEÏNTEGREERDE EINDSCORE & 32 THEMA-BADGES FUNCTIES
-    // ==========================================
     function calculateCombinedScore() {
-      const creditsBonus = state.bits;
-      const hpBonus = Math.max(0, state.playerHp) * HP_SCORE_MULTIPLIER;
-      return state.sessionScore + creditsBonus + hpBonus;
+      return state.sessionScore + state.bits + (Math.max(0, state.playerHp) * HP_SCORE_MULTIPLIER);
     }
 
     function unlockBadge(baseBadgeId) {
-      // Plak automatisch het actieve thema voor het badge-ID (bijv. 'kawaii_first_hit')
-      const fullBadgeId = baseBadgeId.startsWith(`${state.gameTheme}_`)
-        ? baseBadgeId
-        : `${state.gameTheme}_${baseBadgeId}`;
-
+      const fullBadgeId = baseBadgeId.startsWith(`${state.gameTheme}_`) ? baseBadgeId : `${state.gameTheme}_${baseBadgeId}`;
       if (state.sessionBadges.includes(fullBadgeId)) return;
       const themeBadges = getActiveThemeBadges(state.gameTheme);
       const badge = themeBadges.find(b => b.id === fullBadgeId);
@@ -1732,9 +1441,7 @@
 
       if (!state.allTimeBadges.includes(fullBadgeId)) {
         state.allTimeBadges.push(fullBadgeId);
-        try {
-          localStorage.setItem('codebot_all_badges', JSON.stringify(state.allTimeBadges));
-        } catch (e) {}
+        try { localStorage.setItem('codebot_all_badges', JSON.stringify(state.allTimeBadges)); } catch (e) {}
       }
 
       playBadgeSound();
@@ -1752,7 +1459,7 @@
       toast.innerHTML = `
         <span class="text-3xl">${badge.icon}</span>
         <div class="text-left">
-          <div class="font-cyber text-[10px] font-black text-amber-400 uppercase tracking-wider">🎖️ Badge Vrijgespeeld! (+${badge.bonus} Pnt)</div>
+          <div class="font-cyber text-[10px] font-black text-amber-400 uppercase">🎖️ Badge Vrijgespeeld! (+${badge.bonus} Pnt)</div>
           <div class="font-cyber text-sm font-bold text-white">${badge.title}</div>
           <div class="text-[11px] text-slate-300">${badge.desc}</div>
         </div>
@@ -1766,13 +1473,10 @@
       const hubCounter = document.getElementById('hub-badge-counter');
       const hubBadgesList = getActiveThemeBadges(state.hubBadgePreviewTheme);
       
-      // Tel specifiek hoeveel badges in het geselecteerde voorbeeld-thema zijn behaald
       const unlockedInPreviewTheme = hubBadgesList.filter(b => state.allTimeBadges.includes(b.id)).length;
       const totalPossible = Object.values(THEMES).reduce((sum, t) => sum + t.badges.length, 0);
 
-      if (hubCounter) {
-        hubCounter.textContent = `${unlockedInPreviewTheme} / ${hubBadgesList.length} (Totaal: ${state.allTimeBadges.length}/${totalPossible})`;
-      }
+      if (hubCounter) hubCounter.textContent = `${unlockedInPreviewTheme} / ${hubBadgesList.length} (Totaal: ${state.allTimeBadges.length}/${totalPossible})`;
 
       ['arena', 'lab', 'space', 'kawaii'].forEach(tk => {
         const btn = document.getElementById(`hub-bt-${tk}`);
@@ -1823,8 +1527,7 @@
     }
 
     function isSentenceItem(text) {
-      const words = text.trim().split(/\s+/).filter(Boolean);
-      return words.length >= 3;
+      return text.trim().split(/\s+/).filter(Boolean).length >= 3;
     }
 
     function shuffleArray(array) {
@@ -1840,17 +1543,13 @@
       const raw = state.lists[state.activeListName] || [];
       const words = raw.filter(item => !isSentenceItem(item));
       const sentences = raw.filter(item => isSentenceItem(item));
-      
       state.wordsQueue = shuffleArray(words);
       state.sentencesQueue = shuffleArray(sentences);
-      
-      if (state.wordsQueue.length === 0 && state.sentencesQueue.length > 0) {
-        state.currentPhase = 'bossrush';
-      }
+      if (state.wordsQueue.length === 0 && state.sentencesQueue.length > 0) state.currentPhase = 'bossrush';
     }
 
     function normalizeText(str) {
-      if (state.strictPunctuation) { return str.trim().replace(/\s+/g, ' '); }
+      if (state.strictPunctuation) return str.trim().replace(/\s+/g, ' ');
       return str.toLowerCase().replace(/[.,!?;:"'()]/g, '').trim().replace(/\s+/g, ' ');
     }
 
@@ -1930,7 +1629,6 @@
       document.getElementById('shop-title').textContent = t.shopTitle;
       document.getElementById('shop-desc').textContent = t.shopDesc;
       document.getElementById('builder-title').textContent = t.builderTitle;
-      document.getElementById('builder-desc').textContent = t.builderDesc;
 
       document.getElementById('repair-kit-icon').textContent = t.repairIcon;
       document.getElementById('repair-kit-title').textContent = t.repairName;
@@ -1939,44 +1637,24 @@
       document.getElementById('btn-speak').innerHTML = `🔊 Spreek Uit (${t.currencySymbol} ${COST_SPEAK})`;
       document.getElementById('btn-spell').innerHTML = `🐢 Spel (${t.currencySymbol} ${COST_SPELL})`;
 
-      const topUpgradeLabel = document.getElementById('btn-top-upgrades-label');
-      if (topUpgradeLabel) {
-        topUpgradeLabel.textContent = state.gameTheme === 'kawaii' ? '🎀 Boetiek' : (state.gameTheme === 'space' ? '🛸 Hangar' : '🔧 Upgrades');
-      }
-
       root.classList.remove('lab-theme', 'space-theme', 'kawaii-theme');
       consolePanel.classList.remove('cyber-border-cyan', 'lab-border', 'space-border', 'kawaii-border');
       modalPanel.classList.remove('cyber-border-cyan', 'lab-border', 'space-border', 'kawaii-border');
 
       if (state.gameTheme === 'lab') { 
-        root.classList.add('lab-theme'); 
-        consolePanel.classList.add('lab-border');
-        modalPanel.classList.add('lab-border');
-        if (stageGlow) stageGlow.style.background = 'radial-gradient(circle at 50% 50%, #10b981 0%, transparent 70%)';
+        root.classList.add('lab-theme'); consolePanel.classList.add('lab-border'); modalPanel.classList.add('lab-border');
       } else if (state.gameTheme === 'space') {
-        root.classList.add('space-theme');
-        consolePanel.classList.add('space-border');
-        modalPanel.classList.add('space-border');
-        if (stageGlow) stageGlow.style.background = 'radial-gradient(circle at 50% 50%, #6366f1 0%, transparent 70%)';
+        root.classList.add('space-theme'); consolePanel.classList.add('space-border'); modalPanel.classList.add('space-border');
       } else if (state.gameTheme === 'kawaii') {
-        root.classList.add('kawaii-theme');
-        consolePanel.classList.add('kawaii-border');
-        modalPanel.classList.add('kawaii-border');
-        if (stageGlow) stageGlow.style.background = 'radial-gradient(circle at 50% 50%, #f472b6 0%, transparent 70%)';
+        root.classList.add('kawaii-theme'); consolePanel.classList.add('kawaii-border'); modalPanel.classList.add('kawaii-border');
       } else { 
-        consolePanel.classList.add('cyber-border-cyan');
-        modalPanel.classList.add('cyber-border-cyan');
-        if (stageGlow) stageGlow.style.background = 'radial-gradient(circle at 50% 50%, #06b6d4 0%, transparent 70%)';
+        consolePanel.classList.add('cyber-border-cyan'); modalPanel.classList.add('cyber-border-cyan');
       }
-      
       renderGarage();
       renderBadgesUI();
       updateHUD();
     }
 
-    // ==========================================
-    // ONLINE (FIREBASE) & LOKALE HIGHSCORES ENGINE
-    // ==========================================
     function getEffectiveFirebaseUrl() {
       const url = (state.firebaseUrl || FIREBASE_DB_URL || '').trim().replace(/\/+$/, '');
       if (!url || !url.startsWith('http')) return '';
@@ -1984,9 +1662,7 @@
     }
 
     function makeSafeFirebaseKey(listName, playerName) {
-      const cleanList = (listName || 'Algemeen').toLowerCase().replace(/[^a-z0-9]/g, '_');
-      const cleanName = (playerName || 'speler').toLowerCase().replace(/[^a-z0-9]/g, '_');
-      return `${cleanList}__${cleanName}`;
+      return `${(listName || 'Algemeen').toLowerCase().replace(/[^a-z0-9]/g, '_')}__${(playerName || 'speler').toLowerCase().replace(/[^a-z0-9]/g, '_')}`;
     }
 
     function updateFirebaseAdminStatus() {
@@ -1995,7 +1671,6 @@
       const url = getEffectiveFirebaseUrl();
       if (inputEl) inputEl.value = url;
       if (!badgeEl) return;
-
       if (url) {
         badgeEl.textContent = '🟢 Gekoppeld';
         badgeEl.className = 'text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-bold';
@@ -2009,9 +1684,7 @@
       const inputEl = document.getElementById('admin-firebase-url-input');
       if (!inputEl) return;
       state.firebaseUrl = inputEl.value.trim().replace(/\/+$/, '');
-      try {
-        localStorage.setItem('codebot_firebase_url', state.firebaseUrl);
-      } catch (e) {}
+      try { localStorage.setItem('codebot_firebase_url', state.firebaseUrl); } catch (e) {}
       updateFirebaseAdminStatus();
       renderHighscores(true);
     }
@@ -2021,12 +1694,8 @@
       const btnCur = document.getElementById('hs-filter-current');
       const btnAll = document.getElementById('hs-filter-all');
       if (btnCur && btnAll) {
-        btnCur.className = filterMode === 'current'
-          ? 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-slate-950 transition'
-          : 'px-2 py-0.5 rounded text-[10px] font-bold text-slate-400 hover:text-white transition';
-        btnAll.className = filterMode === 'all'
-          ? 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-slate-950 transition'
-          : 'px-2 py-0.5 rounded text-[10px] font-bold text-slate-400 hover:text-white transition';
+        btnCur.className = filterMode === 'current' ? 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-slate-950 transition' : 'px-2 py-0.5 rounded text-[10px] font-bold text-slate-400 hover:text-white transition';
+        btnAll.className = filterMode === 'all' ? 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-slate-950 transition' : 'px-2 py-0.5 rounded text-[10px] font-bold text-slate-400 hover:text-white transition';
       }
       renderHighscores();
     }
@@ -2036,9 +1705,7 @@
       entries.forEach(entry => {
         if (!entry || typeof entry.score !== 'number') return;
         const key = `${(entry.list || 'Algemeen').toLowerCase()}__${(entry.name || 'Held').toLowerCase()}`;
-        if (!bestMap[key] || entry.score > bestMap[key].score) {
-          bestMap[key] = entry;
-        }
+        if (!bestMap[key] || entry.score > bestMap[key].score) bestMap[key] = entry;
       });
       return Object.values(bestMap);
     }
@@ -2048,31 +1715,23 @@
       const modeBadge = document.getElementById('hs-mode-badge');
       if (!list) return;
 
-      if (forceRefresh) {
-        list.innerHTML = '<div class="text-xs text-cyan-300 text-center py-3 animate-pulse">⏳ Online klassement ophalen...</div>';
-      }
+      if (forceRefresh) list.innerHTML = '<div class="text-xs text-cyan-300 text-center py-3 animate-pulse">⏳ Online klassement ophalen...</div>';
 
       let highscores = [];
       let isOnlineActive = false;
       const fbUrl = getEffectiveFirebaseUrl();
 
-      // 1. Probeer Online Firebase Klassement op te halen
       if (fbUrl) {
         try {
           const res = await fetch(`${fbUrl}/highscores.json?t=${Date.now()}`, { cache: 'no-store' });
           if (res.ok) {
             const data = await res.json();
             isOnlineActive = true;
-            if (data && typeof data === 'object') {
-              highscores = Object.values(data);
-            }
+            if (data && typeof data === 'object') highscores = Object.values(data);
           }
-        } catch (err) {
-          console.warn('Online klassement niet bereikbaar, val terug op lokaal:', err);
-        }
+        } catch (err) {}
       }
 
-      // 2. Fallback naar lokale scores op de tablet
       if (!isOnlineActive) {
         try {
           const hs = localStorage.getItem('codebot_highscores');
@@ -2081,56 +1740,32 @@
       }
 
       if (modeBadge) {
-        if (isOnlineActive) {
-          modeBadge.textContent = '🟢 Online Klas';
-          modeBadge.className = 'px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/40';
-        } else {
-          modeBadge.textContent = '📱 Lokaal';
-          modeBadge.className = 'px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-800 text-slate-400 border border-slate-700';
-        }
+        modeBadge.textContent = isOnlineActive ? '🟢 Online Klas' : '📱 Lokaal';
+        modeBadge.className = isOnlineActive ? 'px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/40' : 'px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-800 text-slate-400 border border-slate-700';
       }
 
-      // Filter op actieve woordenlijst indien geselecteerd
-      if (state.highscoreFilter === 'current') {
-        highscores = highscores.filter(e => !e.list || e.list === state.activeListName);
-      }
+      if (state.highscoreFilter === 'current') highscores = highscores.filter(e => !e.list || e.list === state.activeListName);
 
-      // Houd per speler + lijst alleen het Persoonlijk Record (PR) over en sorteer op hoogste score
       highscores = deduplicateBestPerPlayer(highscores);
       highscores.sort((a, b) => b.score - a.score);
       highscores = highscores.slice(0, 10);
 
       if (highscores.length === 0) {
-        const filterMsg = state.highscoreFilter === 'current'
-          ? `Nog geen scores voor '${state.activeListName}'. Zet jij de eerste neer?`
-          : 'Speel een ronde om de eerste highscore te zetten!';
-        list.innerHTML = `<div class="text-xs text-slate-500 text-center py-3 border border-dashed border-slate-700 rounded-lg">${filterMsg}</div>`;
+        list.innerHTML = `<div class="text-xs text-slate-500 text-center py-3 border border-dashed border-slate-700 rounded-lg">Nog geen scores. Speel een ronde!</div>`;
         return;
       }
 
       const themeIcons = { arena: '🤖', lab: '🧪', space: '🚀', kawaii: '🦄' };
-      const themeNames = { arena: 'CodeBot Arena', lab: 'Bio-Chem Lab', space: 'Star-Blaster Galaxy', kawaii: 'Kawaii Wereld' };
-      const themeColors = { arena: 'text-cyan-300', lab: 'text-emerald-300', space: 'text-indigo-300', kawaii: 'text-pink-300' };
-
       list.innerHTML = highscores.map((entry, i) => {
         const tKey = entry.theme || 'arena';
-        const tIcon = themeIcons[tKey] || '🤖';
-        const tLabel = themeNames[tKey] || 'CodeBot Arena';
-        const tColor = themeColors[tKey] || 'text-cyan-300';
-        const listTag = state.highscoreFilter === 'all' && entry.list
-          ? `<span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 hidden sm:inline">${entry.list}</span>`
-          : '';
-
         return `
           <div class="flex items-center justify-between bg-slate-900/80 px-2.5 py-1.5 rounded-lg border border-slate-800">
             <div class="flex items-center gap-2 min-w-0">
               <span class="font-cyber font-bold ${i===0 ? 'text-amber-400 text-sm' : 'text-slate-500 text-xs'}">#${i+1}</span>
-              <span class="text-base leading-none select-none" title="${tLabel}">${tIcon}</span>
-              <span class="font-bold text-xs md:text-sm ${tColor} truncate">${entry.name}</span>
-              ${listTag}
+              <span class="text-base select-none">${themeIcons[tKey] || '🤖'}</span>
+              <span class="font-bold text-xs md:text-sm text-white truncate">${entry.name}</span>
             </div>
             <div class="flex items-center gap-2.5 shrink-0">
-              <span class="text-[10px] text-slate-500 hidden sm:block">${entry.date || ''}</span>
               <span class="font-cyber font-bold text-emerald-400 text-xs md:text-sm">${entry.score} pnt</span>
             </div>
           </div>
@@ -2141,104 +1776,51 @@
     async function saveHighscore(inputId = 'player-name-input', btnId = '') {
       const inputEl = document.getElementById(inputId);
       const btnEl = btnId ? document.getElementById(btnId) : null;
-      const nameInput = inputEl ? inputEl.value.trim() : "";
-      const name = nameInput || "Onbekende Held";
+      const name = (inputEl ? inputEl.value.trim() : "") || "Onbekende Held";
       const score = calculateCombinedScore();
 
-      if (btnEl) {
-        btnEl.disabled = true;
-        btnEl.textContent = "⏳ Opslaan...";
-      }
+      if (btnEl) { btnEl.disabled = true; btnEl.textContent = "⏳ Opslaan..."; }
 
-      const newEntry = {
-        name,
-        score,
-        theme: state.gameTheme,
-        list: state.activeListName,
-        date: new Date().toLocaleDateString()
-      };
+      const newEntry = { name, score, theme: state.gameTheme, list: state.activeListName, date: new Date().toLocaleDateString() };
 
-      // 1. Altijd lokaal opslaan als backup (alleen PR per speler + lijst bewaren)
       let localScores = [];
-      try {
-        const hs = localStorage.getItem('codebot_highscores');
-        if (hs) localScores = JSON.parse(hs);
-      } catch (e) {}
-
+      try { const hs = localStorage.getItem('codebot_highscores'); if (hs) localScores = JSON.parse(hs); } catch (e) {}
       localScores.push(newEntry);
       localScores = deduplicateBestPerPlayer(localScores);
       localScores.sort((a, b) => b.score - a.score);
-      localScores = localScores.slice(0, 30);
+      try { localStorage.setItem('codebot_highscores', JSON.stringify(localScores.slice(0, 30))); } catch (e) {}
 
-      try {
-        localStorage.setItem('codebot_highscores', JSON.stringify(localScores));
-      } catch (e) {}
-
-      // 2. Indien Firebase gekoppeld is: check of dit een nieuw Persoonlijk Record is voor deze lijst en sla online op!
       const fbUrl = getEffectiveFirebaseUrl();
       if (fbUrl) {
         const recordKey = makeSafeFirebaseKey(state.activeListName, name);
         try {
           const checkRes = await fetch(`${fbUrl}/highscores/${recordKey}.json?t=${Date.now()}`, { cache: 'no-store' });
           let existingScore = -1;
-          if (checkRes.ok) {
-            const existingData = await checkRes.json();
-            if (existingData && typeof existingData.score === 'number') {
-              existingScore = existingData.score;
-            }
-          }
-
+          if (checkRes.ok) { const d = await checkRes.json(); if (d && typeof d.score === 'number') existingScore = d.score; }
           if (score > existingScore) {
-            await fetch(`${fbUrl}/highscores/${recordKey}.json`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(newEntry)
-            });
+            await fetch(`${fbUrl}/highscores/${recordKey}.json`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newEntry) });
           }
-        } catch (err) {
-          console.warn('Kon score niet naar Firebase sturen (wel lokaal bewaard):', err);
-        }
+        } catch (err) {}
       }
 
-      if (btnEl) {
-        btnEl.disabled = false;
-        btnEl.textContent = "Opslaan";
-      }
+      if (btnEl) { btnEl.disabled = false; btnEl.textContent = "Opslaan"; }
       if (inputEl) inputEl.value = "";
       returnToHub();
     }
 
-    // ==========================================
-    // WOORDEN.JSON FETCHER MET LAATST GEKOZEN LIJST BEHOUD
-    // ==========================================
-    function updateJsonMonitorUI(statusType, activeSourceUrl, extraNote = '') {
+    function updateJsonMonitorUI(statusType, activeSourceUrl) {
       const badge = document.getElementById('json-source-badge');
       const confEl = document.getElementById('json-configured-url');
       const actEl = document.getElementById('json-active-url');
-      const timeEl = document.getElementById('json-last-sync');
-
       if (confEl) confEl.textContent = GITHUB_PAGES_JSON_URL;
       if (actEl) actEl.textContent = activeSourceUrl;
-      if (timeEl) timeEl.textContent = `Check: ${new Date().toLocaleTimeString()}`;
-
       if (!badge) return;
-      if (statusType === 'online') {
-        badge.textContent = '🟢 Online (GitHub Pages)';
-        badge.className = 'px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[11px] font-bold';
-      } else if (statusType === 'local') {
-        badge.textContent = '🔵 Lokale App Bundel (woorden.json)';
-        badge.className = 'px-2 py-0.5 rounded bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-[11px] font-bold';
-      } else {
-        badge.textContent = `🟠 Geheugen Fallback ${extraNote}`;
-        badge.className = 'px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400/50 text-amber-300 text-[11px] font-bold';
-      }
+      if (statusType === 'online') badge.textContent = '🟢 Online (GitHub Pages)';
+      else if (statusType === 'local') badge.textContent = '🔵 Lokale App Bundel';
+      else badge.textContent = '🟠 Geheugen Fallback';
     }
 
     async function fetchWordsJson() {
-      const badge = document.getElementById('json-source-badge');
-      if (badge) badge.textContent = '⏳ Verbinden...';
-
-      // Haal eerst de laatst gekozen woordenlijst en eventuele eigen lijsten op uit het geheugen
       let savedActive = null;
       let localLists = {};
       try {
@@ -2247,56 +1829,34 @@
         if (savedAll) localLists = JSON.parse(savedAll);
       } catch (e) {}
 
-      const urlsToTry = [
-        `${GITHUB_PAGES_JSON_URL}?t=${Date.now()}`,
-        `woorden.json?t=${Date.now()}`
-      ];
-
+      const urlsToTry = [`${GITHUB_PAGES_JSON_URL}?t=${Date.now()}`, `woorden.json?t=${Date.now()}`];
       for (const url of urlsToTry) {
         const cleanUrl = url.split('?')[0];
         if (cleanUrl.includes('JOUW_GITHUB_NAAM')) continue;
-
         try {
           const response = await fetch(url, { cache: 'no-store' });
           if (response.ok) {
             const jsonData = await response.json();
             if (jsonData && typeof jsonData === 'object' && Object.keys(jsonData).length > 0) {
-              // Voeg handmatig aangemaakte lokale lijsten samen met de online woorden.json
               state.lists = { ...localLists, ...jsonData };
-
-              // Herstel de laatst gekozen lijst als die bestaat, anders pak de eerste lijst
-              if (savedActive && state.lists[savedActive]) {
-                state.activeListName = savedActive;
-              } else if (!state.lists[state.activeListName]) {
-                state.activeListName = Object.keys(state.lists)[0];
-              }
-
+              if (savedActive && state.lists[savedActive]) state.activeListName = savedActive;
+              else if (!state.lists[state.activeListName]) state.activeListName = Object.keys(state.lists)[0];
               saveAllListsToStorage();
               renderListSelector();
               processQueues();
               renderHighscores();
-
-              const isOnline = cleanUrl.startsWith('http');
-              updateJsonMonitorUI(isOnline ? 'online' : 'local', cleanUrl);
-              updateDiag(null, undefined, `woorden.json geladen (${isOnline ? 'Online' : 'Lokaal'})!`);
+              updateJsonMonitorUI(cleanUrl.startsWith('http') ? 'online' : 'local', cleanUrl);
               return;
             }
           }
-        } catch (e) {
-          console.warn(`Kon niet laden van ${cleanUrl}, probeer volgende bron...`);
-        }
+        } catch (e) {}
       }
 
       try {
         if (Object.keys(localLists).length > 0) state.lists = localLists;
-        if (savedActive && state.lists[savedActive]) {
-          state.activeListName = savedActive;
-        } else if (!state.lists[state.activeListName]) {
-          state.activeListName = Object.keys(state.lists)[0];
-        }
-      } catch(e){}
-
-      updateJsonMonitorUI('fallback', 'LocalStorage / Standaard Lijst');
+        if (savedActive && state.lists[savedActive]) state.activeListName = savedActive;
+      } catch (e) {}
+      updateJsonMonitorUI('fallback', 'LocalStorage');
       renderListSelector();
       processQueues();
       renderHighscores();
@@ -2313,14 +1873,10 @@
         const savedStrict = localStorage.getItem('codebot_strict');
         if (savedStrict) state.strictPunctuation = savedStrict === 'true';
         
-        // Laad behaalde badges en migreer eventuele oude ID's (zonder thema-prefix) eenmalig naar 'arena_'
         const savedBadges = localStorage.getItem('codebot_all_badges');
         if (savedBadges) {
-          const parsedBadges = JSON.parse(savedBadges);
-          state.allTimeBadges = [...new Set(parsedBadges.map(id => {
-            if (/^(arena|lab|space|kawaii)_/.test(id)) return id;
-            return `arena_${id}`;
-          }))];
+          const parsed = JSON.parse(savedBadges);
+          state.allTimeBadges = [...new Set(parsed.map(id => /^(arena|lab|space|kawaii)_/.test(id) ? id : `arena_${id}`))];
           localStorage.setItem('codebot_all_badges', JSON.stringify(state.allTimeBadges));
         }
 
@@ -2330,7 +1886,6 @@
 
       updateFirebaseAdminStatus();
       renderBadgesUI();
-
       fetchWordsJson().then(() => {
         document.getElementById('tts-engine-select').value = state.ttsEngine;
         document.getElementById('admin-game-mode').value = state.gameMode;
@@ -2344,39 +1899,31 @@
       select.innerHTML = '';
       Object.keys(state.lists).forEach(name => {
         const opt = document.createElement('option');
-        opt.value = name;
-        opt.textContent = name;
+        opt.value = name; opt.textContent = name;
         if (name === state.activeListName) opt.selected = true;
         select.appendChild(opt);
       });
-
-      const currentItems = state.lists[state.activeListName] || [];
-      document.getElementById('admin-words-input').value = currentItems.join('\n');
-
+      document.getElementById('admin-words-input').value = (state.lists[state.activeListName] || []).join('\n');
       const hubLabel = document.getElementById('hub-active-list-label');
-      if (hubLabel) hubLabel.textContent = `${state.activeListName} (${currentItems.length} items)`;
+      if (hubLabel) hubLabel.textContent = `${state.activeListName} (${(state.lists[state.activeListName] || []).length} items)`;
     }
 
     function loadSelectedList() {
-      const select = document.getElementById('saved-lists-select');
-      state.activeListName = select.value;
+      state.activeListName = document.getElementById('saved-lists-select').value;
       resetSessionProgress();
-      try { localStorage.setItem('codebot_active_list_name', state.activeListName); } catch(e){}
-      const currentItems = state.lists[state.activeListName] || [];
-      document.getElementById('admin-words-input').value = currentItems.join('\n');
-      const hubLabel = document.getElementById('hub-active-list-label');
-      if (hubLabel) hubLabel.textContent = `${state.activeListName} (${currentItems.length} items)`;
+      try { localStorage.setItem('codebot_active_list_name', state.activeListName); } catch (e) {}
+      renderListSelector();
       applyThemeUI();
       renderHighscores();
     }
 
     function createNewListPrompt() {
-      const name = prompt("Geef een naam op voor deze nieuwe woordenlijst:");
+      const name = prompt("Nieuwe woordenlijst naam:");
       if (!name || !name.trim()) return;
-      const cleanName = name.trim();
-      if (state.lists[cleanName]) { alert("Bestaat al!"); return; }
-      state.lists[cleanName] = ["voorbeeld", "lijst", "zin van drie woorden"];
-      state.activeListName = cleanName;
+      const clean = name.trim();
+      if (state.lists[clean]) { alert("Bestaat al!"); return; }
+      state.lists[clean] = ["voorbeeld", "lijst"];
+      state.activeListName = clean;
       saveAllListsToStorage();
       renderListSelector();
       loadSelectedList();
@@ -2396,7 +1943,7 @@
     }
 
     function deleteCurrentList() {
-      if (Object.keys(state.lists).length <= 1) { alert("Je moet minstens één lijst behouden!"); return; }
+      if (Object.keys(state.lists).length <= 1) { alert("Minstens één lijst behouden!"); return; }
       if (!confirm(`Verwijder '${state.activeListName}'?`)) return;
       delete state.lists[state.activeListName];
       state.activeListName = Object.keys(state.lists)[0];
@@ -2406,8 +1953,7 @@
     }
 
     function saveActiveWordList() {
-      const raw = document.getElementById('admin-words-input').value;
-      const parsed = raw.split(/[\n;]+/).map(w => w.trim()).filter(w => w.length > 0);
+      const parsed = document.getElementById('admin-words-input').value.split(/[\n;]+/).map(w => w.trim()).filter(Boolean);
       if (parsed.length === 0) return;
       state.lists[state.activeListName] = parsed;
       resetSessionProgress();
@@ -2422,7 +1968,7 @@
       try {
         localStorage.setItem('codebot_all_lists', JSON.stringify(state.lists));
         localStorage.setItem('codebot_active_list_name', state.activeListName);
-      } catch(e){}
+      } catch (e) {}
     }
 
     function resetDefaultLists() {
@@ -2436,24 +1982,6 @@
 
     let nlVoices = [];
     let currentUtterance = null;
-    let audioUnlocked = false;
-
-    function unlockAudioOnInteraction() {
-      if (audioUnlocked) return;
-      const ctx = getAudioCtx();
-      if (ctx && ctx.state === 'suspended') ctx.resume();
-      
-      if ('speechSynthesis' in window) {
-        let u = new SpeechSynthesisUtterance('');
-        u.volume = 0;
-        window.speechSynthesis.speak(u);
-      }
-      audioUnlocked = true;
-      document.removeEventListener('touchstart', unlockAudioOnInteraction);
-      document.removeEventListener('click', unlockAudioOnInteraction);
-    }
-    document.addEventListener('touchstart', unlockAudioOnInteraction, { once: true });
-    document.addEventListener('click', unlockAudioOnInteraction, { once: true });
 
     function initSpeechVoices() {
       if (!('speechSynthesis' in window)) return;
@@ -2464,8 +1992,7 @@
           select.innerHTML = '';
           nlVoices.forEach((v, idx) => {
             let opt = document.createElement('option');
-            opt.value = idx;
-            opt.textContent = `${v.name} (${v.lang})`;
+            opt.value = idx; opt.textContent = `${v.name} (${v.lang})`;
             select.appendChild(opt);
           });
         }
@@ -2475,58 +2002,38 @@
       window.speechSynthesis.onvoiceschanged = fetchVoices;
     }
 
-    function updateDiag(statusText, voiceCount, lastAction) {
-      if(statusText && document.getElementById('diag-status')) document.getElementById('diag-status').textContent = statusText;
-      if(document.getElementById('diag-voices') && voiceCount !== undefined) document.getElementById('diag-voices').textContent = voiceCount;
-      if(lastAction && document.getElementById('diag-last-action')) document.getElementById('diag-last-action').textContent = lastAction;
+    function updateDiag(statusText, voiceCount) {
+      if (statusText && document.getElementById('diag-status')) document.getElementById('diag-status').textContent = statusText;
+      if (document.getElementById('diag-voices') && voiceCount !== undefined) document.getElementById('diag-voices').textContent = voiceCount;
     }
 
     function setAudioStatus(msg) {
-      if(document.getElementById('audio-status-indicator')) document.getElementById('audio-status-indicator').textContent = msg;
+      if (document.getElementById('audio-status-indicator')) document.getElementById('audio-status-indicator').textContent = msg;
     }
 
     async function speakText(text, rate = 0.95) {
-      if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.TextToSpeech) {
+      if (window.Capacitor?.Plugins?.TextToSpeech) {
         try {
-          setAudioStatus("🔊 Spreekt uit via Android Native TTS...");
           await window.Capacitor.Plugins.TextToSpeech.stop().catch(() => {});
-          await window.Capacitor.Plugins.TextToSpeech.speak({
-            text: text,
-            lang: 'nl-NL',
-            rate: rate,
-            pitch: 1.0,
-            volume: 1.0,
-            category: 'ambient'
-          });
+          await window.Capacitor.Plugins.TextToSpeech.speak({ text, lang: 'nl-NL', rate, pitch: 1.0, volume: 1.0 });
           return;
-        } catch (err) {
-          console.warn("Native TTS fout, val terug op Web Speech:", err);
-        }
+        } catch (err) {}
       }
 
       return new Promise((resolve) => {
         if (!('speechSynthesis' in window)) return resolve();
-        
-        setAudioStatus("🔊 Spreekt uit via browser...");
         window.speechSynthesis.cancel();
-        
         setTimeout(() => {
           currentUtterance = new SpeechSynthesisUtterance(text);
           currentUtterance.lang = 'nl-NL';
           currentUtterance.rate = rate;
-          
           const select = document.getElementById('tts-voice-select');
-          if (select && select.value !== "" && nlVoices[select.value]) {
-            currentUtterance.voice = nlVoices[select.value];
-          } else if (nlVoices.length > 0) {
-            currentUtterance.voice = nlVoices[0];
-          }
-
+          if (select && select.value !== "" && nlVoices[select.value]) currentUtterance.voice = nlVoices[select.value];
+          else if (nlVoices.length > 0) currentUtterance.voice = nlVoices[0];
           currentUtterance.onend = () => resolve();
-          currentUtterance.onerror = () => resolve(); 
-          
+          currentUtterance.onerror = () => resolve();
           window.speechSynthesis.speak(currentUtterance);
-          setTimeout(resolve, 3000); 
+          setTimeout(resolve, 3000);
         }, 50);
       });
     }
@@ -2536,21 +2043,11 @@
         state.bits -= cost;
         state.hintsUsedCount++;
         updateHUD();
-        
-        const btn = document.getElementById(btnId);
-        const t = THEMES[state.gameTheme];
-        if (btn) {
-          spawnFloatingText(`-${cost} ${t.currencySymbol}`, btn, "text-rose-400", -25);
-        }
+        spawnFloatingText(`-${cost} ${THEMES[state.gameTheme].currencySymbol}`, document.getElementById(btnId), "text-rose-400", -25);
         return true;
       } else {
         playErrorSound();
-        setAudioStatus(`Niet genoeg ${THEMES[state.gameTheme].currency} voor deze hint! (Koste: ${cost})`);
-        const btn = document.getElementById(btnId);
-        if (btn) {
-          btn.classList.add('bg-rose-900', 'text-rose-300', 'border-rose-500');
-          setTimeout(() => btn.classList.remove('bg-rose-900', 'text-rose-300', 'border-rose-500'), 500);
-        }
+        setAudioStatus(`Niet genoeg ${THEMES[state.gameTheme].currency}!`);
         return false;
       }
     }
@@ -2563,34 +2060,23 @@
 
     function spellCurrentWord() {
       if (!checkAndDeductHintCost(COST_SPELL, 'btn-spell')) return;
-      const item = getCurrentItem();
-      const spelledText = item.split('').map(char => {
-        return char === ' ' ? 'spatie' : char;
-      }).join(', ');
-      speakText(spelledText, 0.95);
+      speakText(getCurrentItem().split('').map(c => c === ' ' ? 'spatie' : c).join(', '), 0.95);
       document.getElementById('word-input').focus();
     }
 
     function triggerFlashHint() {
       if (!checkAndDeductHintCost(COST_SCAN, 'btn-flash')) return;
-      const item = getCurrentItem();
-      renderWordDisplay(item, true, state.currentPhase === 'bossrush');
+      renderWordDisplay(getCurrentItem(), true, state.currentPhase === 'bossrush');
       document.getElementById('word-input').focus();
     }
 
     function changeTTSEngine() {}
     function testAudioSystem() { speakText("De ingebouwde spraakmodule werkt uitstekend.", 0.95); }
 
-    // ==========================================
-    // 3. AUDIO EFFECTS & SCHATTIGE KAWAII SYNTHESIZER
-    // ==========================================
     let audioCtx = null;
     function getAudioCtx() {
-      if (!audioCtx) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) audioCtx = new AudioContext();
-      }
-      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
       return audioCtx;
     }
 
@@ -2598,109 +2084,31 @@
       const now = ctx.currentTime + startOffset;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-
       osc.type = type;
       osc.frequency.setValueAtTime(freq, now);
-      if (slideToFreq) {
-        osc.frequency.exponentialRampToValueAtTime(slideToFreq, now + duration * 0.85);
-      }
-
+      if (slideToFreq) osc.frequency.exponentialRampToValueAtTime(slideToFreq, now + duration * 0.85);
       gain.gain.setValueAtTime(0.001, now);
       gain.gain.linearRampToValueAtTime(maxGain, now + 0.012);
       gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + duration + 0.02);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(now); osc.stop(now + duration + 0.02);
     }
 
-    function playKawaiiWeaponSound(ctx, weaponType = 'pulse') {
-      if (weaponType === 'pulse') {
-        [1046.50, 1318.51, 1567.98].forEach((f, i) => {
-          playCuteTone(ctx, f, i * 0.055, 0.22, 'sine', 0.16);
-        });
-      } else if (weaponType === 'twin') {
-        playCuteTone(ctx, 520, 0.00, 0.14, 'sine', 0.18, 980);
-        playCuteTone(ctx, 680, 0.11, 0.16, 'sine', 0.18, 1320);
-      } else if (weaponType === 'plasma') {
-        [783.99, 987.77, 1174.66, 1567.98, 1975.53].forEach((f, i) => {
-          playCuteTone(ctx, f, i * 0.045, 0.24, 'triangle', 0.14);
-        });
-      } else if (weaponType === 'shock') {
-        [987.77, 1318.51, 1479.98, 1975.53].forEach((f, i) => {
-          playCuteTone(ctx, f, i * 0.04, 0.18, 'triangle', 0.16);
-        });
-      } else if (weaponType === 'cryo') {
-        [1318.51, 1567.98, 2093.00, 2637.02].forEach((f, i) => {
-          playCuteTone(ctx, f, i * 0.06, 0.38, 'sine', 0.13);
-        });
-      } else if (weaponType === 'vortex') {
-        [587.33, 739.99, 880.00, 1174.66, 1479.98, 1760.00].forEach((f, i) => {
-          playCuteTone(ctx, f, i * 0.045, 0.32, 'sine', 0.14);
-        });
-      } else if (weaponType === 'crush') {
-        [523.25, 659.25, 783.99, 1046.50].forEach((f) => {
-          playCuteTone(ctx, f, 0, 0.30, 'triangle', 0.10);
-        });
-        playCuteTone(ctx, 1567.98, 0.10, 0.28, 'sine', 0.16);
-        playCuteTone(ctx, 2093.00, 0.16, 0.35, 'sine', 0.16);
-      } else if (weaponType === 'nova') {
-        const scale = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50, 1174.66, 1318.51, 1567.98, 2093.00];
-        scale.forEach((f, i) => {
-          playCuteTone(ctx, f, i * 0.04, 0.38, 'sine', 0.14);
-        });
-      }
+    function playKawaiiWeaponSound(ctx) {
+      [1046.50, 1318.51, 1567.98].forEach((f, i) => playCuteTone(ctx, f, i * 0.055, 0.22, 'sine', 0.16));
     }
 
-    function testKawaiiSoundPreview() {
+    function testKawaiiSoundPreview() { playKawaiiWeaponSound(getAudioCtx()); }
+
+    function playWeaponSound() {
       const ctx = getAudioCtx();
-      if (!ctx) return;
-      const types = ['pulse', 'twin', 'plasma', 'cryo', 'vortex', 'nova'];
-      const chosen = types[Math.floor(Math.random() * types.length)];
-      playKawaiiWeaponSound(ctx, chosen);
-    }
-
-    function playWeaponSound(weaponType = 'pulse') {
-      const ctx = getAudioCtx();
-      if (!ctx) return;
-
-      if (state.gameTheme === 'kawaii') {
-        playKawaiiWeaponSound(ctx, weaponType);
-        return;
-      }
-
+      if (state.gameTheme === 'kawaii') { playKawaiiWeaponSound(ctx); return; }
       const now = ctx.currentTime;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-
-      if (weaponType === 'plasma') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(320, now);
-        osc.frequency.exponentialRampToValueAtTime(75, now + 0.35);
-      } else if (weaponType === 'shock') {
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(920, now);
-        osc.frequency.setValueAtTime(420, now + 0.08);
-        osc.frequency.setValueAtTime(1100, now + 0.16);
-      } else if (weaponType === 'cryo') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(1200, now);
-        osc.frequency.linearRampToValueAtTime(600, now + 0.3);
-      } else if (weaponType === 'vortex') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(180, now);
-        osc.frequency.exponentialRampToValueAtTime(840, now + 0.32);
-      } else if (weaponType === 'crush' || weaponType === 'nova') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(640, now);
-        osc.frequency.exponentialRampToValueAtTime(60, now + 0.45);
-      } else {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(state.gameTheme === 'lab' ? 540 : 780, now);
-        osc.frequency.exponentialRampToValueAtTime(140, now + 0.25);
-      }
-
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(780, now);
+      osc.frequency.exponentialRampToValueAtTime(140, now + 0.25);
       gain.gain.setValueAtTime(0.18, now);
       gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
       osc.connect(gain); gain.connect(ctx.destination);
@@ -2708,169 +2116,41 @@
     }
 
     function playBadgeSound() {
-      const ctx = getAudioCtx();
-      if (!ctx) return;
-      [587.33, 783.99, 1174.66, 1567.98].forEach((freq, idx) => {
-        playCuteTone(ctx, freq, idx * 0.075, 0.35, 'triangle', 0.18);
-      });
+      [587.33, 783.99, 1174.66, 1567.98].forEach((f, idx) => playCuteTone(getAudioCtx(), f, idx * 0.075, 0.35, 'triangle', 0.18));
     }
 
     function playHealSound() {
-      const ctx = getAudioCtx();
-      if (!ctx) return;
-      if (state.gameTheme === 'kawaii') {
-        playCuteTone(ctx, 480, 0.00, 0.12, 'sine', 0.16, 860);
-        playCuteTone(ctx, 640, 0.10, 0.14, 'sine', 0.16, 1180);
-        playCuteTone(ctx, 1046.50, 0.22, 0.30, 'triangle', 0.16);
-        playCuteTone(ctx, 1318.51, 0.28, 0.35, 'sine', 0.16);
-        return;
-      }
-      [440, 554.37, 659.25, 880].forEach((freq, idx) => {
-        playCuteTone(ctx, freq, idx * 0.08, 0.28, 'sine', 0.16);
-      });
+      [440, 554.37, 659.25, 880].forEach((f, idx) => playCuteTone(getAudioCtx(), f, idx * 0.08, 0.28, 'sine', 0.16));
     }
 
     function playMegaLaserSound() {
-      const ctx = getAudioCtx();
-      if (!ctx) return;
-
-      if (state.gameTheme === 'kawaii') {
-        const notes = [523.25, 659.25, 783.99, 987.77, 1046.50, 1318.51, 1567.98, 1975.53, 2093.00];
-        notes.forEach((f, idx) => {
-          playCuteTone(ctx, f, idx * 0.05, 0.45, 'sine', 0.15);
-        });
-        return;
-      }
-
-      const now = ctx.currentTime;
-      [440, 554.37, 880].forEach((freq) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, now);
-        osc.frequency.exponentialRampToValueAtTime(80, now + 0.75);
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.005, now + 0.75);
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.start(now); osc.stop(now + 0.75);
-      });
+      [523.25, 659.25, 783.99, 1046.5].forEach((f, idx) => playCuteTone(getAudioCtx(), f, idx * 0.08, 0.4, 'triangle', 0.18));
     }
 
     function playBossAlertSound() {
-      const ctx = getAudioCtx();
-      if (!ctx) return;
-
-      if (state.gameTheme === 'kawaii') {
-        [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
-          playCuteTone(ctx, f, i * 0.09, 0.3, 'triangle', 0.15);
-        });
-        return;
-      }
-
-      const now = ctx.currentTime;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(220, now);
-      osc.frequency.linearRampToValueAtTime(440, now + 0.25);
-      gain.gain.setValueAtTime(0.12, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.55);
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.start(now); osc.stop(now + 0.55);
+      playCuteTone(getAudioCtx(), 220, 0, 0.3, 'sawtooth', 0.15, 440);
     }
 
     function playVictoryFanfare() {
-      const ctx = getAudioCtx();
-      if (!ctx) return;
-      [523.25, 659.25, 783.99, 1046.5, 1318.51, 1567.98].forEach((freq, idx) => {
-        playCuteTone(ctx, freq, idx * 0.12, 0.48, 'triangle', 0.18);
-      });
+      [523.25, 659.25, 783.99, 1046.5].forEach((f, idx) => playCuteTone(getAudioCtx(), f, idx * 0.12, 0.48, 'triangle', 0.18));
     }
 
     function playGameOverSound() {
-      const ctx = getAudioCtx();
-      if (!ctx) return;
-
-      if (state.gameTheme === 'kawaii') {
-        [783.99, 659.25, 587.33, 523.25].forEach((freq, idx) => {
-          playCuteTone(ctx, freq, idx * 0.22, 0.45, 'sine', 0.15);
-        });
-        return;
-      }
-
-      const now = ctx.currentTime;
-      [392.00, 349.23, 329.63, 261.63].forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.22);
-        gain.gain.setValueAtTime(0.18, now + idx * 0.22);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.22 + 0.45);
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.start(now + idx * 0.22);
-        osc.stop(now + idx * 0.22 + 0.45);
-      });
+      [392.00, 349.23, 329.63, 261.63].forEach((f, idx) => playCuteTone(getAudioCtx(), f, idx * 0.22, 0.45, 'sawtooth', 0.15));
     }
 
     function playErrorSound() {
-      const ctx = getAudioCtx();
-      if (!ctx) return;
-
-      if (state.gameTheme === 'kawaii') {
-        playCuteTone(ctx, 523.25, 0.00, 0.14, 'triangle', 0.15, 440);
-        playCuteTone(ctx, 392.00, 0.13, 0.24, 'triangle', 0.15, 330);
-        return;
-      }
-
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(160, ctx.currentTime);
-      gain.gain.setValueAtTime(0.15, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.start(); osc.stop(ctx.currentTime + 0.35);
+      playCuteTone(getAudioCtx(), 160, 0, 0.35, 'square', 0.15);
     }
 
-    // ==========================================
-    // 4. GAMEPLAY, REPAIR KIT & GAME OVER CONDITION
-    // ==========================================
     function buyRepairKit() {
-      const t = THEMES[state.gameTheme];
-      if (state.playerHp >= 100) {
-        setAudioStatus("❤️ Je HP is al helemaal vol (100%)!");
-        return;
-      }
-      if (state.bits < REPAIR_COST) {
-        alert(`Nog niet genoeg ${t.currency} voor een ${t.repairName}! Je hebt ${state.bits}/${REPAIR_COST}.`);
-        return;
-      }
-
+      if (state.playerHp >= 100) return;
+      if (state.bits < REPAIR_COST) { alert("Niet genoeg credits!"); return; }
       state.bits -= REPAIR_COST;
-      const oldHp = state.playerHp;
       state.playerHp = Math.min(100, state.playerHp + REPAIR_AMOUNT);
-      const healed = state.playerHp - oldHp;
-
       playHealSound();
-
-      const playerWrap = document.getElementById('player-bot-wrap');
-      const stagePanel = document.getElementById('battle-stage-panel');
-
-      if (playerWrap) {
-        playerWrap.classList.remove('heal-pulse');
-        void playerWrap.offsetWidth;
-        playerWrap.classList.add('heal-pulse');
-      }
-      if (stagePanel) {
-        stagePanel.classList.remove('heal-flash');
-        void stagePanel.offsetWidth;
-        stagePanel.classList.add('heal-flash');
-      }
-
-      triggerHitExplosion(playerWrap, 'heal', false, false);
-      spawnFloatingText(`+${healed} HP HERSTELD! ${t.repairIcon}`, playerWrap, "text-emerald-300", -10);
-      setAudioStatus(`${t.repairIcon} ${t.repairName} gebruikt (+${healed} HP)!`);
-
+      triggerHitExplosion(document.getElementById('player-bot-wrap'), 'heal', false, false);
+      spawnFloatingText(`+50 HP!`, document.getElementById('player-bot-wrap'), "text-emerald-300", -10);
       updateHUD();
       renderGarage();
     }
@@ -2885,7 +2165,6 @@
           return state.wordsQueue[state.currentIndex].trim();
         }
       }
-      
       if (state.currentIndex >= state.sentencesQueue.length) {
         triggerVictory();
         return state.sentencesQueue[state.sentencesQueue.length - 1] || "Klaar";
@@ -2896,12 +2175,10 @@
     let flashTimeout = null;
     function loadNextWord(speakImmediately = true) {
       if (state.playerHp <= 0) return;
-
       if (state.currentPhase === 'bossrush' && state.currentIndex >= state.sentencesQueue.length) {
         triggerVictory();
         return;
       }
-
       if (state.currentPhase === 'words' && state.currentIndex >= state.wordsQueue.length) {
         state.currentPhase = 'bossrush';
         state.currentIndex = 0;
@@ -2916,12 +2193,7 @@
       document.getElementById('debugger-panel').classList.add('hidden');
       const inputEl = document.getElementById('word-input');
       inputEl.value = '';
-      if (
-        document.getElementById('upgrades-modal').classList.contains('hidden') &&
-        document.getElementById('hub-lobby').classList.contains('hidden')
-      ) {
-        inputEl.focus();
-      }
+      inputEl.focus();
 
       const retryBadge = document.getElementById('retry-warning-badge');
       if (retryBadge) {
@@ -2930,24 +2202,18 @@
       }
 
       if (isBossRush) {
-        const totalSentences = state.sentencesQueue.length;
-        const wordCount = item.trim().split(/\s+/).length;
-        document.getElementById('word-progress-badge').textContent = `Zin ${state.currentIndex + 1} / ${totalSentences}`;
-        document.getElementById('boss-progress-badge').textContent = `Zin ${state.currentIndex + 1} / ${totalSentences}`;
-        document.getElementById('word-length-hint').textContent = `👑 Finale (${wordCount} woorden)`;
+        document.getElementById('word-progress-badge').textContent = `Zin ${state.currentIndex + 1} / ${state.sentencesQueue.length}`;
+        document.getElementById('boss-progress-badge').textContent = `Zin ${state.currentIndex + 1} / ${state.sentencesQueue.length}`;
+        document.getElementById('word-length-hint').textContent = `👑 Finale`;
         activateBossArenaUI(true);
       } else {
-        const totalWords = state.wordsQueue.length;
-        const charCountWithoutSpaces = item.replace(/\s+/g, '').length;
-        document.getElementById('word-progress-badge').textContent = `Opdracht ${state.currentIndex + 1} / ${totalWords}`;
-        document.getElementById('word-length-hint').textContent = `Lengte: ${charCountWithoutSpaces} letters`;
+        document.getElementById('word-progress-badge').textContent = `Opdracht ${state.currentIndex + 1} / ${state.wordsQueue.length}`;
+        document.getElementById('word-length-hint').textContent = `Lengte: ${item.replace(/\s+/g, '').length} letters`;
         activateBossArenaUI(false);
       }
 
       renderWordDisplay(item, state.gameMode === 'flash', isBossRush);
-      
       if (speakImmediately) speakText(item, 0.95);
-      
       updateHUD();
     }
 
@@ -2957,61 +2223,24 @@
       if (state.totalMistakesCount === 0) unlockBadge('flawless');
 
       playVictoryFanfare();
-
-      const hpBonus = state.playerHp * HP_SCORE_MULTIPLIER;
       const totalScore = calculateCombinedScore();
-      const activeBadges = getActiveThemeBadges(state.gameTheme);
 
       document.getElementById('victory-base-score').textContent = state.sessionScore;
       document.getElementById('victory-credits-bonus').textContent = `+${state.bits}`;
-      document.getElementById('victory-hp-label').textContent = `❤️ Overgebleven HP Bonus (${state.playerHp}% × ${HP_SCORE_MULTIPLIER}):`;
-      document.getElementById('victory-hp-bonus').textContent = `+${hpBonus}`;
+      document.getElementById('victory-hp-bonus').textContent = `+${state.playerHp * HP_SCORE_MULTIPLIER}`;
       document.getElementById('victory-total-score').textContent = totalScore;
 
-      const badgesListEl = document.getElementById('victory-badges-list');
-      if (badgesListEl) {
-        if (state.sessionBadges.length === 0) {
-          badgesListEl.innerHTML = `<span class="text-xs text-slate-500 italic">Geen nieuwe badges in deze ronde.</span>`;
-        } else {
-          badgesListEl.innerHTML = state.sessionBadges.map(id => {
-            const b = activeBadges.find(x => x.id === id);
-            return b ? `<span class="px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-400 text-amber-300 font-cyber font-bold text-xs flex items-center gap-1">${b.icon} ${b.title} (+${b.bonus})</span>` : '';
-          }).join('');
-        }
-      }
-
-      const victoryTitles = {
-        arena: "EINDBAAS VERSLAGEN!",
-        lab: "LAB EXPERIMENT GESLAAGD!",
-        space: "MELKWEG BEVRIJD!",
-        kawaii: "REGENBOOG FEESTJE!"
-      };
-      document.getElementById('victory-title').textContent = victoryTitles[state.gameTheme] || "MISSIE VOLTOOID!";
-      document.getElementById('victory-desc').textContent = "Fantastisch gedaan! Alle woorden en zinnen zijn voltooid!";
       document.getElementById('upgrades-modal').classList.add('hidden');
       document.getElementById('victory-modal').classList.remove('hidden');
-      updateHUD();
     }
 
     function triggerGameOver() {
       playGameOverSound();
-      const totalScore = calculateCombinedScore();
-
       document.getElementById('gameover-base-score').textContent = state.sessionScore;
       document.getElementById('gameover-credits-bonus').textContent = `+${state.bits}`;
-      document.getElementById('gameover-total-score').textContent = totalScore;
-
-      const overTitles = {
-        arena: "ROBOT UITGESCHAKELD!",
-        lab: "LAB BESMETTING: AF!",
-        space: "RUIMTESCHIP NEERGESTORT!",
-        kawaii: "OOPS! HARTJES OP!"
-      };
-      document.getElementById('gameover-title').textContent = overTitles[state.gameTheme] || "GAME OVER!";
-      document.getElementById('gameover-desc').textContent = "Je HP is opgeraakt (0 HP-bonus), maar je behaalde ronde-punten en bespaarde credits tellen wel mee!";
+      document.getElementById('gameover-total-score').textContent = calculateCombinedScore();
       document.getElementById('upgrades-modal').classList.add('hidden');
       document.getElementById('gameover-modal').classList.remove('hidden');
-      updateHUD();
     }
 
     function restartGameSession() {
@@ -3038,95 +2267,40 @@
         stagePanel.classList.add('cyber-border-boss');
         consolePanel.classList.add('cyber-border-boss');
         bossCrown.classList.remove('hidden');
-
         enemyName.textContent = t.bossName;
-        enemyName.className = "font-cyber text-xs md:text-sm font-black text-amber-400";
         enemyAvatar.textContent = t.bossAvatar;
-        enemyAvatar.className = "text-7xl md:text-8xl animate-boss select-none";
-
         compileBtn.innerHTML = t.megaBtn;
-        compileBtn.className = "px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 hover:from-amber-300 hover:to-rose-400 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-amber-500/30 active:scale-95 transition whitespace-nowrap";
       } else {
         banner.classList.add('hidden');
         stagePanel.classList.remove('cyber-border-boss');
         consolePanel.classList.remove('cyber-border-boss');
         bossCrown.classList.add('hidden');
-
-        const currentEnemy = t.enemies[(state.level - 1) % t.enemies.length];
-        enemyName.textContent = `${currentEnemy.name} #${state.level}`;
-        enemyName.className = "font-cyber text-xs md:text-sm font-bold text-rose-400";
-        enemyAvatar.textContent = currentEnemy.icon;
-        enemyAvatar.className = "text-6xl md:text-7xl animate-float filter drop-shadow-[0_0_16px_rgba(244,63,94,0.7)] select-none";
-
+        enemyName.textContent = `${t.enemies[0].name} #${state.level}`;
+        enemyAvatar.textContent = t.enemies[0].icon;
         compileBtn.innerHTML = t.compileBtn;
-        if (state.gameTheme === 'kawaii') {
-          compileBtn.className = "px-6 py-3.5 rounded-xl bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-300 hover:to-purple-400 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-pink-500/25 active:scale-95 transition whitespace-nowrap";
-        } else if (state.gameTheme === 'space') {
-          compileBtn.className = "px-6 py-3.5 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-400 hover:from-indigo-400 hover:to-cyan-300 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-indigo-500/25 active:scale-95 transition whitespace-nowrap";
-        } else {
-          compileBtn.className = "px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-cyber font-black text-sm md:text-base tracking-wider shadow-lg shadow-cyan-500/25 active:scale-95 transition whitespace-nowrap";
-        }
       }
     }
 
     function renderWordDisplay(item, showTemporarily, isBossRush) {
       const box = document.getElementById('word-display-box');
-      const t = THEMES[state.gameTheme];
       if (flashTimeout) clearTimeout(flashTimeout);
-
-      const scanDuration = isBossRush ? 3500 : 1600;
-      
-      document.getElementById('btn-flash').innerHTML = isBossRush 
-        ? `👁️ Scan 3.5s (${t.currencySymbol} ${COST_SCAN})` 
-        : `👁️ Scan 1.5s (${t.currencySymbol} ${COST_SCAN})`;
-
       if (showTemporarily) {
         box.textContent = isBossRush ? item : item.toUpperCase();
-        box.className = isBossRush 
-          ? "font-cyber text-base md:text-xl tracking-wider text-amber-300 font-bold animate-pulse"
-          : "font-cyber text-2xl md:text-3xl tracking-[0.25em] text-cyan-300 font-bold";
-        
-        flashTimeout = setTimeout(() => {
-          applyMaskedDisplay(box, item, isBossRush);
-        }, scanDuration);
+        flashTimeout = setTimeout(() => applyMaskedDisplay(box, item, isBossRush), isBossRush ? 3500 : 1600);
       } else {
         applyMaskedDisplay(box, item, isBossRush);
       }
     }
 
     function applyMaskedDisplay(box, item, isBossRush) {
-      const textColor = state.gameTheme === 'kawaii' ? 'text-pink-300' : 'text-cyan-300';
-      box.className = isBossRush
-        ? `font-cyber text-sm md:text-lg tracking-wider ${textColor} font-bold leading-relaxed`
-        : `font-cyber text-xl md:text-2xl tracking-[0.2em] ${textColor} font-bold leading-relaxed`;
-
-      if (state.gameMode === 'vowels') {
-        box.textContent = maskVowels(item);
-      } else {
-        box.textContent = item
-          .trim()
-          .split(/\s+/)
-          .map(word => word.split('').map(() => '•').join('\u00A0'))
-          .join(' _ ');
-      }
-    }
-
-    function maskVowels(text) {
-      return text
-        .trim()
-        .split(/\s+/)
-        .map(word => word.split('').map(ch => /[aeiouyäëïöü]/i.test(ch) ? '•' : ch.toUpperCase()).join('\u00A0'))
-        .join(' _ ');
+      box.textContent = item.trim().split(/\s+/).map(word => word.split('').map(() => '•').join('\u00A0')).join(' _ ');
     }
 
     function handleCompileSubmit(e) {
       e.preventDefault();
       if (state.playerHp <= 0) return;
-
-      const inputEl = document.getElementById('word-input');
-      const typed = inputEl.value.trim();
+      const typed = document.getElementById('word-input').value.trim();
       if (!typed) return;
-
       const target = getCurrentItem();
 
       if (normalizeText(typed) === normalizeText(target)) {
@@ -3139,113 +2313,22 @@
     function handleCorrectCompile(item) {
       const isBossRush = (state.currentPhase === 'bossrush');
       const t = THEMES[state.gameTheme];
-      const currentBotObj = t.bots.find(b => b.id === state.selectedBot) || t.bots[0];
+      const botObj = t.bots.find(b => b.id === state.selectedBot) || t.bots[0];
 
-      const playerWrap = document.getElementById('player-bot-wrap');
-      const enemyWrap = document.getElementById('enemy-bot-wrap');
+      playWeaponSound();
+      state.streak++;
+      unlockBadge('first_hit');
+      if (state.streak >= 5) unlockBadge('streak_5');
 
-      if (playerWrap) {
-        playerWrap.classList.remove('attack-lunge');
-        void playerWrap.offsetWidth;
-        playerWrap.classList.add('attack-lunge');
-      }
-
-      if (isBossRush) {
-        playMegaLaserSound();
-        shootLaserEffect(currentBotObj.weaponType, true);
-      } else {
-        playWeaponSound(currentBotObj.weaponType);
-        shootLaserEffect(currentBotObj.weaponType, false);
-      }
-
-      const elapsedSec = (Date.now() - state.wordStartTime) / 1000;
-      const isRetryItem = Boolean(state.penalizedItems[item]);
+      const credits = isBossRush ? 35 : 12;
+      state.bits += credits;
+      state.sessionScore += credits;
+      state.enemyHp = Math.max(0, state.enemyHp - 35);
       
-      let damage = isBossRush ? 100 : 35;
-      damage = Math.round(damage * currentBotObj.multDmg);
-
-      let creditsEarned = 0;
-      let protocolTriggered = false;
-
-      if (state.isPatchingBug) {
-        state.shieldActive = true;
-        damage = Math.round(damage * 0.5);
-        creditsEarned = 0;
-        setAudioStatus("🛠️ Gecorrigeerd! Noodschild actief (+0 Credits).");
-      } else if (isRetryItem) {
-        state.penalizedItems[item] = false;
-        creditsEarned = 0;
-        state.streak++;
-        setAudioStatus("🔄 Herkansing voltooid! (+0 extra credits)");
-      } else {
-        creditsEarned = isBossRush ? 35 : 12;
-        creditsEarned = Math.round(creditsEarned * currentBotObj.multBits);
-        state.streak++;
-
-        unlockBadge('first_hit');
-        if (state.streak >= 5) unlockBadge('streak_5');
-        if (state.streak >= 10) unlockBadge('streak_10');
-        if (elapsedSec <= 4.2) {
-          state.fastCount++;
-          if (state.fastCount >= 3) unlockBadge('speed_3');
-        }
-
-        const cleanLen = item.replace(/\s+/g, '').length;
-        let conditionMet = false;
-        if (state.ifRule === 'streak2' && state.streak >= 2) conditionMet = true;
-        if (state.ifRule === 'len7' && cleanLen >= 7) conditionMet = true;
-        if (state.ifRule === 'bossrush' && isBossRush) conditionMet = true;
-        if (state.ifRule === 'fast' && elapsedSec <= 6) conditionMet = true;
-
-        const statusBadge = document.getElementById('script-trigger-status');
-        if (conditionMet) {
-          protocolTriggered = true;
-          statusBadge.textContent = "🔥 BONUS GEACTIVEERD!";
-          statusBadge.className = "text-[11px] px-2 py-0.5 rounded bg-emerald-500/30 border border-emerald-400 text-emerald-300 font-bold";
-          if (state.thenRule === 'double_dmg') damage = Math.round(damage * 1.5);
-          if (state.thenRule === 'mine_bits') creditsEarned += 15;
-          if (state.thenRule === 'shield') {
-            state.shieldActive = true;
-            state.playerHp = Math.min(100, state.playerHp + 25);
-          }
-        } else {
-          statusBadge.textContent = "Wacht op conditie...";
-          statusBadge.className = "text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400";
-        }
-      }
-
-      const allHitClasses = ['hit-recoil', 'hit-twin', 'hit-burn', 'hit-shock', 'hit-freeze', 'hit-vortex', 'hit-crush', 'hit-nova'];
-      setTimeout(() => {
-        if (enemyWrap) {
-          enemyWrap.classList.remove(...allHitClasses);
-          void enemyWrap.offsetWidth;
-          enemyWrap.classList.add(currentBotObj.hitClass || 'hit-recoil');
-        }
-        triggerHitExplosion(enemyWrap, currentBotObj.weaponType, isBossRush, false);
-        spawnFloatingText(`-${damage} HP!`, enemyWrap, isBossRush ? "text-amber-300" : "text-rose-400", 0);
-
-        if (creditsEarned > 0) {
-          spawnFloatingText(`+${creditsEarned} ${t.currencySymbol}`, playerWrap, "text-emerald-300", 0);
-        } else {
-          spawnFloatingText(`GEPATCHT (0 ${t.currencySymbol})`, playerWrap, "text-slate-400", 0);
-        }
-
-        if (protocolTriggered) {
-          spawnFloatingText(`✨ BONUS ACTIEF!`, enemyWrap, "text-purple-300", -26);
-        }
-      }, 140);
-
-      state.bits += creditsEarned;
-      state.sessionScore += creditsEarned;
-
-      state.enemyHp = Math.max(0, state.enemyHp - damage);
       if (state.enemyHp === 0) {
         state.level++;
         state.enemyMaxHp = 85 + (state.level * 25);
         state.enemyHp = state.enemyMaxHp;
-        setTimeout(() => {
-          spawnFloatingText(`💥 VERSLAGEN! LEVEL UP!`, enemyWrap, "text-cyan-300", -45);
-        }, 300);
       }
 
       state.currentIndex++;
@@ -3266,346 +2349,61 @@
 
       if (!state.isPatchingBug) {
         state.penalizedItems[target] = true;
-        if (state.currentPhase === 'bossrush') {
-          state.sentencesQueue.push(target);
-        } else {
-          state.wordsQueue.push(target);
-        }
+        if (state.currentPhase === 'bossrush') state.sentencesQueue.push(target);
+        else state.wordsQueue.push(target);
       }
 
       state.isPatchingBug = true;
-
-      const playerWrap = document.getElementById('player-bot-wrap');
-      const enemyWrap = document.getElementById('enemy-bot-wrap');
-      const stagePanel = document.getElementById('battle-stage-panel');
-
-      if (enemyWrap) {
-        enemyWrap.classList.remove('enemy-lunge');
-        void enemyWrap.offsetWidth;
-        enemyWrap.classList.add('enemy-lunge');
-      }
-      if (stagePanel) {
-        stagePanel.classList.remove('damage-flash');
-        void stagePanel.offsetWidth;
-        stagePanel.classList.add('damage-flash');
-      }
-
+      state.playerHp = Math.max(0, state.playerHp - 25);
       state.mistakes[target] = (state.mistakes[target] || 0) + 1;
       renderMistakeLog();
-
-      if (state.shieldActive) {
-        state.shieldActive = false;
-        spawnFloatingText(`🛡️ SCHILD BLOKKEERT SCHADE!`, playerWrap, "text-cyan-300", 0);
-      } else {
-        state.playerHp = Math.max(0, state.playerHp - 25);
-        triggerHitExplosion(playerWrap, 'pulse', false, true);
-        spawnFloatingText(`-25 HP! (-50 Eindscore)`, playerWrap, "text-rose-500", 0);
-      }
-
       updateHUD();
-      renderGarage();
 
       if (state.playerHp <= 0) {
-        setTimeout(() => {
-          triggerHitExplosion(playerWrap, 'nova', true, true);
-          triggerGameOver();
-        }, 550);
+        setTimeout(triggerGameOver, 550);
         return;
       }
 
       const debugPanel = document.getElementById('debugger-panel');
-      const userContainer = document.getElementById('debug-user-chars');
-      const targetContainer = document.getElementById('debug-target-chars');
-      userContainer.innerHTML = '';
-      targetContainer.innerHTML = '';
-
-      const isBossRush = (state.currentPhase === 'bossrush');
-
-      if (isBossRush) {
-        document.getElementById('debugger-title').textContent = `🐞 ZIN-FOUTJE (-25 HP!) — NOG ${state.playerHp} HP OVER`;
-        const targetWords = target.trim().split(/\s+/);
-        const userWords = typed.trim().split(/\s+/);
-
-        userWords.forEach((uw, i) => {
-          const span = document.createElement('span');
-          span.textContent = uw;
-          const tw = targetWords[i] || '';
-          if (normalizeText(uw) === normalizeText(tw)) {
-            span.className = "px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500 text-emerald-300 font-bold text-xs md:text-sm";
-          } else {
-            span.className = "px-2.5 py-1 rounded-lg bg-rose-500/30 border border-rose-500 text-rose-300 font-bold text-xs md:text-sm underline decoration-wavy";
-          }
-          userContainer.appendChild(span);
-        });
-
-        targetWords.forEach((tw, i) => {
-          const span = document.createElement('span');
-          span.textContent = tw;
-          const uw = userWords[i] || '';
-          const isMatch = normalizeText(uw) === normalizeText(tw);
-          span.className = isMatch
-            ? "px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 font-bold text-xs md:text-sm"
-            : "px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-400 text-amber-300 font-bold text-xs md:text-sm";
-          targetContainer.appendChild(span);
-        });
-      } else {
-        document.getElementById('debugger-title').textContent = `🐞 FOUTJE GEDETECTEERD (-25 HP!) — NOG ${state.playerHp} HP OVER`;
-        const tChars = target.toLowerCase().split('');
-        const uChars = typed.toLowerCase().split('');
-
-        uChars.forEach((ch, i) => {
-          const span = document.createElement('span');
-          span.textContent = ch === ' ' ? '_' : ch.toUpperCase();
-          if (tChars[i] === ch) {
-            span.className = "w-7 h-8 flex items-center justify-center rounded bg-emerald-500/20 border border-emerald-500 text-emerald-300 font-bold text-sm";
-          } else if (tChars.includes(ch)) {
-            span.className = "w-7 h-8 flex items-center justify-center rounded bg-amber-500/20 border border-amber-500 text-amber-300 font-bold text-sm";
-          } else {
-            span.className = "w-7 h-8 flex items-center justify-center rounded bg-rose-500/30 border border-rose-500 text-rose-300 font-bold text-sm";
-          }
-          userContainer.appendChild(span);
-        });
-
-        tChars.forEach((ch) => {
-          const span = document.createElement('span');
-          span.textContent = ch === ' ' ? '_' : ch.toUpperCase();
-          span.className = "w-7 h-8 flex items-center justify-center rounded bg-cyan-500/20 border border-cyan-500 text-cyan-300 font-bold text-sm";
-          targetContainer.appendChild(span);
-        });
-      }
-
       debugPanel.classList.remove('hidden');
-      
-      // Maak het invoerveld leeg zodat de speler opnieuw moet beginnen met typen
+
+      // Maak het invoerveld direct leeg zodat de speler opnieuw moet typen
       const inputEl = document.getElementById('word-input');
       inputEl.value = '';
-      
+
       speakText(target, 0.8);
       inputEl.focus();
-      
-      speakText(target, 0.8);
-      document.getElementById('word-input').focus();
-    }
-
-    function shootLaserEffect(weaponType = 'pulse', isMega = false) {
-      const container = document.getElementById('laser-container');
-      const mainContainer = document.getElementById('main-container');
-
-      if (isMega || weaponType === 'nova') {
-        container.innerHTML = '<div class="mega-laser-beam"></div>';
-        mainContainer.classList.add('shake-effect');
-        setTimeout(() => {
-          container.innerHTML = '';
-          mainContainer.classList.remove('shake-effect');
-        }, 900);
-        return;
-      }
-
-      if (weaponType === 'twin') {
-        container.innerHTML = '<div class="twin-beam"></div>';
-      } else if (weaponType === 'plasma') {
-        container.innerHTML = '<div class="plasma-beam"></div>';
-      } else if (weaponType === 'shock') {
-        container.innerHTML = '<div class="shock-beam"></div>';
-      } else if (weaponType === 'cryo') {
-        container.innerHTML = '<div class="cryo-beam"></div>';
-      } else if (weaponType === 'vortex') {
-        container.innerHTML = '<div class="vortex-beam"></div>';
-      } else if (weaponType === 'crush') {
-        container.innerHTML = '<div class="crush-beam"></div>';
-        mainContainer.classList.add('shake-effect');
-        setTimeout(() => mainContainer.classList.remove('shake-effect'), 450);
-      } else {
-        let beamColors = 'from-cyan-300 via-purple-400 to-rose-500 shadow-[0_0_20px_#06b6d4]';
-        if (state.gameTheme === 'lab') beamColors = 'from-emerald-400 via-teal-200 to-lime-400 shadow-[0_0_20px_#10b981]';
-        if (state.gameTheme === 'space') beamColors = 'from-indigo-400 via-sky-300 to-violet-500 shadow-[0_0_20px_#6366f1]';
-        if (state.gameTheme === 'kawaii') beamColors = 'from-pink-300 via-amber-200 to-fuchsia-400 shadow-[0_0_20px_#f472b6]';
-        container.innerHTML = `<div class="laser-beam bg-gradient-to-r ${beamColors}"></div>`;
-      }
-
-      setTimeout(() => { container.innerHTML = ''; }, 580);
     }
 
     function updateHUD() {
       const t = THEMES[state.gameTheme];
-      const activeBadges = getActiveThemeBadges(state.gameTheme);
       document.getElementById('hud-bits').textContent = `${t.currencySymbol} ${state.bits}`;
       document.getElementById('hud-session-score').textContent = calculateCombinedScore();
       document.getElementById('hud-streak').textContent = `⚡ ${state.streak}`;
       
       const badgeHud = document.getElementById('hud-badges-count');
-      if (badgeHud) badgeHud.textContent = `🎖️ ${state.sessionBadges.length}/${activeBadges.length}`;
+      if (badgeHud) badgeHud.textContent = `🎖️ ${state.sessionBadges.length}/${getActiveThemeBadges(state.gameTheme).length}`;
       
-      const shopBalance = document.getElementById('shop-balance-badge');
-      if (shopBalance) shopBalance.textContent = `${t.currencySymbol} ${state.bits} beschikbaar`;
-
-      const hpBar = document.getElementById('player-hp-bar');
-      const hpText = document.getElementById('player-hp-text');
-      hpBar.style.width = `${state.playerHp}%`;
-      if (hpText) {
-        hpText.textContent = `(${state.playerHp}/100 HP)`;
-        hpText.className = state.playerHp <= 25 ? "text-xs font-black text-rose-500 animate-pulse" : "text-xs font-bold text-emerald-400";
-      }
-      hpBar.className = state.playerHp <= 25
-        ? "bg-gradient-to-r from-rose-600 to-orange-500 h-full rounded-full transition-all duration-300"
-        : (state.gameTheme === 'kawaii'
-            ? "bg-gradient-to-r from-pink-400 to-purple-400 h-full rounded-full transition-all duration-300"
-            : "bg-gradient-to-r from-emerald-500 to-cyan-400 h-full rounded-full transition-all duration-300");
-
-      const quickRepairBtn = document.getElementById('quick-repair-btn');
-      const shopRepairBtn = document.getElementById('shop-repair-btn');
-      const canAffordRepair = state.bits >= REPAIR_COST;
-      const needsRepair = state.playerHp < 100 && state.playerHp > 0;
-
-      if (quickRepairBtn) {
-        quickRepairBtn.innerHTML = `${t.repairIcon} +50 HP (${t.currencySymbol}${REPAIR_COST})`;
-        if (needsRepair && canAffordRepair) {
-          quickRepairBtn.classList.remove('hidden');
-        } else {
-          quickRepairBtn.classList.add('hidden');
-        }
-      }
-
-      if (shopRepairBtn) {
-        if (!needsRepair) {
-          shopRepairBtn.textContent = `HP is al vol (100%)`;
-          shopRepairBtn.className = "px-4 py-2 rounded-xl bg-slate-800 text-slate-500 font-cyber font-bold text-xs cursor-not-allowed whitespace-nowrap";
-        } else if (canAffordRepair) {
-          shopRepairBtn.textContent = `Koop & Gebruik (${t.currencySymbol} ${REPAIR_COST})`;
-          shopRepairBtn.className = "px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-cyber font-black text-xs animate-pulse transition whitespace-nowrap";
-        } else {
-          shopRepairBtn.textContent = `Koop (${t.currencySymbol} ${REPAIR_COST})`;
-          shopRepairBtn.className = "px-4 py-2 rounded-xl bg-slate-800 text-slate-400 font-cyber font-bold text-xs whitespace-nowrap";
-        }
-      }
-
-      const enemyPct = Math.round((state.enemyHp / state.enemyMaxHp) * 100);
-      document.getElementById('enemy-hp-bar').style.width = `${enemyPct}%`;
-      document.getElementById('enemy-hp-text').textContent = `(${state.enemyHp}/${state.enemyMaxHp})`;
-
-      const shieldBadge = document.getElementById('shield-badge');
-      if (state.shieldActive) shieldBadge.classList.remove('hidden');
-      else shieldBadge.classList.add('hidden');
-
-      const canAffordNew = t.bots.some(b => !state.unlockedBots.includes(b.id) && state.bits >= b.cost) || (needsRepair && canAffordRepair);
-      const dot = document.getElementById('upgrade-affordable-dot');
-      const stageUpgradeBtn = document.getElementById('stage-upgrade-btn');
-
-      if (dot) {
-        if (canAffordNew) dot.classList.remove('hidden');
-        else dot.classList.add('hidden');
-      }
-      if (stageUpgradeBtn) {
-        if (canAffordNew) {
-          stageUpgradeBtn.className = "px-2.5 py-0.5 rounded-md bg-amber-500 hover:bg-amber-400 text-slate-950 font-cyber font-black text-[10px] animate-pulse transition flex items-center gap-1 shadow-lg shadow-amber-500/30";
-          stageUpgradeBtn.innerHTML = `<span>⬆️ Upgrade Beschikbaar!</span>`;
-        } else {
-          stageUpgradeBtn.className = "px-2 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 border border-cyan-500/40 text-cyan-300 font-cyber font-bold text-[10px] transition flex items-center gap-1";
-          const btnTitle = state.gameTheme === 'kawaii' ? '🎀 Boetiek' : (state.gameTheme === 'space' ? '🛸 Hangar' : '🔧 Wapenkamer');
-          stageUpgradeBtn.innerHTML = `<span>${btnTitle}</span>`;
-        }
-      }
-    }
-
-    function updateLogicRule() {
-      state.ifRule = document.getElementById('select-if').value;
-      state.thenRule = document.getElementById('select-then').value;
-      document.getElementById('code-preview-block').innerHTML = `if (antwoord.goed && ${state.ifRule}) {<br>&nbsp;&nbsp;bonus.activeer("${state.thenRule}");<br>}`;
-
-      const ifLabels = {
-        streak2: 'Streak >= 2',
-        len7: 'Lengte >= 7',
-        bossrush: 'Eindbaas Finale',
-        fast: 'Binnen 6 sec'
-      };
-      const thenLabels = {
-        double_dmg: '+50% Kracht',
-        mine_bits: '+15 Credits',
-        shield: 'Schild + 25 HP'
-      };
-      const bannerEl = document.getElementById('active-script-display');
-      if (bannerEl) {
-        bannerEl.textContent = `ALS [${ifLabels[state.ifRule]}] DAN [${thenLabels[state.thenRule]}]`;
-      }
+      document.getElementById('player-hp-bar').style.width = `${state.playerHp}%`;
+      document.getElementById('enemy-hp-bar').style.width = `${Math.round((state.enemyHp / state.enemyMaxHp) * 100)}%`;
     }
 
     function renderGarage() {
       const container = document.getElementById('garage-list');
       if (!container) return;
       container.innerHTML = '';
-      
-      const t = THEMES[state.gameTheme];
-      t.bots.forEach((bot, idx) => {
-        const unlocked = state.unlockedBots.includes(bot.id);
+      THEMES[state.gameTheme].bots.forEach(bot => {
         const active = state.selectedBot === bot.id;
-        const canAfford = state.bits >= bot.cost;
-
         const row = document.createElement('div');
-        row.className = `p-3 rounded-xl border flex items-center justify-between gap-2 transition ${
-          active ? 'bg-cyan-950/60 border-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.25)]' : 'bg-slate-900/90 border-slate-800'
-        }`;
-        row.innerHTML = `
-          <div class="flex items-center gap-3">
-            <div class="relative">
-              <span class="text-3xl">${bot.icon}</span>
-              <span class="absolute -top-1 -left-1 px-1.5 py-0.2 rounded bg-slate-800 text-[9px] font-cyber text-slate-300 border border-slate-700">T${idx+1}</span>
-            </div>
-            <div>
-              <div class="font-cyber text-xs font-bold text-white flex items-center gap-1.5 flex-wrap">
-                <span>${bot.name}</span>
-                <span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">${bot.weaponName}</span>
-              </div>
-              <div class="text-[11px] text-slate-400 mt-0.5">${bot.desc}</div>
-            </div>
-          </div>
-          <div class="shrink-0">
-            ${active 
-              ? `<span class="px-3 py-1.5 rounded-lg bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-xs font-bold block">Actief</span>`
-              : unlocked 
-                ? `<button type="button" onclick="selectBot('${bot.id}')" class="px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold transition">Kies</button>`
-                : `<button type="button" onclick="buyBot('${bot.id}', ${bot.cost})" class="px-3 py-1.5 rounded-lg ${canAfford ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 animate-pulse' : 'bg-slate-800 text-slate-500'} text-xs font-bold transition">Koop (${t.currencySymbol} ${bot.cost})</button>`
-            }
-          </div>
-        `;
+        row.className = `p-3 rounded-xl border flex items-center justify-between gap-2 ${active ? 'bg-cyan-950/60 border-cyan-400' : 'bg-slate-900/90 border-slate-800'}`;
+        row.innerHTML = `<span class="text-white text-xs">${bot.name}</span><span class="text-cyan-300 text-xs">${active ? 'Actief' : 'Klaar'}</span>`;
         container.appendChild(row);
       });
-    }
-
-    function buyBot(id, cost) {
-      const t = THEMES[state.gameTheme];
-      if (state.bits < cost) { alert(`Nog niet genoeg ${t.currency}! Je hebt ${state.bits}/${cost}.`); return; }
-      state.bits -= cost;
-      state.unlockedBots.push(id);
-
-      const tierNum = parseInt(id.replace('t', ''), 10);
-      if (tierNum >= 4) unlockBadge('heavy_weapon');
-
-      selectBot(id);
-    }
-
-    function selectBot(id) {
-      state.selectedBot = id;
-      const t = THEMES[state.gameTheme];
-      const currentBotObj = t.bots.find(b => b.id === state.selectedBot) || t.bots[0];
-      const wLabel = state.gameTheme === 'kawaii' ? '✨ Stafje' : '🔫 Wapen';
-      
-      if(document.getElementById('player-bot-name')) {
-        document.getElementById('player-bot-name').textContent = currentBotObj.name;
-        document.getElementById('player-bot-avatar').textContent = currentBotObj.icon;
-        document.getElementById('player-weapon-badge').textContent = `${wLabel}: ${currentBotObj.weaponName} (${currentBotObj.multDmg}x)`;
-      }
-      
-      updateHUD();
-      renderGarage();
     }
 
     function saveAdminSettings() {
       state.gameMode = document.getElementById('admin-game-mode').value;
       state.strictPunctuation = document.getElementById('admin-strict-punct').checked;
-      try {
-        localStorage.setItem('codebot_mode', state.gameMode);
-        localStorage.setItem('codebot_strict', String(state.strictPunctuation));
-      } catch(e){}
       loadNextWord(false);
     }
 
@@ -3614,18 +2412,22 @@
       if (!logEl) return;
       const entries = Object.entries(state.mistakes);
       if (entries.length === 0) { logEl.textContent = "Nog geen foutjes gemaakt."; return; }
-      logEl.innerHTML = entries.map(([w, count]) => `<span class="inline-block bg-rose-950 border border-rose-500/40 text-rose-300 px-2 py-0.5 rounded mr-1.5 mb-1 not-italic">${w} (${count}x)</span>`).join('');
+      logEl.innerHTML = entries.map(([w, count]) => `<span class="bg-rose-950 text-rose-300 px-2 py-0.5 rounded mr-1">${w} (${count}x)</span>`).join('');
     }
 
     window.addEventListener('DOMContentLoaded', () => {
       initBgParticles();
       animateCanvases();
       initSpeechVoices();
-      updateLogicRule();
       loadState();
       renderHighscores();
 
-      // Verberg het debug-paneel (verwachte invoer) direct zodra de speler begint met typen
+      // Toon de 'Download Android App' knop ALLEEN in de webbrowser (niet in native APK)
+      const isNativeApp = Boolean(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
+      const apkBtn = document.getElementById('btn-download-apk');
+      if (apkBtn && !isNativeApp) apkBtn.classList.remove('hidden');
+
+      // Verberg het debug-paneel direct zodra de speler na een fout begint te typen
       const wordInput = document.getElementById('word-input');
       if (wordInput) {
         wordInput.addEventListener('input', () => {
